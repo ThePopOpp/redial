@@ -11,8 +11,8 @@ async function scrub(page: Page, position: number) {
 }
 
 test('material tracing returns to solid, descends between chapters, and rewinds exactly', () => {
-  for (const position of [0, 1.35, 2.4, 3.4, 4.5, 5.55, 6.6, 7.4, 8.4]) expect(timeline(position / 9).outline).toBe(0);
-  for (const position of [.24, 3.24, 7.24, 8.8]) {
+  for (const position of [0, 1.35, 2.4, 3.4, 4.5, 5.55, 6.6, 7.4, 8.4, 8.8, 9]) expect(timeline(position / 9).outline).toBe(0);
+  for (const position of [.24, 3.24, 7.24]) {
     const frame = timeline(position / 9);
     expect(frame.outline).toBe(1); expect(frame.traceDraw).toBeGreaterThan(.96);
   }

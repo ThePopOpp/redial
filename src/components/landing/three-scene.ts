@@ -1,7 +1,7 @@
 ﻿import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { CSS3DObject, CSS3DRenderer } from 'three/addons/renderers/CSS3DRenderer.js';
-import { clamp, smooth, timeline } from '@/lib/landing/timeline';
+import { clamp, formPreviewStart, formZoomEnd, mix, smooth, timeline } from '@/lib/landing/timeline';
 
 function roundedShape(width: number, height: number, radius: number) {
   const x = -width / 2, y = -height / 2, shape = new THREE.Shape();
@@ -21,7 +21,7 @@ function radialTexture() {
 }
 
 /** Original procedural geometry/textures. The call state is always scroll-driven. */
-export function createPhoneScene(mount: HTMLElement, readProgress: () => number, onLost: () => void) {
+export function createPhoneScene(mount: HTMLElement, readProgress: () => number, onLost: () => void, onboarding: HTMLElement | null) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.65));
   renderer.setClearColor(0x000000, 0); renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -124,6 +124,7 @@ export function createPhoneScene(mount: HTMLElement, readProgress: () => number,
     if (disposed) return;
     frame = requestAnimationFrame(draw);
     const progress = readProgress();
+    if (onboarding?.dataset.embedded === 'true' && (progress < formPreviewStart / 9 || progress >= formZoomEnd / 9)) { onboarding.dataset.embedded = 'false'; onboarding.removeAttribute('style'); }
     const unsettled = Math.abs(targetX - pointerX) + Math.abs(targetY - pointerY) > .0002 || Math.abs(cursorTargetX - cursorX) + Math.abs(cursorTargetY - cursorY) > .05;
     if (!active || document.hidden || (!dirty && !unsettled && Math.abs(progress - lastProgress) < .000001)) return;
     dirty = false; lastProgress = progress;
@@ -133,15 +134,28 @@ export function createPhoneScene(mount: HTMLElement, readProgress: () => number,
     if (progress > .97) cursor.dataset.visible = 'false';
     stage.style.setProperty('--pointer-x', String(pointerX)); stage.style.setProperty('--pointer-y', String(pointerY));
     screenElement.style.setProperty('--gloss-x', `${50 + pointerX * 35}%`); screenElement.style.setProperty('--gloss-y', `${15 + pointerY * 30}%`);
-    const state = timeline(progress, width < 768), [x, y, z, rx, ry, rz, scale] = state.pose;
-    const horizontal = width < 768 ? 0 : x * clamp(camera.aspect / 1.65, .6, 1.2), parallax = (1 - state.formReveal) * (width < 768 ? .25 : 1);
+    const mobile = width < 768, state = timeline(progress, mobile);
+    const formWidth = Math.min(740, width - (mobile ? 32 : 48));
+    if (state.position >= formPreviewStart) {
+      // Zoom an upright, solid device toward the actual form's natural layout.
+      // Solving the perspective projection gives an exact, jump-free endpoint.
+      const focal = height / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+      const targetScale = formWidth * (state.cameraZ + .4) / (2.28 * focal + .23 * formWidth);
+      const targetY = (height / 2 - (mobile ? 35 : 55)) * (2.28 * targetScale / formWidth) - 2.356 * targetScale;
+      state.pose = [0, mix(mobile ? -1.6 : -.7, targetY, state.zoom), -.4, 0, 0, 0, mix(mobile ? .85 * .64 : .85, targetScale, state.zoom)];
+    }
+    const [x, y, z, rx, ry, rz, scale] = state.pose;
+    const horizontal = mobile ? 0 : x * clamp(camera.aspect / 1.65, .6, 1.2), parallax = (1 - smooth((state.position - 7.8) / .2)) * (mobile ? .25 : 1);
     phone.position.set(horizontal + pointerX * .085 * parallax, y - pointerY * .07 * parallax, z);
     phone.rotation.set(rx + pointerY * .065 * parallax, ry + pointerX * .11 * parallax, rz - pointerX * .025 * parallax); phone.scale.setScalar(scale);
     domPhone.position.copy(phone.position); domPhone.rotation.copy(phone.rotation); domPhone.scale.copy(phone.scale); camera.position.z = state.cameraZ;
     tint.setRGB(state.tone[0] / 255, state.tone[1] / 255, state.tone[2] / 255, THREE.SRGBColorSpace);
     rim.color.copy(tint); rim.position.set(4 + pointerX * 3, 3 - pointerY * 2 - state.travel, 4);
     key.position.x = -4 + pointerX * 2; fill.position.y = -2 + Math.sin(state.position) * 2;
-    hardwareMaterials.forEach(material => { material.opacity = (1 - state.outline) * state.phoneOpacity; material.depthWrite = state.outline < .5 && state.phoneOpacity > .99; }); bezel.material.opacity = .6 * (1 - state.outline) * state.phoneOpacity;
+    // A matching solid DOM rim takes over near the endpoint so the device can
+    // continue around longer form steps below the canvas viewport.
+    const formRim = smooth((state.position - 8.82) / .16);
+    hardwareMaterials.forEach(material => { material.opacity = (1 - state.outline) * state.phoneOpacity * (1 - formRim); material.depthWrite = state.outline < .5 && state.phoneOpacity > .99 && formRim < .01; }); bezel.material.opacity = .6 * (1 - state.outline) * state.phoneOpacity * (1 - formRim);
     traceMaterial.uniforms.uDraw.value = state.traceDraw * 1.04; traceMaterial.uniforms.uOpacity.value = state.outline * state.phoneOpacity; traceMaterial.uniforms.uTint.value.copy(tint).lerp(white, .3); drawing.visible = state.outline * state.phoneOpacity > .002;
     halo.position.set(horizontal, y * .45, -1.6); halo.material.color.copy(tint); halo.material.opacity = (.20 + state.outline * .12) * (1 - state.formReveal);
     shadow.position.x = horizontal; shadow.material.opacity = (document.documentElement.classList.contains('light') ? .30 : .6) * (1 - state.outline * .65) * (1 - state.formReveal) * state.phoneOpacity;
@@ -149,13 +163,26 @@ export function createPhoneScene(mount: HTMLElement, readProgress: () => number,
     rings.forEach((ring, index) => { ring.rotation.z = progress * (index + 1) * .75; ring.rotation.x = .4 + index * .35 + state.position * .04; ring.material.color.copy(tint); ring.material.opacity = (.10 + state.outline * .15) * (1 - state.formReveal); });
     route.material.color.copy(tint); route.material.opacity = (state.chapter === 1 || state.chapter === 6 ? .45 : .06) * (1 - state.formReveal);
     pulse.position.copy(path.getPoint(clamp((state.position % 1) * 1.3))); pulse.visible = state.chapter === 1 || state.chapter === 6;
-    css.domElement.style.opacity = String(state.screenOpacity * (1 - smooth((state.outline - .12) / .82)) * state.phoneOpacity);
+    css.domElement.style.opacity = String((state.position >= formPreviewStart ? 0 : state.screenOpacity) * (1 - smooth((state.outline - .12) / .82)) * state.phoneOpacity);
     screenElement.style.filter = `blur(${state.outline * 5}px)`; renderer.domElement.style.opacity = String(state.sceneOpacity);
-    if (state.sceneOpacity > .001) { renderer.render(scene, camera); css.render(domScene, camera); }
+    if (state.sceneOpacity > .001) renderer.render(scene, camera);
+    css.render(domScene, camera);
+    if (onboarding) {
+      if (state.position >= formPreviewStart && state.position < formZoomEnd) {
+        // One real form, projected onto the screen. Never clone inputs or remount
+        // the form; the same DOM returns to normal flow at the zoom endpoint.
+        const bounds = screenElement.getBoundingClientRect();
+        onboarding.dataset.embedded = 'true';
+        onboarding.style.cssText = `width:${formWidth}px;height:${formWidth * 620 / 300}px;transform:translate3d(${bounds.left}px,${bounds.top}px,0) scale(${bounds.width / formWidth});border-radius:${formWidth * .12}px;--device-rim-opacity:${formRim};`;
+      } else {
+        onboarding.dataset.embedded = 'false'; onboarding.removeAttribute('style');
+      }
+    }
     mount.dataset.progress = progress.toFixed(4); mount.dataset.rendered = 'true'; mount.dataset.outline = state.outline.toFixed(3); mount.dataset.trace = state.traceDraw.toFixed(3); mount.dataset.phoneOpacity = state.phoneOpacity.toFixed(3); mount.dataset.pointer = `${pointerX.toFixed(3)},${pointerY.toFixed(3)}`;
   }
   draw();
   return { screenElement, dispose() {
+    if (onboarding) { onboarding.dataset.embedded = 'false'; onboarding.removeAttribute('style'); }
     disposed = true; cancelAnimationFrame(frame); observer.disconnect(); intersection.disconnect(); themeObserver.disconnect();
     window.removeEventListener('pointermove', movePointer); document.removeEventListener('pointerleave', resetPointer); window.removeEventListener('blur', resetPointer);
     stage.style.removeProperty('--pointer-x'); stage.style.removeProperty('--pointer-y'); renderer.domElement.removeEventListener('webglcontextlost', contextLost);

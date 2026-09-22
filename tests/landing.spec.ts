@@ -15,7 +15,7 @@ test('scroll timeline is deterministic and reverses every feature state', () => 
   const forward = Array.from({ length: 91 }, (_, index) => timeline(index / 90));
   for (let index = 90; index >= 0; index--) expect(timeline(index / 90)).toEqual(forward[index]);
   expect(timeline(1).formReveal).toBe(1);
-  expect(timeline(1).sceneOpacity).toBe(0);
+  expect(timeline(1).sceneOpacity).toBe(1);
   expect(timeline(-1).position).toBe(0);
 });
 test('setup validates identity fields, disclosure and completion without granting activation', () => {

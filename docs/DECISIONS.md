@@ -1,5 +1,11 @@
 # Working decision log
 
+## 2026-09-22 — Keep onboarding inside the zooming phone
+
+- Replace the final outline-to-card transition with one solid-phone zoom containing the actual onboarding form. Preserve all earlier story effects, existing form behavior and local-only service boundaries. The clean pre-edit baseline is Git commit `87e3880`.
+- Keep a single mounted form and project it onto the phone screen until its normal document position matches. Remove the decorative form duplicate, separate introduction and upward card reveal. Keep controls inert while moving; retain entered values on rewind and restore ordinary layout for reduced motion or WebGL loss.
+- Preserve the device frame around lower fields after zooming, including long mobile forms, with a solid CSS rim at the endpoint. Lint, typecheck, optimized build and the 92-file kit integrity check passed. The final combined browser suite passed 18/18. Evidence and responsive review steps are in `PHONE-FORM-ZOOM.md` and `evidence/phone-form-zoom/`. No dependency, storage, provider or production changes.
+
 ## 2026-09-22 — Initial GitHub publication
 
 - The user explicitly authorized committing and pushing this project to `https://github.com/ThePopOpp/redial.git`. Read-only inspection found no existing local Git history and no remote refs. Initialize `main` and use that exact URL as `origin`; preserve all existing project work.

@@ -12,6 +12,9 @@ export const chapters = [
 export const clamp = (value: number, low = 0, high = 1) => Math.min(high, Math.max(low, value));
 export const smooth = (value: number) => { const t = clamp(value); return t * t * (3 - 2 * t); };
 export const mix = (a: number, b: number, t: number) => a + (b - a) * t;
+// Allow for subpixel scroll rounding at the chapter and normal-flow boundaries.
+export const formPreviewStart = 7.995;
+export const formZoomEnd = 8.999;
 // The scene is a pure function of scroll position. No time-based animation can
 // leave the call story in a different state when the reader scrolls backward.
 const poses = [
@@ -48,9 +51,10 @@ export function timeline(progress: number, mobile = false) {
   const index = Math.min(8, Math.floor(position));
   const local = position - index;
   // Hold each composition, then slide into the next one.
-  const transition = smooth((local - .62) / .38);
+  const zoom = smooth((position - 8.10) / .90);
+  const transition = index === 8 ? zoom : smooth((local - .62) / .38);
   const pose = poses[index].map((value, axis) => mix(value, poses[index + 1][axis], transition));
-  const travel = Math.sin(transition * Math.PI);
+  const travel = index === 8 ? 0 : Math.sin(transition * Math.PI);
   // A shallow descending camera arc gives each slide real depth without
   // scroll hijacking or moving any of the interactive onboarding fields.
   pose[1] -= travel * .55;
@@ -60,8 +64,8 @@ export function timeline(progress: number, mobile = false) {
   const reveal = index < 8 ? stagedReveal(position, index) : null;
   if (reveal) { pose[6] *= 1 + reveal.dissolve * .10; pose[3] -= reveal.dissolve * .055; }
   if (mobile) { pose[0] = 0; pose[1] = index >= 8 ? mix(-1.6, -2.1, transition) : -1.65; pose[6] *= .64; pose[4] *= .65; }
-  const outline = Math.max(...[0, 3, 7].map(chapter => tracingPass(position - chapter, .08, .22, .38, .04)), smooth((position - 8.53) / .22));
-  const traceDraw = Math.max(...[0, 3, 7].map(chapter => smooth((position - chapter - .08) / .14) * (1 - smooth((position - chapter - .28) / .10))), smooth((position - 8.48) / .32));
+  const outline = Math.max(...[0, 3, 7].map(chapter => tracingPass(position - chapter, .08, .22, .38, .04)));
+  const traceDraw = Math.max(...[0, 3, 7].map(chapter => smooth((position - chapter - .08) / .14) * (1 - smooth((position - chapter - .28) / .10))));
   const tone = tones[index].map((value, channel) => Math.round(mix(value, tones[index + 1][channel], transition)));
-  return { position, chapter: Math.min(8, Math.floor(position + .13)), local, transition, travel, pose, outline, traceDraw, tone, phoneOpacity: reveal?.phoneOpacity ?? 1, cameraZ: 11.5 + travel * .3, formReveal: smooth((position - 8.80) / .20), sceneOpacity: 1 - smooth((position - 8.94) / .06), screenOpacity: 1 - smooth((position - 8.65) / .13) };
+  return { position, chapter: Math.min(8, Math.floor(position + .13)), local, transition, travel, pose, outline, traceDraw, tone, zoom, phoneOpacity: reveal?.phoneOpacity ?? 1, cameraZ: 11.5 + travel * .3, formReveal: zoom, sceneOpacity: 1, screenOpacity: 1 };
 }

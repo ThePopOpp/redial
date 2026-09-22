@@ -175,11 +175,16 @@ body:has(.landing-experience) > .preview-banner { display: none; }
 .preview-choices > span { flex: 1; border: 1px solid #725584; padding: 12px 8px; border-radius: 6px; color: #cbb0e2; }
 .preview-choices > span:first-child { background: #3a2c4b; border-color: #b797df; }
 .preview-continue { display: flex; gap: 13px; align-items: center; justify-content: center; font-size: 10px; background: #eae2f1; padding: 13px; border-radius: 5px; color: #281a30; }
-.landing-onboarding { position: relative; z-index: 12; margin-top: calc(-100svh + 80px); min-height: calc(100svh - 80px); padding: 55px 24px 85px; scroll-margin-top: 80px; opacity: var(--form-reveal); transform: translateY(calc((1 - var(--form-reveal)) * 35px)); background: radial-gradient(ellipse at 50% 20%,#4632500c,transparent 55%),var(--story-ink); }
-.onboarding-intro { text-align: center; margin: 0 auto 45px; }
-.onboarding-intro .story-kicker { font-size: .56rem; }
-.onboarding-intro > p { color: var(--muted-foreground); font: 1.35rem/1.45 var(--font-display); margin-top: 13px; }
-.onboarding-intro em { color: var(--destructive); }
+.landing-onboarding { position: relative; z-index: 12; margin-top: calc(-100svh + 80px); min-height: calc(100svh - 80px); padding: 55px 24px 85px; scroll-margin-top: 80px; overflow-x: clip; }
+.onboarding-viewport { --device-rim: calc(min(740px, 100vw - 48px) * .065); position: relative; isolation: isolate; width: 100%; max-width: 740px; margin: 0 auto; border-radius: calc(min(740px, 100vw - 48px) * .12); background: var(--card); box-shadow: var(--shadow); }
+.is-cinematic .onboarding-viewport::before { content: ''; position: absolute; z-index: -1; pointer-events: none; inset: calc(-1 * var(--device-rim)); border-radius: calc(min(740px, 100vw - 48px) * .185); border: 2px solid #aaa8b3; background: linear-gradient(135deg, #fcfcff 0%, #a5a3ae 22%, #eeedf4 34%, #686773 51%, #d9d8e4 72%, #777580 89%, #dddce6); box-shadow: inset 0 0 0 3px #e7e5ef, inset 0 0 0 6px #72707f, inset 0 0 0 8px #c6c3d2, 0 14px 40px #0003; opacity: var(--device-rim-opacity, 1); }
+.onboarding-viewport[data-embedded=true] { position: fixed; top: 0; left: 0; margin: 0; transform-origin: top left; pointer-events: none; box-shadow: none; }
+.landing-onboarding[data-stage=hidden] .onboarding-viewport { visibility: hidden; }
+.onboarding-viewport .onboard-card { width: 100%; max-width: none; border: 0; border-radius: inherit; box-shadow: none; }
+.onboarding-viewport[data-embedded=true] .onboard-card { height: 100%; overflow: hidden; }
+.is-cinematic .onboarding-viewport:not([data-embedded=true]) .onboard-card { min-height: calc(100svh - 100px); }
+.is-cinematic .story-topline, .is-cinematic .story-depth-meter, .is-cinematic .story-bottom, .is-cinematic .story-timeline { opacity: calc(1 - var(--setup-zoom)); }
+.is-cinematic .chapter-8 .story-fine-print { display: none; }
 .onboard-card { max-width: 740px; margin: 0 auto; padding: 36px 45px 25px; background: var(--background); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 40px 120px #0005; }
 .onboard-header { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 34px; }
 .onboard-header .brand { font-size: 1.3rem; }
@@ -311,7 +316,8 @@ body:has(.landing-experience) > .preview-banner { display: none; }
   .story-floating-card { display: none; } .story-counter { font-size: .58rem; }
   .copy-center .story-description { font-size: .76rem; margin: 17px 0 0; } .copy-center .story-fine-print { font-size: .63rem; margin-top: 14px; }
   .landing-onboarding { margin-top: calc(-100svh + 70px); padding: 35px 16px 55px; scroll-margin-top: 70px; }
-  .onboarding-intro { margin-bottom: 25px; } .onboarding-intro > p { font-size: 1.15rem; }
+  .onboarding-viewport { --device-rim: calc((100vw - 32px) * .065); border-radius: calc((100vw - 32px) * .12); }
+  .is-cinematic .onboarding-viewport::before { border-radius: calc((100vw - 32px) * .185); }
   .onboard-card { border-radius: 13px; padding: 20px 19px; } .onboard-header { gap: 10px; margin-bottom: 26px; } .onboard-header .brand { font-size: 1.13rem; gap: 7px; } .onboard-header .brand-mark { width: 24px; height: 24px; }
   .onboard-save { font-size: .63rem; gap: 6px; } .onboard-save > svg { display: none; }
   .onboard-progress { margin-bottom: 25px; gap: 4px; } .onboard-step-label { font-size: .54rem; margin-bottom: 14px; }

@@ -1,0 +1,969 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/onboarding-zoom.spec.ts",
+      "tests/landing.spec.ts",
+      "tests/motion.spec.ts"
+    ],
+    "configFile": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\playwright.config.ts",
+    "rootDir": "C:/Users/jwate/Projects/Redial/Redial GPT/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/jwate/Projects/Redial/Redial GPT/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/jwate/Projects/Redial/Redial GPT/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/browser-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 2,
+    "webServer": {
+      "command": "npm run start -- --port 3210",
+      "url": "http://127.0.0.1:3210",
+      "reuseExistingServer": false,
+      "env": {
+        "NEXT_TELEMETRY_DISABLED": "1"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "landing.spec.ts",
+      "file": "landing.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "scroll timeline is deterministic and reverses every feature state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 23,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:52.408Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e5b49d369fd48ca0656-bf60e1d12e828c2a3af4",
+          "file": "landing.spec.ts",
+          "line": 14,
+          "column": 5
+        },
+        {
+          "title": "setup validates identity fields, disclosure and completion without granting activation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 4,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:52.407Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e5b49d369fd48ca0656-2a8f4955d63dec7dc14e",
+          "file": "landing.spec.ts",
+          "line": 21,
+          "column": 5
+        },
+        {
+          "title": "Three.js journey renders, scrubs both ways and hands off to a real form",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2918,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:52.432Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e5b49d369fd48ca0656-8fdd918ab20aa436a401",
+          "file": "landing.spec.ts",
+          "line": 26,
+          "column": 5
+        },
+        {
+          "title": "seven-step setup saves real form input, resumes, and deletes independently of the demo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3481,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:52.452Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e5b49d369fd48ca0656-1d0cda2c91ff31c23dc8",
+          "file": "landing.spec.ts",
+          "line": 57,
+          "column": 5
+        },
+        {
+          "title": "setup API enforces origin, session isolation, stale versions and completion rules",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 65,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:55.693Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e5b49d369fd48ca0656-c8c1bd76edef07ce37ea",
+          "file": "landing.spec.ts",
+          "line": 120,
+          "column": 5
+        },
+        {
+          "title": "mobile journey and reduced-motion onboarding stay accessible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1416,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:55.770Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e5b49d369fd48ca0656-322846d8eb01419317af",
+          "file": "landing.spec.ts",
+          "line": 136,
+          "column": 5
+        },
+        {
+          "title": "unavailable WebGL retains a readable journey and usable form",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 437,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:56.257Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e5b49d369fd48ca0656-a22752f7af287aa25c6e",
+          "file": "landing.spec.ts",
+          "line": 156,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "motion.spec.ts",
+      "file": "motion.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "material tracing returns to solid, descends between chapters, and rewinds exactly",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 136,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:56.705Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "472f259022e25a651642-6c63c8f6a58507251c23",
+          "file": "motion.spec.ts",
+          "line": 13,
+          "column": 5
+        },
+        {
+          "title": "rendered phone traces and reforms with pointer depth, preserving the native cursor",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2367,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:56.849Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "472f259022e25a651642-547089c823a03334d4a9",
+          "file": "motion.spec.ts",
+          "line": 26,
+          "column": 5
+        },
+        {
+          "title": "phone microanimations preserve handoff order and leave all four controls inside the device",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2660,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:57.195Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "472f259022e25a651642-667f1bb90e00feed90f6",
+          "file": "motion.spec.ts",
+          "line": 58,
+          "column": 5
+        },
+        {
+          "title": "motion works in light mode on touch and hands over to the untransformed form",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5257,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.story-scene')\nExpected: \u001b[32m\"true\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.story-scene') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.story-scene')\u001b[22m\n\u001b[2m    14 × locator resolved to <div aria-hidden=\"true\" class=\"story-scene\" data-testid=\"three-scene\"></div>\u001b[22m\n\u001b[2m       - unexpected value \"null\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.story-scene')\nExpected: \u001b[32m\"true\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.story-scene') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.story-scene')\u001b[22m\n\u001b[2m    14 × locator resolved to <div aria-hidden=\"true\" class=\"story-scene\" data-testid=\"three-scene\"></div>\u001b[22m\n\u001b[2m       - unexpected value \"null\"\u001b[22m\n\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\motion.spec.ts:92:46",
+                    "location": {
+                      "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\motion.spec.ts",
+                      "column": 46,
+                      "line": 92
+                    },
+                    "snippet": "  90 |   const page = await context.newPage(); await page.goto('/');\n  91 |   await expect(page.locator('html')).toHaveClass(/light/);\n> 92 |   await expect(page.locator('.story-scene')).toHaveAttribute('data-rendered', 'true');\n     |                                              ^\n  93 |   for (const value of [0, .64, 3.4, 4.52]) {\n  94 |     await scrub(page, value);\n  95 |     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\motion.spec.ts",
+                        "column": 46,
+                        "line": 92
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.story-scene')\nExpected: \u001b[32m\"true\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.story-scene') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.story-scene')\u001b[22m\n\u001b[2m    14 × locator resolved to <div aria-hidden=\"true\" class=\"story-scene\" data-testid=\"three-scene\"></div>\u001b[22m\n\u001b[2m       - unexpected value \"null\"\u001b[22m\n\n\n  90 |   const page = await context.newPage(); await page.goto('/');\n  91 |   await expect(page.locator('html')).toHaveClass(/light/);\n> 92 |   await expect(page.locator('.story-scene')).toHaveAttribute('data-rendered', 'true');\n     |                                              ^\n  93 |   for (const value of [0, .64, 3.4, 4.52]) {\n  94 |     await scrub(page, value);\n  95 |     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\motion.spec.ts:92:46"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:59.227Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\motion-motion-works-in-lig-a97ff-r-to-the-untransformed-form\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\motion-motion-works-in-lig-a97ff-r-to-the-untransformed-form\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\motion-motion-works-in-lig-a97ff-r-to-the-untransformed-form\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\motion.spec.ts",
+                    "column": 46,
+                    "line": 92
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "472f259022e25a651642-88e5575f04a0d196e05e",
+          "file": "motion.spec.ts",
+          "line": 87,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "onboarding-zoom.spec.ts",
+      "file": "onboarding-zoom.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "form stays on the phone through zoom and rewind: dark, 390px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 5669,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28",
+                    "location": {
+                      "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                      "column": 28,
+                      "line": 25
+                    },
+                    "snippet": "  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                        "column": 28,
+                        "line": 25
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n\n  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:55:59.863Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-1497b--zoom-and-rewind-dark-390px\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-1497b--zoom-and-rewind-dark-390px\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-1497b--zoom-and-rewind-dark-390px\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                    "column": 28,
+                    "line": 25
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "fda34e0466fc66f6a13a-75a564564af182470aa5",
+          "file": "onboarding-zoom.spec.ts",
+          "line": 11,
+          "column": 82
+        },
+        {
+          "title": "form stays on the phone through zoom and rewind: dark, 768px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6577,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28",
+                    "location": {
+                      "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                      "column": 28,
+                      "line": 25
+                    },
+                    "snippet": "  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                        "column": 28,
+                        "line": 25
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n\n  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:56:05.033Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-468ca--zoom-and-rewind-dark-768px\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-468ca--zoom-and-rewind-dark-768px\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-468ca--zoom-and-rewind-dark-768px\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                    "column": 28,
+                    "line": 25
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "fda34e0466fc66f6a13a-d73ce5b8d85e3207e861",
+          "file": "onboarding-zoom.spec.ts",
+          "line": 11,
+          "column": 82
+        },
+        {
+          "title": "form stays on the phone through zoom and rewind: dark, 1440px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 6743,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28",
+                    "location": {
+                      "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                      "column": 28,
+                      "line": 25
+                    },
+                    "snippet": "  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                        "column": 28,
+                        "line": 25
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n\n  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:56:06.105Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-a1331-zoom-and-rewind-dark-1440px\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-a1331-zoom-and-rewind-dark-1440px\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-a1331-zoom-and-rewind-dark-1440px\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                    "column": 28,
+                    "line": 25
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "fda34e0466fc66f6a13a-3c421bed0936e47c25d3",
+          "file": "onboarding-zoom.spec.ts",
+          "line": 11,
+          "column": 82
+        },
+        {
+          "title": "form stays on the phone through zoom and rewind: light, 390px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6295,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28",
+                    "location": {
+                      "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                      "column": 28,
+                      "line": 25
+                    },
+                    "snippet": "  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                        "column": 28,
+                        "line": 25
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n\n  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:56:12.235Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-8f2c3-zoom-and-rewind-light-390px\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-8f2c3-zoom-and-rewind-light-390px\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-8f2c3-zoom-and-rewind-light-390px\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                    "column": 28,
+                    "line": 25
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "fda34e0466fc66f6a13a-02304794741075ce349b",
+          "file": "onboarding-zoom.spec.ts",
+          "line": 11,
+          "column": 82
+        },
+        {
+          "title": "form stays on the phone through zoom and rewind: light, 768px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 6760,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28",
+                    "location": {
+                      "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                      "column": 28,
+                      "line": 25
+                    },
+                    "snippet": "  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                        "column": 28,
+                        "line": 25
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n\n  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:56:13.560Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-d4c0e-zoom-and-rewind-light-768px\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-d4c0e-zoom-and-rewind-light-768px\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-d4c0e-zoom-and-rewind-light-768px\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                    "column": 28,
+                    "line": 25
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "fda34e0466fc66f6a13a-b79da7caf6c543d6798e",
+          "file": "onboarding-zoom.spec.ts",
+          "line": 11,
+          "column": 82
+        },
+        {
+          "title": "form stays on the phone through zoom and rewind: light, 1440px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6463,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28",
+                    "location": {
+                      "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                      "column": 28,
+                      "line": 25
+                    },
+                    "snippet": "  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                        "column": 28,
+                        "line": 25
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.onboarding-viewport')\nExpected: \u001b[32m\"\u001b[7mtru\u001b[27me\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mfals\u001b[27me\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.onboarding-viewport') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.onboarding-viewport')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-embedded=\"false\" class=\"onboarding-viewport\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"false\"\u001b[22m\n\n\n  23 |     await expect(scene).toHaveAttribute('data-outline', '0.000');\n  24 |     await expect(scene).toHaveAttribute('data-trace', '0.000');\n> 25 |     await expect(viewport).toHaveAttribute('data-embedded', 'true');\n     |                            ^\n  26 |     await expect(page.locator('.landing-onboarding')).toHaveAttribute('inert', '');\n  27 |     const phone = (await page.locator('.story-screen-host').boundingBox())!, actual = (await viewport.boundingBox())!;\n  28 |     expect(Math.abs(actual.x - phone.x)).toBeLessThan(1);\n    at C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts:25:28"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T15:56:19.165Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-aae51-oom-and-rewind-light-1440px\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-aae51-oom-and-rewind-light-1440px\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\test-results\\onboarding-zoom-form-stays-aae51-oom-and-rewind-light-1440px\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\tests\\onboarding-zoom.spec.ts",
+                    "column": 28,
+                    "line": 25
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "fda34e0466fc66f6a13a-828a7cc36abd854a5a7f",
+          "file": "onboarding-zoom.spec.ts",
+          "line": 11,
+          "column": 82
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-22T15:55:50.891Z",
+    "duration": 35466.006,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 7,
+    "flaky": 0
+  }
+}
