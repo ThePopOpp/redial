@@ -1,0 +1,343 @@
+{
+  "address": "http://127.0.0.1:4317/",
+  "status": 200,
+  "errors": [],
+  "findings": [
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "position": 0.03,
+      "card": {
+        "x": 874.7000122070312,
+        "y": 648.3423461914062,
+        "width": 266.60003662109375,
+        "height": 76.9090576171875
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "position": 0.68,
+      "card": {
+        "x": 758.5999755859375,
+        "y": 371.8497009277344,
+        "width": 498.7999267578125,
+        "height": 143.89437866210938
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "position": 1.1,
+      "card": {
+        "x": 298.70001220703125,
+        "y": 648.3423461914062,
+        "width": 266.60003662109375,
+        "height": 76.9090576171875
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "position": 1.68,
+      "card": {
+        "x": 182.60000610351562,
+        "y": 293.1962585449219,
+        "width": 498.8000183105469,
+        "height": 301.2012023925781
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "position": 0.03,
+      "card": {
+        "x": 633.2418823242188,
+        "y": 558.1771850585938,
+        "width": 228.5474853515625,
+        "height": 61.8643798828125
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "position": 0.68,
+      "card": {
+        "x": 533.713134765625,
+        "y": 323.8762512207031,
+        "width": 427.60498046875,
+        "height": 115.74624633789062
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "position": 1.1,
+      "card": {
+        "x": 162.19500732421875,
+        "y": 558.1771850585938,
+        "width": 228.5474853515625,
+        "height": 61.8643798828125
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "height": 768,
+      "position": 1.68,
+      "card": {
+        "x": 62.666259765625,
+        "y": 245.22280883789062,
+        "width": 427.60498046875,
+        "height": 273.0531311035156
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "height": 1024,
+      "position": 0.03,
+      "card": {
+        "x": 474.919677734375,
+        "y": 741.6665649414062,
+        "width": 171.41064453125,
+        "height": 73.7606201171875
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "height": 1024,
+      "position": 0.68,
+      "card": {
+        "x": 400.27313232421875,
+        "y": 433.06500244140625,
+        "width": 320.7037353515625,
+        "height": 138.00372314453125
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "height": 1024,
+      "position": 1.1,
+      "card": {
+        "x": 121.65406036376953,
+        "y": 740.920654296875,
+        "width": 171.41064453125,
+        "height": 75.25250244140625
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "height": 1024,
+      "position": 1.68,
+      "card": {
+        "x": 47.00750732421875,
+        "y": 319.0224914550781,
+        "width": 320.7037353515625,
+        "height": 366.0887145996094
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "position": 0.03,
+      "card": {
+        "x": 874.7000122070312,
+        "y": 648.3423461914062,
+        "width": 266.60003662109375,
+        "height": 76.9090576171875
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "position": 0.68,
+      "card": {
+        "x": 758.5999755859375,
+        "y": 371.8497009277344,
+        "width": 498.7999267578125,
+        "height": 143.89437866210938
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "position": 1.1,
+      "card": {
+        "x": 298.70001220703125,
+        "y": 648.3423461914062,
+        "width": 266.60003662109375,
+        "height": 76.9090576171875
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "position": 1.68,
+      "card": {
+        "x": 182.60000610351562,
+        "y": 293.1962585449219,
+        "width": 498.8000183105469,
+        "height": 301.2012023925781
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "position": 0.03,
+      "card": {
+        "x": 633.2418823242188,
+        "y": 558.1771850585938,
+        "width": 228.5474853515625,
+        "height": 61.8643798828125
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "position": 0.68,
+      "card": {
+        "x": 533.713134765625,
+        "y": 323.8762512207031,
+        "width": 427.60498046875,
+        "height": 115.74624633789062
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "position": 1.1,
+      "card": {
+        "x": 162.19500732421875,
+        "y": 558.1771850585938,
+        "width": 228.5474853515625,
+        "height": 61.8643798828125
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "height": 768,
+      "position": 1.68,
+      "card": {
+        "x": 62.666259765625,
+        "y": 245.22280883789062,
+        "width": 427.60498046875,
+        "height": 273.0531311035156
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "height": 1024,
+      "position": 0.03,
+      "card": {
+        "x": 474.919677734375,
+        "y": 741.6665649414062,
+        "width": 171.41064453125,
+        "height": 73.7606201171875
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "height": 1024,
+      "position": 0.68,
+      "card": {
+        "x": 400.27313232421875,
+        "y": 433.06500244140625,
+        "width": 320.7037353515625,
+        "height": 138.00372314453125
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "height": 1024,
+      "position": 1.1,
+      "card": {
+        "x": 121.65406036376953,
+        "y": 740.920654296875,
+        "width": 171.41064453125,
+        "height": 75.25250244140625
+      },
+      "phoneOpacity": "1.000",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "height": 1024,
+      "position": 1.68,
+      "card": {
+        "x": 47.00750732421875,
+        "y": 319.0224914550781,
+        "width": 320.7037353515625,
+        "height": 366.0887145996094
+      },
+      "phoneOpacity": "0.000",
+      "overflow": false
+    }
+  ]
+}

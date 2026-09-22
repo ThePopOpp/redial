@@ -1,0 +1,12 @@
+{
+  "origin": "http://127.0.0.1:4317",
+  "checks": [
+    "Current build renders Three.js, Screen Calls and slower native scroll",
+    "dark account: submitted data, layout and fixed navigation",
+    "dark admin: submitted data, layout and fixed navigation",
+    "light account: submitted data, layout and fixed navigation",
+    "light admin: submitted data, layout and fixed navigation"
+  ],
+  "errors": [],
+  "checkedAt": "2026-09-20T04:41:07.934Z"
+}

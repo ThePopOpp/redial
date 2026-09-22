@@ -1,0 +1,193 @@
+{
+  "review_date": "2026-09-18",
+  "timezone": "America/Phoenix",
+  "status": "documentation_review_not_live_integration_test",
+  "sources": [
+    {
+      "id": "W01",
+      "title": "T-Mobile \u2014 Calling services",
+      "url": "https://www.t-mobile.com/support/plans-features/calling-services",
+      "scope_and_limit": "Carrier forwarding models and limitations. Does not establish a Redial partnership, consumer-account OAuth integration, or universal spam-only routing."
+    },
+    {
+      "id": "W02",
+      "title": "Verizon \u2014 Call Forwarding FAQs",
+      "url": "https://www.verizon.com/support/call-forwarding-faqs/",
+      "scope_and_limit": "All-call/unanswered forwarding and the distinction between forwarding voice calls and text messages. Match the real account and device before publishing instructions."
+    },
+    {
+      "id": "W03",
+      "title": "AT&T \u2014 Call Forwarding",
+      "url": "https://www.att.com/support/article/wireless/KM1011513/",
+      "scope_and_limit": "Wireless-phone setup, voicemail interactions and forwarding limitations. Not evidence of an online API for controlling every consumer line."
+    },
+    {
+      "id": "W04",
+      "title": "Twilio \u2014 Media Streams",
+      "url": "https://www.twilio.com/docs/voice/media-streams",
+      "scope_and_limit": "Media transport, bidirectional stream limits and request authentication. Does not certify this proposed bridge or its transfer implementation."
+    },
+    {
+      "id": "W05",
+      "title": "xAI \u2014 Speech to Speech",
+      "url": "https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech",
+      "scope_and_limit": "Realtime WebSocket audio, client/server authentication distinctions and supported audio formats. The sample voice.space-xai.dev address in the prototype is not validated by this documentation."
+    },
+    {
+      "id": "W06",
+      "title": "xAI \u2014 Pricing",
+      "url": "https://docs.x.ai/developers/pricing",
+      "scope_and_limit": "Voice audio reference of $0.08/minute at review time, plus separately listed text-input/tool costs. Recheck the selected model and account before pricing a plan."
+    },
+    {
+      "id": "W07",
+      "title": "Twilio \u2014 US Voice Pricing",
+      "url": "https://www.twilio.com/en-us/voice/pricing/us",
+      "scope_and_limit": "US local inbound, app/browser, Media Streams, number rental and other voice charges. Public unit rates are not a complete bill or a contracted quote."
+    },
+    {
+      "id": "W09",
+      "title": "xAI \u2014 SIP voice integration",
+      "url": "https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech/sip",
+      "scope_and_limit": "Candidate alternative voice transport. Documentation existence is not proof of a tested Redial SIP implementation."
+    },
+    {
+      "id": "W10",
+      "title": "Square \u2014 Subscriptions API overview",
+      "url": "https://developer.squareup.com/docs/subscriptions-api/overview",
+      "scope_and_limit": "Subscription/catalog/payment relationships and documented constraints. Redial free membership is an internal entitlement, not a $0 Square subscription."
+    },
+    {
+      "id": "W11",
+      "title": "Square \u2014 Plans and variations",
+      "url": "https://developer.squareup.com/docs/subscriptions-api/plans-and-variations",
+      "scope_and_limit": "STATIC versus RELATIVE pricing, phases and discount applicability. Use tested mappings instead of importing Stripe assumptions."
+    },
+    {
+      "id": "W12",
+      "title": "Square \u2014 Manage subscriptions",
+      "url": "https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions",
+      "scope_and_limit": "Create/manage/cancel behavior and associated objects. Provider subscription state is not sufficient evidence that an invoice was paid."
+    },
+    {
+      "id": "W13",
+      "title": "Square \u2014 Validate webhook notifications",
+      "url": "https://developer.squareup.com/docs/webhooks/step3validate",
+      "scope_and_limit": "Signature-key, notification-URL and raw-body verification. Validation precedes event persistence and side effects."
+    },
+    {
+      "id": "W14",
+      "title": "Supabase \u2014 Row Level Security",
+      "url": "https://supabase.com/docs/guides/database/postgres/row-level-security",
+      "scope_and_limit": "RLS, database grants and privileged-key implications. These primitives do not automatically implement the line-sharing/privacy policy proposed here."
+    },
+    {
+      "id": "W15",
+      "title": "Resend \u2014 Domain introduction",
+      "url": "https://resend.com/docs/dashboard/domains/introduction",
+      "scope_and_limit": "Domain ownership and email authentication setup. Preserve existing mail routing and evaluate changes before publishing DNS records."
+    },
+    {
+      "id": "W16",
+      "title": "Apple \u2014 App Review Guidelines",
+      "url": "https://developer.apple.com/app-store/review/guidelines/",
+      "scope_and_limit": "Payment rules and the free companion-app provision in 3.1.3(f), subject to actual eligibility. No guarantee that Redial will qualify or be approved."
+    },
+    {
+      "id": "W17",
+      "title": "Google Play \u2014 Understanding payments policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/9858738",
+      "scope_and_limit": "Digital-service billing requirements and applicable exceptions/programs. Apple eligibility does not establish Google Play eligibility."
+    },
+    {
+      "id": "W18",
+      "title": "Android \u2014 CallScreeningService",
+      "url": "https://developer.android.com/reference/android/telecom/CallScreeningService",
+      "scope_and_limit": "On-device screening response constraints, including the five-second response deadline. Not evidence of universal access to cellular-call audio."
+    },
+    {
+      "id": "W19",
+      "title": "Chrome \u2014 Extension service workers",
+      "url": "https://developer.chrome.com/docs/extensions/develop/concepts/service-workers",
+      "scope_and_limit": "Event-driven worker lifecycle and architecture. Persistent voice sessions must not assume the extension worker remains alive."
+    },
+    {
+      "id": "W19a",
+      "title": "Chrome \u2014 Service-worker events tutorial",
+      "url": "https://developer.chrome.com/docs/extensions/get-started/tutorial/service-worker-events",
+      "scope_and_limit": "Persisted state and testing worker termination/restart. Opening developer tools may affect lifecycle tests."
+    },
+    {
+      "id": "W19b",
+      "title": "Chrome \u2014 Extension service-worker basics",
+      "url": "https://developer.chrome.com/docs/extensions/develop/concepts/service-workers/basics",
+      "scope_and_limit": "Manifest V3 packaged-code constraints. Do not execute remote model-generated code in the extension."
+    },
+    {
+      "id": "W20",
+      "title": "Expo \u2014 Development builds introduction",
+      "url": "https://docs.expo.dev/develop/development-builds/introduction/",
+      "scope_and_limit": "Custom native runtime requirements and distinction from Expo Go. Native voice SDKs require an appropriate development/build workflow."
+    },
+    {
+      "id": "W21",
+      "title": "Nous Research \u2014 Hermes Agent source",
+      "url": "https://github.com/NousResearch/hermes-agent",
+      "scope_and_limit": "Agent runtime and tool/skill integration candidate. Pin and inspect the release, dependencies, license and configuration before deployment."
+    },
+    {
+      "id": "W22",
+      "title": "Paperclip \u2014 Project source",
+      "url": "https://github.com/paperclipai/paperclip",
+      "scope_and_limit": "Agent/task execution, coordination and governance candidate. Repository existence does not grant Redial production credentials or authority."
+    },
+    {
+      "id": "W23",
+      "title": "xAI \u2014 Grok Bot overview",
+      "url": "https://docs.x.ai/grok-bot/overview",
+      "scope_and_limit": "Hosted agent/workspace model and shared-computer considerations. Treat as a separately governed external teammate, not a self-hosted voice gateway."
+    },
+    {
+      "id": "W24",
+      "title": "MCP \u2014 Security best practices",
+      "url": "https://modelcontextprotocol.io/docs/2026-07-28/tutorials/security/security_best_practices",
+      "scope_and_limit": "Authorization, token handling and boundary protections. Protocol connectivity does not substitute for application permissions."
+    },
+    {
+      "id": "W25",
+      "title": "FTC \u2014 CAN-SPAM compliance guide",
+      "url": "https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business",
+      "scope_and_limit": "US commercial-email baseline for review. This is not an exhaustive jurisdiction-specific legal assessment of Redial."
+    },
+    {
+      "id": "W26",
+      "title": "Twilio \u2014 A2P 10DLC",
+      "url": "https://www.twilio.com/docs/messaging/compliance/a2p-10dlc",
+      "scope_and_limit": "US long-code application messaging registration context. Registration is not a substitute for appropriate recipient consent."
+    },
+    {
+      "id": "W27",
+      "title": "Next.js \u2014 Self-hosting",
+      "url": "https://nextjs.org/docs/app/guides/self-hosting",
+      "scope_and_limit": "Self-hosted web runtime and deployment considerations. Select and test actual locked versions instead of blindly copying an old manifest."
+    },
+    {
+      "id": "W28",
+      "title": "shadcn/ui \u2014 Next.js installation",
+      "url": "https://ui.shadcn.com/docs/installation/next",
+      "scope_and_limit": "Component installation reference. Reconcile existing Tailwind/React conventions before using a current generator."
+    },
+    {
+      "id": "W29",
+      "title": "Supabase \u2014 Self-hosting with Docker",
+      "url": "https://supabase.com/docs/guides/self-hosting/docker",
+      "scope_and_limit": "Full self-hosted service stack and operational responsibilities. A Postgres container alone is not the whole Supabase platform."
+    },
+    {
+      "id": "W30",
+      "title": "Coolify \u2014 Next.js framework example",
+      "url": "https://coolify.io/docs/applications/framework-examples/javascript/nextjs",
+      "scope_and_limit": "Deployment starting point. Voice gateway isolation, backup restoration and release draining are additional proposed requirements."
+    }
+  ]
+}

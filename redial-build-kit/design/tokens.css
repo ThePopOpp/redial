@@ -1,0 +1,30 @@
+/* Source-derived Redial reference tokens, not a framework-version-specific
+   replacement for the existing project's globals.css. No font files bundled. */
+:root {
+  --redial-background: #0f1011;
+  --redial-surface-subtle: #1a1b1c;
+  --redial-surface: #2e2e2e;
+  --redial-foreground: #f5f5f7;
+  --redial-muted-foreground: #9f9fa0;
+  --redial-source-dim-text: #6a6b6b; /* Decorative only pending contrast review. */
+  --redial-paper: #cacaca;
+  --redial-paper-foreground: #0f1011;
+  --redial-primary: #847dff;
+  --redial-primary-foreground: #101014;
+  --redial-violet-deep: #4b49aa;
+  --redial-pink: #dd90d8;
+  --redial-pink-foreground: #1a1017;
+  --redial-cyan: #00b3dd;
+  --redial-border: rgba(255, 255, 255, 0.12);
+  --redial-focus: #d1c9ff;
+  --redial-radius-control: 0.5rem;
+  --redial-radius-card: 1rem;
+  --redial-radius-feature: 1.875rem;
+  --redial-sidebar-width: 14.75rem;
+  --redial-font-display: 'DM Serif Display', Georgia, serif;
+  --redial-font-body: 'Inter', system-ui, sans-serif;
+  --redial-font-mono: 'Roboto Mono', ui-monospace, monospace;
+}
+/* Map into the chosen shadcn/Tailwind version's semantic token format.
+   Test focus, disabled states, error colors, zoom and every text pairing.
+   Native apps share values, not this CSS file or web DOM components. */

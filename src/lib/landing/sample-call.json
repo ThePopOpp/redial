@@ -1,0 +1,42 @@
+{
+    "src":  "/audio/redial-sample.wav",
+    "duration":  30.248,
+    "description":  "Original fictional call, synthesized offline with installed Windows voices. No real caller or provider audio.",
+    "turns":  [
+                  {
+                      "speaker":  "agent",
+                      "label":  "Redial",
+                      "text":  "Hi, you\u0027ve reached Alex\u0027s AI assistant. May I ask who\u0027s calling and what it\u0027s about?",
+                      "start":  0,
+                      "end":  6.584
+                  },
+                  {
+                      "speaker":  "caller",
+                      "label":  "Jordan",
+                      "text":  "Hi, this is Jordan with a delivery for Alex. Would tomorrow morning work?",
+                      "start":  6.884,
+                      "end":  12.947
+                  },
+                  {
+                      "speaker":  "agent",
+                      "label":  "Redial",
+                      "text":  "Thanks, Jordan. What time tomorrow, and do you need someone there to sign?",
+                      "start":  13.247,
+                      "end":  19.651
+                  },
+                  {
+                      "speaker":  "caller",
+                      "label":  "Jordan",
+                      "text":  "Around ten. A signature would be great, but I can check with reception.",
+                      "start":  19.951,
+                      "end":  25.814
+                  },
+                  {
+                      "speaker":  "agent",
+                      "label":  "Redial",
+                      "text":  "Got it. I\u0027ll make sure Alex has the details.",
+                      "start":  26.114,
+                      "end":  30.248
+                  }
+              ]
+}

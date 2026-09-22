@@ -1,0 +1,530 @@
+{
+  "recordedAt": "2026-09-19T20:58:30.121Z",
+  "checks": {
+    "build": "passed",
+    "typecheck": "passed",
+    "lint": "passed, no warnings",
+    "referenceTests": {
+      "passed": 75,
+      "failed": 0
+    },
+    "preservedKitFiles": 92,
+    "browserApiDomain": {
+      "startTime": "2026-09-19T20:56:10.028Z",
+      "duration": 23620.03,
+      "expected": 39,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "tests": [
+    {
+      "file": "api.spec.ts",
+      "title": "review API isolates sessions, rejects cross-origin changes, and never becomes real auth",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 213
+        }
+      ]
+    },
+    {
+      "file": "api.spec.ts",
+      "title": "review commands are strict, version checked and idempotent",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 127
+        }
+      ]
+    },
+    {
+      "file": "api.spec.ts",
+      "title": "simultaneous state changes serialize with one stale loser",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 93
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "Gavel serializes routing and only grants the human after AI detach",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "Insider leaving does not end the caller or detach the AI",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "Audible is session bound, expires, and remains outside caller data and audit content",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 4
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "Directory locks pending targets, rejects loops, and requires acceptance",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "human ownership survives a failed onward Directory transfer",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 0
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "billing invite has no implied line rights and production data is rejected",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "campaign changes invalidate approvals and stale decisions cannot be applied",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "example prices match v1.1 and refunded records cannot be refunded again",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 4
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "policy preserves explicit block precedence and unavailable reputation/fallback states",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1
+        }
+      ]
+    },
+    {
+      "file": "landing.spec.ts",
+      "title": "scroll timeline is deterministic and reverses every feature state",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 16
+        }
+      ]
+    },
+    {
+      "file": "landing.spec.ts",
+      "title": "setup validates identity fields, disclosure and completion without granting activation",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1
+        }
+      ]
+    },
+    {
+      "file": "landing.spec.ts",
+      "title": "Three.js journey renders, scrubs both ways and hands off to a real form",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1720
+        }
+      ]
+    },
+    {
+      "file": "landing.spec.ts",
+      "title": "seven-step setup saves real form input, resumes, and deletes independently of the demo",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1828
+        }
+      ]
+    },
+    {
+      "file": "landing.spec.ts",
+      "title": "setup API enforces origin, session isolation, stale versions and completion rules",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 38
+        }
+      ]
+    },
+    {
+      "file": "landing.spec.ts",
+      "title": "mobile journey and reduced-motion onboarding stay accessible",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1275
+        }
+      ]
+    },
+    {
+      "file": "landing.spec.ts",
+      "title": "unavailable WebGL retains a readable journey and usable form",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 592
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "local navigation opens the inbox, a transcript, and all four simulated controls",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 729
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "private trees reject anonymous and forged role/demo input without reflecting redirects",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 160
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "preview does not collect credentials and protects indexing and media permissions",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 324
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "keyboard skip link and mobile disclosure work without a mouse",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 507
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "routes fit a 360px viewport and keep one main heading",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1059
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "routes fit a 390px viewport and keep one main heading",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1254
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "routes fit a 768px viewport and keep one main heading",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1115
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "routes fit a 1024px viewport and keep one main heading",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1202
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "routes fit a 1440px viewport and keep one main heading",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1959
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "automated WCAG checks at 390px",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 4007
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "automated WCAG checks at 1440px",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 4169
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "large text and reduced motion preserve readable layouts",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 781
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "unknown synthetic call cannot resolve to a different example",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 394
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "contacts validate, persist on reload, and remain removable",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 924
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "Insider, Audible, Gavel and Directory expose truthful state transitions",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1470
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "local support replies appear in member view and campaign revisions invalidate approval",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1464
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "billing creates a simulated annual payment and operations can refund it once",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 896
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "mobile menu and dialogs keep keyboard focus contained and return it on close",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 946
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "all workspace routes render without overflow or browser errors at 390px",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 5964
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "all workspace routes render without overflow or browser errors at 1440px",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6376
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "src/app/page.tsx",
+      "sha256": "623bdfb399b5097d90cd979ad8ddfb5136d9a95c2a1ea1b70f803eb2a65e4ffe"
+    },
+    {
+      "path": "src/app/landing.css",
+      "sha256": "b876a3c9c4350e78629857b86b0a89e9073697002686194f79934575b054780d"
+    },
+    {
+      "path": "src/app/api/onboarding/route.ts",
+      "sha256": "75ed3268ea4a146956bc25b572cc6f44eb29f19ccb70c78d0faa1365664bc022"
+    },
+    {
+      "path": "src/components/landing/experience.tsx",
+      "sha256": "821f93bd754175c7fb64ddf6047c67c17e15d07d2ef20bf01cf7f7e85b0a7360"
+    },
+    {
+      "path": "src/components/landing/scene.tsx",
+      "sha256": "4995d3a97c1ef3ddf7566b50fdf838f9dac7b7a9dd258d38f28a86113a02fcb4"
+    },
+    {
+      "path": "src/components/landing/three-scene.ts",
+      "sha256": "de79a72501bf5f79f0f886160d21c2438b37fcd3dac63e752de45427eee5f7db"
+    },
+    {
+      "path": "src/components/landing/phone-screen.tsx",
+      "sha256": "c49dfb6d17a21e95843fc0641bc02d10ed379de76f9db7bc562dac085b908365"
+    },
+    {
+      "path": "src/components/landing/onboarding-form.tsx",
+      "sha256": "54ac925e1f5bfcac7a7fcba1aa6b808fed5d2ef92bebfb36f82d22a969710d17"
+    },
+    {
+      "path": "src/lib/landing/timeline.ts",
+      "sha256": "10aa85f664bdfc2e55754d24f1b98dd073ccec4185958935add170c7f321ef84"
+    },
+    {
+      "path": "src/lib/landing/onboarding.ts",
+      "sha256": "c0015385791272c337e80c616aae57cab4851972954942809760bcf6236415cf"
+    },
+    {
+      "path": "tests/landing.spec.ts",
+      "sha256": "74c923d589507375765f324392aa5045df538fa42c0517023ac0bb7b19d3cef0"
+    },
+    {
+      "path": "package.json",
+      "sha256": "13d9cb73bd29bcb2e2b1de8003318028330af28f2966f4a484cc75a147a94d9c"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "253af258ed6de2ed0391d2a0b2d27faa99c88b1db698536588b4667073d038ef"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ef984c4977e87ad5452c958995b79d69ee3b940b6a2ac5c96c49fddb365f463c"
+    },
+    {
+      "path": "THIRD-PARTY-NOTICES.md",
+      "sha256": "1a4b9fca68a638ad4f741d2524218657dbd220f4a18d23416493cddfb8301b2c"
+    },
+    {
+      "path": "docs/DECISIONS.md",
+      "sha256": "b34fd8872d522d4bb7fdaa65d9606ac5cf5e272218b9954264aad87eea6480a7"
+    },
+    {
+      "path": "docs/LANDING-EXPERIENCE.md",
+      "sha256": "bb739b60b71a13ba99261120475629f4788fa16c504e79cde6042c245a4da962"
+    }
+  ],
+  "previousHome": "docs/evidence/pre-landing-source/home.tsx",
+  "replacedRoute": "src/app/(site)/page.tsx",
+  "dependencies": {
+    "three": "0.186.0",
+    "@types/three": "0.186.0"
+  },
+  "providerActivity": "none",
+  "reviewAddress": "http://127.0.0.1:4317/"
+}

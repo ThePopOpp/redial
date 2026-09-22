@@ -1,0 +1,197 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/story-interactions.spec.ts",
+      "--grep",
+      "every phone overlay|interactive cards fit mobile"
+    ],
+    "configFile": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT\\playwright.config.ts",
+    "rootDir": "C:/Users/jwate/Projects/Redial/Redial GPT/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/jwate/Projects/Redial/Redial GPT/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/jwate/Projects/Redial/Redial GPT/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/browser-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 2,
+    "webServer": {
+      "command": "npm run start -- --port 3210",
+      "url": "http://127.0.0.1:3210",
+      "reuseExistingServer": false,
+      "env": {
+        "NEXT_TELEMETRY_DISABLED": "1"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "story-interactions.spec.ts",
+      "file": "story-interactions.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "every phone overlay grows and rises, with background typography only in screening",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5165,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-20T02:41:34.512Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92efbde569348a8f4bf6-87e902f0f2d8d8d07ac8",
+          "file": "story-interactions.spec.ts",
+          "line": 64,
+          "column": 5
+        },
+        {
+          "title": "interactive cards fit mobile and stay accessible in light mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 4882,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-20T02:41:34.510Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92efbde569348a8f4bf6-f9b0592f9fa0c81849c5",
+          "file": "story-interactions.spec.ts",
+          "line": 161,
+          "column": 44
+        },
+        {
+          "title": "interactive cards fit mobile and stay accessible in dark mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 3792,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-20T02:41:39.593Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "92efbde569348a8f4bf6-9b5ce1cda9a0e8908fa9",
+          "file": "story-interactions.spec.ts",
+          "line": 161,
+          "column": 44
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-20T02:41:33.271Z",
+    "duration": 10850.197,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

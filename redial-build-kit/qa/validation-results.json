@@ -1,0 +1,670 @@
+{
+  "kit_version": "1.1",
+  "date": "2026-09-18",
+  "timezone": "America/Phoenix",
+  "scope": "Documentation/package checks and isolated policy tests only",
+  "checks": [
+    {
+      "name": "JSON parses: research/original-files.sha256.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "JSON parses: research/live-controls-sources.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "JSON parses: research/sources.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "JSON parses: configuration/reuse-manifest.example.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "JSON parses: configuration/plans.proposed.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "JSON parses: configuration/live-controls.proposed.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: AGENTS.redial.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: AGENTS.redial.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: CHANGELOG.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: CHANGELOG.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: README.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: README.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: research/live-controls-sources.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: research/live-controls-sources.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: research/sources.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: research/sources.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: qa/README.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: qa/README.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: content/live-call-controls-copy.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: content/live-call-controls-copy.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: content/content-plan.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: content/content-plan.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: content/lifecycle-messages.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: content/lifecycle-messages.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: content/website-copy.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: content/website-copy.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: reference-code/README.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: reference-code/README.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/15-security-and-launch-gates.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/15-security-and-launch-gates.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/17-design-system.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/17-design-system.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/05-member-workflows.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/05-member-workflows.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/04-routes-and-screens.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/04-routes-and-screens.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/12-agents-and-mcp.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/12-agents-and-mcp.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/18-roadmap-and-acceptance.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/18-roadmap-and-acceptance.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/19-live-call-controls.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/19-live-call-controls.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/02-repository-reuse.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/02-repository-reuse.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/20-live-call-data-api.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/20-live-call-data-api.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/06-telephony-and-providers.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/06-telephony-and-providers.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/13-business-operations.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/13-business-operations.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/10-api-and-events.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/10-api-and-events.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/07-square-commerce.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/07-square-commerce.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/00-review-and-decisions.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/00-review-and-decisions.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/03-architecture.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/03-architecture.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/21-live-call-topology.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/21-live-call-topology.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/14-marketing-and-lifecycle.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/14-marketing-and-lifecycle.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/16-local-development-and-coolify.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/16-local-development-and-coolify.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/09-data-and-access.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/09-data-and-access.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/01-product-and-scope.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/01-product-and-scope.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/08-pricing-and-economics.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/08-pricing-and-economics.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: docs/11-mobile-and-extension.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: docs/11-mobile-and-extension.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: automation/skills-template.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: automation/skills-template.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: automation/agent-profiles.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: automation/agent-profiles.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: automation/live-call-controls-skill.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: automation/live-call-controls-skill.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/12-independent-security-review.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/12-independent-security-review.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/02-shell-and-design.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/02-shell-and-design.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/10-agents-and-mcp.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/10-agents-and-mcp.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/09-chrome-extension.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/09-chrome-extension.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/07-business-and-marketing.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/07-business-and-marketing.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/11-coolify-and-release.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/11-coolify-and-release.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/13-live-call-controls.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/13-live-call-controls.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/08-mobile-companion.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/08-mobile-companion.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/04-real-voice-slice.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/04-real-voice-slice.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/05-square-billing.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/05-square-billing.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/01-inventory-and-reuse.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/01-inventory-and-reuse.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/03-supabase-and-permissions.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/03-supabase-and-permissions.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/00-start-here.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/00-start-here.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: prompts/06-member-experience.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: prompts/06-member-experience.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Markdown fences paired: references/README.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Source identifiers resolve: references/README.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Original design bytes preserved: ReDial Admin Dashboard.dc.html",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Original design bytes preserved: ReDial App.dc.html",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Original design bytes preserved: ReDial Site.dc.html",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Original design bytes preserved: ios-frame.jsx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Original design bytes preserved: support.js",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Original plan catalog unchanged",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Production feature activation is off",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "New automatic billing is off",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Original policy tests pass",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Live-control reference tests pass",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Both shared TypeScript contracts typecheck",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "No font binaries included",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "AI conference app credential is blank",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "New module exists: docs/19-live-call-controls.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "New module exists: docs/20-live-call-data-api.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "New module exists: docs/21-live-call-topology.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "New module exists: prompts/13-live-call-controls.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "New module exists: contracts/live-call-controls.ts",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "New module exists: configuration/live-controls.proposed.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "New module exists: automation/live-call-controls-skill.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "New module exists: content/live-call-controls-copy.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "New module exists: research/live-controls-sources.md",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "passed": 130,
+  "failed": 0,
+  "not_run": [
+    "Live call and provider mute/unmute/audio tests",
+    "xAI live guidance, interruption or cancellation mapping",
+    "Phone, extension, PBX or SIP transfer integration",
+    "Supabase migration/RLS/realtime integration",
+    "Production application or native/extension builds",
+    "Square transactions or new pricing analysis",
+    "Coolify deployment, DNS or provider configuration changes",
+    "Legal review of live monitoring, recording and consent"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "scope": "HTML documentation reader only",
+  "kit_version": "1.1",
+  "checks": [
+    {
+      "name": "50 documentation sections render",
+      "passed": true
+    },
+    {
+      "name": "Section search returns live-controls matches",
+      "passed": true,
+      "matches": 18
+    },
+    {
+      "name": "No-results state",
+      "passed": true
+    },
+    {
+      "name": "Search clear restores navigation",
+      "passed": true
+    },
+    {
+      "name": "Section anchor navigation",
+      "passed": true
+    },
+    {
+      "name": "Mobile has no page-wide overflow",
+      "passed": true
+    },
+    {
+      "name": "No reader JavaScript errors",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "passed": true
+}

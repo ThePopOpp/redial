@@ -1,0 +1,381 @@
+{
+  "recordedAt": "2026-09-19T19:35:06.388Z",
+  "stage": "M1 expanded local review; integration gates incomplete",
+  "commands": {
+    "lint": "passed, no warnings",
+    "typecheck": "passed; final build also checks TypeScript",
+    "build": "passed",
+    "reference": "75 passed",
+    "kit": "92 original hashes preserved",
+    "browserApiDomain": {
+      "startTime": "2026-09-19T19:33:22.490Z",
+      "duration": 20106.905,
+      "expected": 32,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "tests": [
+    {
+      "file": "api.spec.ts",
+      "title": "review API isolates sessions, rejects cross-origin changes, and never becomes real auth",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 164
+        }
+      ]
+    },
+    {
+      "file": "api.spec.ts",
+      "title": "review commands are strict, version checked and idempotent",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 105
+        }
+      ]
+    },
+    {
+      "file": "api.spec.ts",
+      "title": "simultaneous state changes serialize with one stale loser",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 73
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "Gavel serializes routing and only grants the human after AI detach",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 7
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "Insider leaving does not end the caller or detach the AI",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "Audible is session bound, expires, and remains outside caller data and audit content",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "Directory locks pending targets, rejects loops, and requires acceptance",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 5
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "human ownership survives a failed onward Directory transfer",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 0
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "billing invite has no implied line rights and production data is rejected",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "campaign changes invalidate approvals and stale decisions cannot be applied",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "example prices match v1.1 and refunded records cannot be refunded again",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3
+        }
+      ]
+    },
+    {
+      "file": "domain.spec.ts",
+      "title": "policy preserves explicit block precedence and unavailable reputation/fallback states",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 0
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "local navigation opens the inbox, a transcript, and all four simulated controls",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 797
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "private trees reject anonymous and forged role/demo input without reflecting redirects",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 126
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "preview does not collect credentials and protects indexing and media permissions",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 425
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "keyboard skip link and mobile disclosure work without a mouse",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 594
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "routes fit a 360px viewport and keep one main heading",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 978
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "routes fit a 390px viewport and keep one main heading",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1009
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "routes fit a 768px viewport and keep one main heading",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 946
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "routes fit a 1024px viewport and keep one main heading",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1038
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "routes fit a 1440px viewport and keep one main heading",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1380
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "automated WCAG checks at 390px",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3416
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "automated WCAG checks at 1440px",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3790
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "large text and reduced motion preserve readable layouts",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 730
+        }
+      ]
+    },
+    {
+      "file": "shell.spec.ts",
+      "title": "unknown synthetic call cannot resolve to a different example",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 438
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "contacts validate, persist on reload, and remain removable",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 891
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "Insider, Audible, Gavel and Directory expose truthful state transitions",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1633
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "local support replies appear in member view and campaign revisions invalidate approval",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1492
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "billing creates a simulated annual payment and operations can refund it once",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 877
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "mobile menu and dialogs keep keyboard focus contained and return it on close",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 974
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "all workspace routes render without overflow or browser errors at 390px",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6117
+        }
+      ]
+    },
+    {
+      "file": "workflows.spec.ts",
+      "title": "all workspace routes render without overflow or browser errors at 1440px",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6422
+        }
+      ]
+    }
+  ],
+  "notVerified": [
+    "Real Supabase authentication, MFA, RLS and private storage",
+    "Actual Twilio/xAI calling, consent, fallback, monitoring, handoff and transfers",
+    "Square sandbox lifecycle and reconciliation",
+    "Resend sending and suppression",
+    "Native apps and MV3 extension installation",
+    "Distributed gateway/worker durability, release and independent security review"
+  ]
+}

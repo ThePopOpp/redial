@@ -1,0 +1,30 @@
+{
+  "recordedAt": "2026-09-19T22:59:11.616Z",
+  "scope": "Existing landing and motion source before reference-directed animation refinement",
+  "files": [
+    {
+      "file": "src/components/landing/three-scene.ts",
+      "sha256": "de79a72501bf5f79f0f886160d21c2438b37fcd3dac63e752de45427eee5f7db"
+    },
+    {
+      "file": "src/components/landing/scene.tsx",
+      "sha256": "4995d3a97c1ef3ddf7566b50fdf838f9dac7b7a9dd258d38f28a86113a02fcb4"
+    },
+    {
+      "file": "src/components/landing/experience.tsx",
+      "sha256": "88795db30fff80aff783dc0641e10a2a2717e73b3e879e50b0c1362f15bb814c"
+    },
+    {
+      "file": "src/components/landing/phone-screen.tsx",
+      "sha256": "c49dfb6d17a21e95843fc0641bc02d10ed379de76f9db7bc562dac085b908365"
+    },
+    {
+      "file": "src/lib/landing/timeline.ts",
+      "sha256": "10aa85f664bdfc2e55754d24f1b98dd073ccec4185958935add170c7f321ef84"
+    },
+    {
+      "file": "src/app/landing.css",
+      "sha256": "7cdb4bc062b6ffb73d990f4225eaadf9276952757a229ff19a4895b2e8d63a31"
+    }
+  ]
+}

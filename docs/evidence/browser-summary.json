@@ -1,0 +1,66 @@
+{
+  "browser": "Microsoft Edge (Playwright Chromium channel)",
+  "baseUrl": "http://127.0.0.1:3210",
+  "stats": {
+    "startTime": "2026-09-19T18:50:56.692Z",
+    "duration": 9518.751,
+    "expected": 13,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "tests": [
+    {
+      "title": "demo navigation opens a real example and an honest empty live view",
+      "status": "expected"
+    },
+    {
+      "title": "private trees reject anonymous and forged role/demo input without reflecting redirects",
+      "status": "expected"
+    },
+    {
+      "title": "preview does not collect credentials and protects indexing and media permissions",
+      "status": "expected"
+    },
+    {
+      "title": "keyboard skip link and mobile disclosure work without a mouse",
+      "status": "expected"
+    },
+    {
+      "title": "routes fit a 360px viewport and keep one main heading",
+      "status": "expected"
+    },
+    {
+      "title": "routes fit a 390px viewport and keep one main heading",
+      "status": "expected"
+    },
+    {
+      "title": "routes fit a 768px viewport and keep one main heading",
+      "status": "expected"
+    },
+    {
+      "title": "routes fit a 1024px viewport and keep one main heading",
+      "status": "expected"
+    },
+    {
+      "title": "routes fit a 1440px viewport and keep one main heading",
+      "status": "expected"
+    },
+    {
+      "title": "automated WCAG checks at 390px",
+      "status": "expected"
+    },
+    {
+      "title": "automated WCAG checks at 1440px",
+      "status": "expected"
+    },
+    {
+      "title": "large text and reduced motion preserve readable layouts",
+      "status": "expected"
+    },
+    {
+      "title": "unknown synthetic call cannot resolve to a different example",
+      "status": "expected"
+    }
+  ]
+}

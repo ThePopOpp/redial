@@ -1,0 +1,79 @@
+{
+  "errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "frames": [
+    {
+      "testid": "three-scene",
+      "progress": "0.0000",
+      "rendered": "true",
+      "outline": "0.000",
+      "trace": "0.000",
+      "pointer": "0.000,0.000"
+    },
+    {
+      "testid": "three-scene",
+      "progress": "0.0711",
+      "rendered": "true",
+      "outline": "1.000",
+      "trace": "1.000",
+      "pointer": "0.000,0.000"
+    },
+    {
+      "testid": "three-scene",
+      "progress": "0.1500",
+      "rendered": "true",
+      "outline": "0.000",
+      "trace": "0.000",
+      "pointer": "0.000,0.000"
+    },
+    {
+      "testid": "three-scene",
+      "progress": "0.2644",
+      "rendered": "true",
+      "outline": "0.000",
+      "trace": "0.000",
+      "pointer": "0.000,0.000"
+    },
+    {
+      "testid": "three-scene",
+      "progress": "0.3778",
+      "rendered": "true",
+      "outline": "0.000",
+      "trace": "0.000",
+      "pointer": "0.000,0.000"
+    },
+    {
+      "testid": "three-scene",
+      "progress": "0.5000",
+      "rendered": "true",
+      "outline": "0.000",
+      "trace": "0.000",
+      "pointer": "0.000,0.000"
+    },
+    {
+      "testid": "three-scene",
+      "progress": "0.6166",
+      "rendered": "true",
+      "outline": "0.000",
+      "trace": "0.000",
+      "pointer": "0.000,0.000"
+    },
+    {
+      "testid": "three-scene",
+      "progress": "0.7356",
+      "rendered": "true",
+      "outline": "0.000",
+      "trace": "0.000",
+      "pointer": "0.000,0.000"
+    },
+    {
+      "testid": "three-scene",
+      "progress": "0.9666",
+      "rendered": "true",
+      "outline": "0.867",
+      "trace": "0.767",
+      "pointer": "0.000,0.000"
+    }
+  ]
+}

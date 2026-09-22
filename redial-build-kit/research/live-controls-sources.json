@@ -1,0 +1,85 @@
+{
+  "review_date": "2026-09-18",
+  "timezone": "America/Phoenix",
+  "status": "documentation_review_not_live_integration_test",
+  "sources": [
+    {
+      "id": "LC01",
+      "title": "Twilio \u2014 Conferences Participants subresource",
+      "url": "https://www.twilio.com/docs/voice/api/conference-participant-resource",
+      "scope_and_limit": "Participant mute/hold/update and phone/SIP/client/app endpoints; does not prove Redial implementation."
+    },
+    {
+      "id": "LC02",
+      "title": "Twilio \u2014 TwiML Conference",
+      "url": "https://www.twilio.com/docs/voice/twiml/conference",
+      "scope_and_limit": "Muted participant semantics, lifecycle flags and conference callbacks."
+    },
+    {
+      "id": "LC03",
+      "title": "Twilio \u2014 Media Streams overview",
+      "url": "https://www.twilio.com/docs/voice/media-streams",
+      "scope_and_limit": "Bidirectional inbound-track and single-stream limits; outbound DTMF not supported on bidirectional stream."
+    },
+    {
+      "id": "LC04",
+      "title": "Twilio \u2014 Media Streams WebSocket messages",
+      "url": "https://www.twilio.com/docs/voice/media-streams/websocket-messages",
+      "scope_and_limit": "Media playback buffering, mark and clear controls. Not a guarantee of zero residual network audio."
+    },
+    {
+      "id": "LC05",
+      "title": "Twilio \u2014 AI agent through a TwiML Application conference participant",
+      "url": "https://www.twilio.com/en-us/blog/developers/tutorials/product/connect-twiml-app-twilio-conference",
+      "scope_and_limit": "Conference-first AI application participant architecture; reviewed with official help article on Connect Stream."
+    },
+    {
+      "id": "LC06",
+      "title": "Twilio \u2014 TwiML Number",
+      "url": "https://www.twilio.com/docs/voice/twiml/number",
+      "scope_and_limit": "sendDigits extensions, pre-bridge instructions and call progression semantics."
+    },
+    {
+      "id": "LC07",
+      "title": "Twilio \u2014 Make outbound phone calls",
+      "url": "https://www.twilio.com/docs/voice/tutorials/how-to-make-outbound-phone-calls",
+      "scope_and_limit": "Outgoing Call SendDigits and timing; verify final SDK/schema and IVR interaction before use."
+    },
+    {
+      "id": "LC08",
+      "title": "xAI \u2014 Speech to Speech",
+      "url": "https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech",
+      "scope_and_limit": "Session instructions, text conversation input, tool result flow. This review did not verify every cancel/truncate event."
+    },
+    {
+      "id": "LC09",
+      "title": "Twilio \u2014 Recordings resource, legal considerations",
+      "url": "https://www.twilio.com/docs/voice/api/recording",
+      "scope_and_limit": "Recording consent and legal-review caution; not a complete analysis of silent live monitoring law."
+    },
+    {
+      "id": "LC10",
+      "title": "Twilio \u2014 TwiML Stream",
+      "url": "https://www.twilio.com/docs/voice/twiml/stream",
+      "scope_and_limit": "Blocking stream behavior and nested custom parameters; Stream URL does not support query parameters."
+    },
+    {
+      "id": "LC11",
+      "title": "Twilio \u2014 TwiML SIP",
+      "url": "https://www.twilio.com/docs/voice/twiml/sip",
+      "scope_and_limit": "SIP routing and connector-specific configuration; not proof of arbitrary PBX compatibility."
+    },
+    {
+      "id": "LC12",
+      "title": "Twilio \u2014 Bidirectional conference streams through a TwiML app",
+      "url": "https://help.twilio.com/articles/45314613523867",
+      "scope_and_limit": "Official help text describes Conference Participant app endpoint with Connect Stream; full page rendering requires JavaScript."
+    },
+    {
+      "id": "LC13",
+      "title": "Twilio \u2014 TwiML app conference support announcement",
+      "url": "https://www.twilio.com/en-us/changelog/added-support-of-adding-a-twiml-app-directly-to-a-conference",
+      "scope_and_limit": "October 6, 2025 announcement of app:<APP_SID> participant support; does not confer product readiness."
+    }
+  ]
+}

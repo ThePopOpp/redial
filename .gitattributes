@@ -1,0 +1,3 @@
+# Preserve the original handoff and recorded evidence byte-for-byte on all platforms.
+redial-build-kit/** -text
+docs/evidence/** -text

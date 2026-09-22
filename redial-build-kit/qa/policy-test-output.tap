@@ -1,0 +1,196 @@
+TAP version 13
+# Subtest: unknown caller is screened
+ok 1 - unknown caller is screened
+  ---
+  duration_ms: 1.420337
+  type: 'test'
+  ...
+# Subtest: unverified transport is rejected
+ok 2 - unverified transport is rejected
+  ---
+  duration_ms: 0.154299
+  type: 'test'
+  ...
+# Subtest: unverified ownership is rejected
+ok 3 - unverified ownership is rejected
+  ---
+  duration_ms: 0.084496
+  type: 'test'
+  ...
+# Subtest: missing route uses fallback
+ok 4 - missing route uses fallback
+  ---
+  duration_ms: 0.118385
+  type: 'test'
+  ...
+# Subtest: route cycle cannot ring
+ok 5 - route cycle cannot ring
+  ---
+  duration_ms: 0.119768
+  type: 'test'
+  ...
+# Subtest: redirect depth guard
+ok 6 - redirect depth guard
+  ---
+  duration_ms: 0.137794
+  type: 'test'
+  ...
+# Subtest: explicit block wins over VIP
+ok 7 - explicit block wins over VIP
+  ---
+  duration_ms: 0.07439
+  type: 'test'
+  ...
+# Subtest: paused screening rings approved destination
+ok 8 - paused screening rings approved destination
+  ---
+  duration_ms: 0.106498
+  type: 'test'
+  ...
+# Subtest: paused mode cannot ring unsafe destination
+ok 9 - paused mode cannot ring unsafe destination
+  ---
+  duration_ms: 0.248339
+  type: 'test'
+  ...
+# Subtest: known caller bypasses unknown mode
+ok 10 - known caller bypasses unknown mode
+  ---
+  duration_ms: 0.259585
+  type: 'test'
+  ...
+# Subtest: every-call mode includes saved contacts
+ok 11 - every-call mode includes saved contacts
+  ---
+  duration_ms: 0.111586
+  type: 'test'
+  ...
+# Subtest: explicit VIP can bypass every-call mode
+ok 12 - explicit VIP can bypass every-call mode
+  ---
+  duration_ms: 0.055352
+  type: 'test'
+  ...
+# Subtest: unmatched number cannot claim VIP
+ok 13 - unmatched number cannot claim VIP
+  ---
+  duration_ms: 0.079268
+  type: 'test'
+  ...
+# Subtest: flagged caller in spam-only mode is screened
+ok 14 - flagged caller in spam-only mode is screened
+  ---
+  duration_ms: 0.047711
+  type: 'test'
+  ...
+# Subtest: unflagged caller in spam-only mode bypasses
+ok 15 - unflagged caller in spam-only mode bypasses
+  ---
+  duration_ms: 0.797553
+  type: 'test'
+  ...
+# Subtest: missing spam evidence is not a spam verdict
+ok 16 - missing spam evidence is not a spam verdict
+  ---
+  duration_ms: 0.082122
+  type: 'test'
+  ...
+# Subtest: declined processing never opens AI
+ok 17 - declined processing never opens AI
+  ---
+  duration_ms: 0.050795
+  type: 'test'
+  ...
+# Subtest: provider failure falls back
+ok 18 - provider failure falls back
+  ---
+  duration_ms: 0.037766
+  type: 'test'
+  ...
+# Subtest: quota exhaustion falls back
+ok 19 - quota exhaustion falls back
+  ---
+  duration_ms: 0.038597
+  type: 'test'
+  ...
+# Subtest: urgent claim cannot override quota
+ok 20 - urgent claim cannot override quota
+  ---
+  duration_ms: 0.040079
+  type: 'test'
+  ...
+# Subtest: urgent claim does not connect an unknown caller
+ok 21 - urgent claim does not connect an unknown caller
+  ---
+  duration_ms: 0.039348
+  type: 'test'
+  ...
+# Subtest: VIP unreachable destination falls back
+ok 22 - VIP unreachable destination falls back
+  ---
+  duration_ms: 0.040019
+  type: 'test'
+  ...
+# Subtest: policy returns an immutable decision
+ok 23 - policy returns an immutable decision
+  ---
+  duration_ms: 0.141139
+  type: 'test'
+  ...
+# Subtest: does not mutate input
+ok 24 - does not mutate input
+  ---
+  duration_ms: 0.077255
+  type: 'test'
+  ...
+# Subtest: rejects null context
+ok 25 - rejects null context
+  ---
+  duration_ms: 0.284642
+  type: 'test'
+  ...
+# Subtest: rejects unknown mode
+ok 26 - rejects unknown mode
+  ---
+  duration_ms: 0.115772
+  type: 'test'
+  ...
+# Subtest: rejects a negative redirect count
+ok 27 - rejects a negative redirect count
+  ---
+  duration_ms: 0.088722
+  type: 'test'
+  ...
+# Subtest: rejects a fractional redirect count
+ok 28 - rejects a fractional redirect count
+  ---
+  duration_ms: 0.08775
+  type: 'test'
+  ...
+# Subtest: rejects truthy strings as trusted booleans
+ok 29 - rejects truthy strings as trusted booleans
+  ---
+  duration_ms: 0.08085
+  type: 'test'
+  ...
+# Subtest: rejects a spam verdict without a signal
+ok 30 - rejects a spam verdict without a signal
+  ---
+  duration_ms: 0.122172
+  type: 'test'
+  ...
+# Subtest: rejects nonboolean urgency input
+ok 31 - rejects nonboolean urgency input
+  ---
+  duration_ms: 0.144304
+  type: 'test'
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 66.794431

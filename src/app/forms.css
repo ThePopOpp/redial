@@ -1,0 +1,80 @@
+/* Shared shadcn / Radix controls. Theme tokens are defined in globals.css. */
+.ui-input, .ui-textarea, .ui-select-trigger, .ui-date-trigger {
+  display: flex; width: 100%; min-width: 0; min-height: 46px; border: 1px solid var(--input); border-radius: 8px;
+  background: var(--field-background); color: var(--foreground); padding: 11px 13px;
+  font: 400 .875rem/1.5 var(--font-body); box-shadow: 0 1px 2px #00000005;
+  transition: border-color .15s, box-shadow .15s;
+}
+.ui-input::placeholder, .ui-textarea::placeholder, .ui-select-trigger[data-placeholder], .ui-date-trigger[data-empty=true] { color: var(--muted-foreground); }
+.ui-input:focus-visible, .ui-textarea:focus-visible, .ui-select-trigger:focus-visible, .ui-date-trigger:focus-visible, .ui-checkbox:focus-visible, .ui-radio-item:focus-visible {
+  outline: 2px solid var(--ring); outline-offset: 3px; border-color: var(--ring);
+}
+.ui-input[aria-invalid=true], .ui-textarea[aria-invalid=true], .ui-select-trigger[aria-invalid=true], .ui-date-trigger[aria-invalid=true], .ui-checkbox[aria-invalid=true] { border-color: var(--destructive); }
+.ui-input:disabled, .ui-textarea:disabled, .ui-select-trigger:disabled, .ui-checkbox:disabled, .ui-radio-item:disabled { cursor: not-allowed; opacity: .55; }
+.ui-textarea { min-height: 108px; resize: vertical; }
+.ui-select-trigger { align-items: center; justify-content: space-between; gap: 12px; text-align: left; }
+.ui-select-trigger > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-select-trigger svg { flex-shrink: 0; color: var(--muted-foreground); }
+.ui-select-content { z-index: 120; min-width: var(--radix-select-trigger-width); max-width: calc(100vw - 24px); max-height: min(300px,var(--radix-select-content-available-height)); overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--foreground); box-shadow: var(--shadow); }
+.ui-select-viewport { padding: 5px; }
+.ui-select-item { position: relative; display: flex; align-items: center; min-height: 40px; padding: 9px 33px 9px 11px; border-radius: 5px; font-size: .82rem; line-height: 1.5; cursor: default; user-select: none; outline: none; }
+.ui-select-item[data-highlighted] { background: var(--selection); color: var(--selection-foreground); }
+.ui-select-item[data-state=checked] { font-weight: 500; }
+.ui-select-indicator { position: absolute; right: 10px; display: flex; }
+.ui-select-scroll { height: 23px; display: flex; justify-content: center; align-items: center; }
+.ui-checkbox, .ui-radio-item { display: inline-flex; align-items: center; justify-content: center; padding: 0; flex: 0 0 18px; width: 18px; height: 18px; border: 1px solid var(--input); background: var(--field-background); color: var(--primary-foreground); box-shadow: 0 1px 2px #00000005; }
+.ui-checkbox { border-radius: 5px; }
+.ui-checkbox[data-state=checked] { background: var(--violet); border-color: var(--violet); color: #fff; }
+.ui-check-indicator { display: flex; align-items: center; justify-content: center; }
+.ui-radio-group { display: grid; gap: 10px; }
+.ui-radio-item { border-radius: 50%; margin-top: 3px; }
+.ui-radio-item[data-state=checked] { border-color: var(--violet); }
+.ui-radio-dot { display: block; width: 8px; height: 8px; background: var(--violet); border-radius: 50%; }
+.ui-dialog-overlay { position: fixed; z-index: 90; inset: 0; background: #100c1b99; backdrop-filter: blur(5px); }
+.ui-dialog-content { position: fixed; z-index: 100; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+.review-dialog.ui-dialog-content { margin: 0; background: var(--card); color: var(--foreground); border-color: var(--border); box-shadow: var(--shadow); }
+.ui-popover { z-index: 110; width: 320px; max-width: calc(100vw - 24px); max-height: var(--radix-popover-content-available-height); overflow: auto; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); color: var(--foreground); box-shadow: var(--shadow); outline: none; }
+.ui-date-time { display: grid; gap: 10px; }
+.ui-date-trigger { align-items: center; gap: 11px; text-align: left; }
+.ui-date-trigger svg { flex-shrink: 0; color: var(--violet); }
+.ui-time-row { display: grid; grid-template-columns: 18px minmax(0,1fr) 4px minmax(0,1fr) minmax(0,1fr); gap: 10px; align-items: center; color: var(--muted-foreground); }
+.ui-time-row .ui-select-trigger { gap: 5px; padding-inline: 10px; }
+.ui-field-error { color: var(--destructive); font-size: .78rem; }
+.ui-calendar { position: relative; width: 100%; font-size: .8rem; }
+.ui-calendar .rdp-months { position: relative; }
+.ui-calendar .rdp-month { width: 100%; }
+.ui-calendar .rdp-month_caption { display: flex; align-items: center; height: 42px; margin-bottom: 6px; padding-inline: 8px 80px; font-weight: 500; }
+.ui-calendar .rdp-nav { position: absolute; top: 0; right: 0; display: flex; gap: 4px; }
+.ui-calendar .rdp-button_previous, .ui-calendar .rdp-button_next { display: grid; place-items: center; width: 36px; height: 38px; border: 1px solid var(--border); border-radius: 7px; background: var(--card); color: var(--foreground); }
+.ui-calendar .rdp-month_grid { width: 100%; table-layout: fixed; border-collapse: collapse; }
+.ui-calendar .rdp-weekday { color: var(--muted-foreground); font-size: .69rem; font-weight: 400; height: 33px; text-align: center; }
+.ui-calendar .rdp-day { padding: 2px; text-align: center; }
+.ui-calendar .rdp-day_button { display: flex; justify-content: center; align-items: center; width: 100%; height: 36px; border: 1px solid transparent; border-radius: 7px; background: none; color: var(--foreground); font: inherit; }
+.ui-calendar .rdp-day_button:hover:not(:disabled) { background: var(--accent); }
+.ui-calendar .rdp-today:not(.rdp-selected) .rdp-day_button { border-color: var(--ring); color: var(--selection-foreground); }
+.ui-calendar .rdp-selected .rdp-day_button, .ui-calendar .rdp-selected .rdp-day_button:hover { background: #6c4db3; color: #fff; font-weight: 500; }
+.ui-calendar .rdp-outside .rdp-day_button { color: var(--muted-foreground); }
+.ui-calendar .rdp-disabled .rdp-day_button { opacity: .3; cursor: not-allowed; }
+.ui-calendar-shortcuts { display: flex; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.ui-calendar-shortcuts button { min-height: 36px; flex: 1; border: 1px solid var(--border); border-radius: 7px; background: var(--surface); color: var(--selection-foreground); font-size: .75rem; }
+.theme-toggle { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; flex: 0 0 42px; background: var(--card); color: var(--foreground); border: 1px solid var(--border); border-radius: 9px; }
+.theme-toggle:hover { background: var(--accent); }
+.theme-moon { display: none; }
+.light .theme-sun { display: none; }
+.light .theme-moon { display: inline; }
+.topbar-actions, .access-brand { display: flex; gap: 18px; align-items: center; }
+.access-brand { justify-content: space-between; flex-wrap: wrap; }
+.site-header > .navigation { margin-left: auto; }
+.search-field { background: var(--field-background); border-color: var(--input); }
+.search-field .ui-input { border: 0; background: transparent; box-shadow: none; }
+.search-field:focus-within { outline: 2px solid var(--ring); outline-offset: 3px; }
+.search-field .ui-input:focus-visible { outline: none; }
+.onboard-checkbox .ui-checkbox { margin-top: 4px; }
+.onboard-choice:has(.ui-radio-item:focus-visible) { outline: 2px solid var(--ring); outline-offset: 3px; }
+@media (max-width:767px) {
+  .ui-input, .ui-textarea, .ui-select-trigger, .ui-date-trigger { font-size: 16px; }
+  .topbar-actions { gap: 10px; }
+  .review-topbar { flex-wrap: wrap; }
+  .review-topbar .topbar-actions { margin-left: auto; }
+  .ui-time-row { gap: 8px; }
+}

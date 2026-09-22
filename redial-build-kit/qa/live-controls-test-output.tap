@@ -1,0 +1,274 @@
+TAP version 13
+# Subtest: all four named capabilities can pass trusted policy gates
+ok 1 - all four named capabilities can pass trusted policy gates
+  ---
+  duration_ms: 1.141103
+  type: 'test'
+  ...
+# Subtest: legacy join_call is not live monitor permission
+ok 2 - legacy join_call is not live monitor permission
+  ---
+  duration_ms: 0.299545
+  type: 'test'
+  ...
+# Subtest: wrong tenant denied
+ok 3 - wrong tenant denied
+  ---
+  duration_ms: 0.495505
+  type: 'test'
+  ...
+# Subtest: wrong line denied
+ok 4 - wrong line denied
+  ---
+  duration_ms: 0.116954
+  type: 'test'
+  ...
+# Subtest: expired or revoked grant denied
+ok 5 - expired or revoked grant denied
+  ---
+  duration_ms: 0.219326
+  type: 'test'
+  ...
+# Subtest: missing capability does not become true
+ok 6 - missing capability does not become true
+  ---
+  duration_ms: 0.123503
+  type: 'test'
+  ...
+# Subtest: missing consent denied
+ok 7 - missing consent denied
+  ---
+  duration_ms: 0.144094
+  type: 'test'
+  ...
+# Subtest: budget and entitlement gate optional use
+ok 8 - budget and entitlement gate optional use
+  ---
+  duration_ms: 0.20258
+  type: 'test'
+  ...
+# Subtest: direct stream does not claim full control topology
+ok 9 - direct stream does not claim full control topology
+  ---
+  duration_ms: 0.295248
+  type: 'test'
+  ...
+# Subtest: unknown feature rejected without object prototype lookup
+ok 10 - unknown feature rejected without object prototype lookup
+  ---
+  duration_ms: 0.996259
+  type: 'test'
+  ...
+# Subtest: only current controller can direct agent
+ok 11 - only current controller can direct agent
+  ---
+  duration_ms: 0.1554
+  type: 'test'
+  ...
+# Subtest: Gavel starts pending without premature human speech
+ok 12 - Gavel starts pending without premature human speech
+  ---
+  duration_ms: 0.122211
+  type: 'test'
+  ...
+# Subtest: stale version cannot begin takeover
+ok 13 - stale version cannot begin takeover
+  ---
+  duration_ms: 0.061782
+  type: 'test'
+  ...
+# Subtest: second takeover cannot race the first
+ok 14 - second takeover cannot race the first
+  ---
+  duration_ms: 0.089903
+  type: 'test'
+  ...
+# Subtest: transfer conflict blocks takeover
+ok 15 - transfer conflict blocks takeover
+  ---
+  duration_ms: 0.223331
+  type: 'test'
+  ...
+# Subtest: ready operator closes AI input and output fences
+ok 16 - ready operator closes AI input and output fences
+  ---
+  duration_ms: 0.172145
+  type: 'test'
+  ...
+# Subtest: stale epoch cannot change media state
+ok 17 - stale epoch cannot change media state
+  ---
+  duration_ms: 0.054111
+  type: 'test'
+  ...
+# Subtest: partial AI detach evidence rejected
+ok 18 - partial AI detach evidence rejected
+  ---
+  duration_ms: 0.087209
+  type: 'test'
+  ...
+# Subtest: commit before AI detach rejected
+ok 19 - commit before AI detach rejected
+  ---
+  duration_ms: 0.082542
+  type: 'test'
+  ...
+# Subtest: human success requires provider confirmation
+ok 20 - human success requires provider confirmation
+  ---
+  duration_ms: 0.071576
+  type: 'test'
+  ...
+# Subtest: completed takeover has human only and no agent session
+ok 21 - completed takeover has human only and no agent session
+  ---
+  duration_ms: 0.081051
+  type: 'test'
+  ...
+# Subtest: failure before endpoint ready preserves AI flow
+ok 22 - failure before endpoint ready preserves AI flow
+  ---
+  duration_ms: 0.12157
+  type: 'test'
+  ...
+# Subtest: failure after fences chooses fallback, not silent AI return
+ok 23 - failure after fences chooses fallback, not silent AI return
+  ---
+  duration_ms: 0.07412
+  type: 'test'
+  ...
+# Subtest: ended call ignores late operator event
+ok 24 - ended call ignores late operator event
+  ---
+  duration_ms: 0.146007
+  type: 'test'
+  ...
+# Subtest: old AI epoch cannot emit effects
+ok 25 - old AI epoch cannot emit effects
+  ---
+  duration_ms: 0.14172
+  type: 'test'
+  ...
+# Subtest: valid guidance stays session scoped
+ok 26 - valid guidance stays session scoped
+  ---
+  duration_ms: 0.176341
+  type: 'test'
+  ...
+# Subtest: guidance old agent is rejected
+ok 27 - guidance old agent is rejected
+  ---
+  duration_ms: 0.137494
+  type: 'test'
+  ...
+# Subtest: expired and blank/oversized guidance is rejected
+ok 28 - expired and blank/oversized guidance is rejected
+  ---
+  duration_ms: 0.151194
+  type: 'test'
+  ...
+# Subtest: submitted or canceled guidance is not replayed
+ok 29 - submitted or canceled guidance is not replayed
+  ---
+  duration_ms: 0.097795
+  type: 'test'
+  ...
+# Subtest: handoff forbids guidance to disappearing AI
+ok 30 - handoff forbids guidance to disappearing AI
+  ---
+  duration_ms: 0.096093
+  type: 'test'
+  ...
+# Subtest: invalid guidance timing and scope rejected
+ok 31 - invalid guidance timing and scope rejected
+  ---
+  duration_ms: 0.0812
+  type: 'test'
+  ...
+# Subtest: known approved target accepted
+ok 32 - known approved target accepted
+  ---
+  duration_ms: 0.123434
+  type: 'test'
+  ...
+# Subtest: cross-tenant directory target rejected
+ok 33 - cross-tenant directory target rejected
+  ---
+  duration_ms: 0.061201
+  type: 'test'
+  ...
+# Subtest: loop and disallowed route rejected
+ok 34 - loop and disallowed route rejected
+  ---
+  duration_ms: 0.076894
+  type: 'test'
+  ...
+# Subtest: extension requires actual route test flag
+ok 35 - extension requires actual route test flag
+  ---
+  duration_ms: 0.055853
+  type: 'test'
+  ...
+# Subtest: custom destination needs action-bound approval
+ok 36 - custom destination needs action-bound approval
+  ---
+  duration_ms: 0.049434
+  type: 'test'
+  ...
+# Subtest: custom destination requires independent dial permission
+ok 37 - custom destination requires independent dial permission
+  ---
+  duration_ms: 0.07395
+  type: 'test'
+  ...
+# Subtest: hours and reserve checks block dialing
+ok 38 - hours and reserve checks block dialing
+  ---
+  duration_ms: 0.063804
+  type: 'test'
+  ...
+# Subtest: a target answering does not establish warm acceptance
+ok 39 - a target answering does not establish warm acceptance
+  ---
+  duration_ms: 0.103915
+  type: 'test'
+  ...
+# Subtest: accepted target plus confirmed bridge completes warm transfer
+ok 40 - accepted target plus confirmed bridge completes warm transfer
+  ---
+  duration_ms: 0.050595
+  type: 'test'
+  ...
+# Subtest: caller hangup or missing bridge prevents transfer completion
+ok 41 - caller hangup or missing bridge prevents transfer completion
+  ---
+  duration_ms: 0.051236
+  type: 'test'
+  ...
+# Subtest: invalid clock input rejected rather than implicitly allowed
+ok 42 - invalid clock input rejected rather than implicitly allowed
+  ---
+  duration_ms: 0.280867
+  type: 'test'
+  ...
+# Subtest: AI audio can continue at current epoch while endpoint is prepared
+ok 43 - AI audio can continue at current epoch while endpoint is prepared
+  ---
+  duration_ms: 0.081942
+  type: 'test'
+  ...
+# Subtest: AI audio stops when readiness closes fences
+ok 44 - AI audio stops when readiness closes fences
+  ---
+  duration_ms: 0.054421
+  type: 'test'
+  ...
+1..44
+# tests 44
+# suites 0
+# pass 44
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 77.822965

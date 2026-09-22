@@ -1,0 +1,392 @@
+{
+  "kit_version": "1.1",
+  "created_at_local": "2026-09-18",
+  "timezone": "America/Phoenix",
+  "files": [
+    {
+      "path": "AGENTS.redial.md",
+      "size_bytes": 4776,
+      "sha256": "0a3b15a64bfc6f64be5d21a3fb3ff5982fbacc761eb461ad9d760761d072b9b3"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size_bytes": 2664,
+      "sha256": "2e1da40b4d5df0814da70b98f6bd52af8469c41c334a5ba774594e3b112fedbd"
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 6774,
+      "sha256": "37a415bbbc3e966e1c79f38516e97519bd8989c870442708a709771f49a95a1f"
+    },
+    {
+      "path": "REDIAL_BLUEPRINT_READER.html",
+      "size_bytes": 671616,
+      "sha256": "c41c5b9fed2cb5d46362cc6f8be7952651a8e6902e3994a9f3c32460756254b0"
+    },
+    {
+      "path": "REDIAL_MASTER_BLUEPRINT.md",
+      "size_bytes": 311248,
+      "sha256": "95b6e548c30d6f256ef3e21b0111698a37d70dd93e2f191f06945ad5a1b25bd3"
+    },
+    {
+      "path": "automation/agent-profiles.md",
+      "size_bytes": 2821,
+      "sha256": "12af6a015286c8d0c73fc040554a5a376abb3e0490a1bf6277cf058a65949fb0"
+    },
+    {
+      "path": "automation/live-call-controls-skill.md",
+      "size_bytes": 3855,
+      "sha256": "e5f9737973fca021fae4d3532772bbf80b498ae0120bdeb5ced441766e8aa985"
+    },
+    {
+      "path": "automation/skills-template.md",
+      "size_bytes": 1787,
+      "sha256": "558959e1d1dda2586d7632613cae1e6ccd9068aa5ce9ca0fc122c4c5c0deb2d8"
+    },
+    {
+      "path": "configuration/.env.example",
+      "size_bytes": 1480,
+      "sha256": "52438855df9d64786a6cce9a3578ce4a42bd5abaf9ad69c4c0d25ede3656f358"
+    },
+    {
+      "path": "configuration/live-controls.proposed.json",
+      "size_bytes": 2094,
+      "sha256": "043e6a8eaeb1bf3971649c82ca22fb2b3140c507a0a258f988142ed240a6f424"
+    },
+    {
+      "path": "configuration/plans.proposed.json",
+      "size_bytes": 2232,
+      "sha256": "5bb4cbc8ab072c05b3bb39d7b1ed76bc551d997993d5a90f5ad619857ffe0b04"
+    },
+    {
+      "path": "configuration/reuse-manifest.example.json",
+      "size_bytes": 1837,
+      "sha256": "cdfa7ef609f7fee8dea5f0bb8040d32fb4e4e1b6c6f18ab9dafabaa2dc22ea13"
+    },
+    {
+      "path": "content/content-plan.md",
+      "size_bytes": 4786,
+      "sha256": "2416e93177359ea6d0af906f612b59918d2f8117f1b49e21901a1e5eacb76a52"
+    },
+    {
+      "path": "content/lifecycle-messages.md",
+      "size_bytes": 7463,
+      "sha256": "a85d6e43d160a768c629c46cf4666563e3da5423d54f077a3009723017dac835"
+    },
+    {
+      "path": "content/live-call-controls-copy.md",
+      "size_bytes": 6498,
+      "sha256": "bf9e875ba821884e2192fdacf50209d22dfbadb69a5e0a8aa840c1a2f2a26064"
+    },
+    {
+      "path": "content/website-copy.md",
+      "size_bytes": 13490,
+      "sha256": "da46cf3a4e44eb044e0de06064b03b3ac89c4ebfd623b43c2998ea0581f3ce61"
+    },
+    {
+      "path": "contracts/domain.ts",
+      "size_bytes": 4680,
+      "sha256": "10b858135662c4b3b744e7232df164056c639b3e69e434ada06249108ef88213"
+    },
+    {
+      "path": "contracts/live-call-controls.ts",
+      "size_bytes": 6576,
+      "sha256": "7ffe80b666b11c4304be8722fdc508781d901ef7f22f61f0863072fe3d5177fd"
+    },
+    {
+      "path": "design/tokens.css",
+      "size_bytes": 1282,
+      "sha256": "ba160fde589618384a0a4e82f3ebc45515164c3366a6cd0851aca4a9a8f4eab5"
+    },
+    {
+      "path": "docs/00-review-and-decisions.md",
+      "size_bytes": 6977,
+      "sha256": "29d166234ea4a324230bdefc8e0e1fd1e22f74955f07263ac5135517615ec301"
+    },
+    {
+      "path": "docs/01-product-and-scope.md",
+      "size_bytes": 6281,
+      "sha256": "8e27820ced1ea3e4d45c214b2462fa5721c767c28e54c712c7a72c58b6efdc8e"
+    },
+    {
+      "path": "docs/02-repository-reuse.md",
+      "size_bytes": 5563,
+      "sha256": "c5dee4067454371bfa7e4fe7eddefb348a05d85e1411ce5e68e4dcff1152a966"
+    },
+    {
+      "path": "docs/03-architecture.md",
+      "size_bytes": 7277,
+      "sha256": "905b023303bf6312b5283e266cf83aa9f2feee6ed22a4da3beae901e54e16474"
+    },
+    {
+      "path": "docs/04-routes-and-screens.md",
+      "size_bytes": 7986,
+      "sha256": "3bd39a0a423fad308c4ca96c9e087f25f57316256672e70846916fc4223edb67"
+    },
+    {
+      "path": "docs/05-member-workflows.md",
+      "size_bytes": 6745,
+      "sha256": "f05d1fa49647fa27e446a0acdf243dc4377a2c1fcbae10e8906111d19f58eaf9"
+    },
+    {
+      "path": "docs/06-telephony-and-providers.md",
+      "size_bytes": 9846,
+      "sha256": "463d797b94041a885da858c3e8fc13960bcd9c69151ea620158a3a773fb48889"
+    },
+    {
+      "path": "docs/07-square-commerce.md",
+      "size_bytes": 11467,
+      "sha256": "30ac796c33ceacc37371e6fcf664589e23557d3949b2b025ca6ff6183f87cacb"
+    },
+    {
+      "path": "docs/08-pricing-and-economics.md",
+      "size_bytes": 6933,
+      "sha256": "7deb0e4d46199420695af3661aa1a5d0bf734230a64959c84bd07a676ab6e9b8"
+    },
+    {
+      "path": "docs/09-data-and-access.md",
+      "size_bytes": 11649,
+      "sha256": "4c4eb4cc0d7710f6da12ad7ba1e9ccc6a6ab8c9a02177291fd0793c78a939a9b"
+    },
+    {
+      "path": "docs/10-api-and-events.md",
+      "size_bytes": 9508,
+      "sha256": "e32e69d0e97bae11283ad6fcb16c335f07b046d827970e7a3f977a10629993f3"
+    },
+    {
+      "path": "docs/11-mobile-and-extension.md",
+      "size_bytes": 8070,
+      "sha256": "13cbe52af97b5ea67cab8d845f428f684e6f84e2a0c8aca414265a4661ce1e4c"
+    },
+    {
+      "path": "docs/12-agents-and-mcp.md",
+      "size_bytes": 8801,
+      "sha256": "632e0cf18e52bce5116fe7ae56fd328bf1d6d7f2d6d2c44050635058a79426fb"
+    },
+    {
+      "path": "docs/13-business-operations.md",
+      "size_bytes": 7434,
+      "sha256": "90197348e6fd2b3a514ffded513dba1bb66bce3f3e4b5fa722dde2c5a00e5528"
+    },
+    {
+      "path": "docs/14-marketing-and-lifecycle.md",
+      "size_bytes": 7711,
+      "sha256": "c611e57925eaf1e6782cea79cbd830b8ea6142a89a04d07f9d64b273fc6461ca"
+    },
+    {
+      "path": "docs/15-security-and-launch-gates.md",
+      "size_bytes": 7415,
+      "sha256": "50cb58c1c77a78a26221513a41e793440b925a45457949fa121da610323e7ec7"
+    },
+    {
+      "path": "docs/16-local-development-and-coolify.md",
+      "size_bytes": 7929,
+      "sha256": "8ff64ea7d5b238bd66f67a3c1c56352c8ddd1a98f87cbfd4e0822af509aa5c20"
+    },
+    {
+      "path": "docs/17-design-system.md",
+      "size_bytes": 5199,
+      "sha256": "1a89072c1da8e1ead851dfee7dbf976d1011689ef85b7b29fde736c0a639f931"
+    },
+    {
+      "path": "docs/18-roadmap-and-acceptance.md",
+      "size_bytes": 6540,
+      "sha256": "1d7839a39e2d1d2b2208ab8c7469ce09458eddb006d468d67c1ccb8630c564dd"
+    },
+    {
+      "path": "docs/19-live-call-controls.md",
+      "size_bytes": 28337,
+      "sha256": "f5a12739408698b78cd0b61b877e2c15881ec4b128ff52a5214e3f73b94101cc"
+    },
+    {
+      "path": "docs/20-live-call-data-api.md",
+      "size_bytes": 11252,
+      "sha256": "554ff58d056e1cc66e1bcb75d620509e65c5031ab2a1976cc07ef4aa5c631acb"
+    },
+    {
+      "path": "docs/21-live-call-topology.md",
+      "size_bytes": 10790,
+      "sha256": "d0c651a1822083b747edb5049c4eea33b30130ec26cf98a8f89c1954820c2f1d"
+    },
+    {
+      "path": "prompts/00-start-here.md",
+      "size_bytes": 4989,
+      "sha256": "0ce5506f1c5bbeaabebbeeb55fa0ef31f94f923d2181b286cae23aaf7cce6756"
+    },
+    {
+      "path": "prompts/01-inventory-and-reuse.md",
+      "size_bytes": 1518,
+      "sha256": "c1bfe75108632716d9ee376198675611a2d2267fae62ee5ae721c7279b22c6f2"
+    },
+    {
+      "path": "prompts/02-shell-and-design.md",
+      "size_bytes": 1299,
+      "sha256": "e7586d6eae82e1692fb13881c867e1fd95bbe67d34506e691a8a67f5f1d47ea7"
+    },
+    {
+      "path": "prompts/03-supabase-and-permissions.md",
+      "size_bytes": 1298,
+      "sha256": "343eaff5f5a56606161e53d55f94d893610e8b7d5981e1f0597431f576241262"
+    },
+    {
+      "path": "prompts/04-real-voice-slice.md",
+      "size_bytes": 1715,
+      "sha256": "c421080108ee342fe4acf328d90f777103bd657e1b427e64661845127fb017ec"
+    },
+    {
+      "path": "prompts/05-square-billing.md",
+      "size_bytes": 1318,
+      "sha256": "f9c24d7a8b01d06ac6e203e48332a69514251400ecdd4d799101e742d9079a37"
+    },
+    {
+      "path": "prompts/06-member-experience.md",
+      "size_bytes": 1549,
+      "sha256": "b724afaff5351fae66233c7ac6871c5e9d5e08a414b6c3bb7989a33437c0e7af"
+    },
+    {
+      "path": "prompts/07-business-and-marketing.md",
+      "size_bytes": 1629,
+      "sha256": "2e9145e9e61fc2f57372a7cad741e3ce98bcc114dd093f43e0b339d9e902bb90"
+    },
+    {
+      "path": "prompts/08-mobile-companion.md",
+      "size_bytes": 1620,
+      "sha256": "8277f7ba8831efaa84f39c2c47bc36d8d4af7269068271b6eb557e6c9ea709e1"
+    },
+    {
+      "path": "prompts/09-chrome-extension.md",
+      "size_bytes": 1540,
+      "sha256": "d17ce2d0b7e523e77304ac775520ae43b2c9089059ff01c898c38c062bb2ab1d"
+    },
+    {
+      "path": "prompts/10-agents-and-mcp.md",
+      "size_bytes": 1569,
+      "sha256": "14ec557a9e6ebe66976e4ead2af1bca2e079d3198ffdc347141ad85972f592ce"
+    },
+    {
+      "path": "prompts/11-coolify-and-release.md",
+      "size_bytes": 1132,
+      "sha256": "b35036e73a993bfd2c20af9ee067b0a7c7769319a54531b83e99b9830f238cc0"
+    },
+    {
+      "path": "prompts/12-independent-security-review.md",
+      "size_bytes": 1692,
+      "sha256": "da4225ca680c76d712e4d88a285cffeb958a88e51452f79cd22a32e272d1e278"
+    },
+    {
+      "path": "prompts/13-live-call-controls.md",
+      "size_bytes": 7710,
+      "sha256": "49603962037828468be2beaa0ee42d5916b3b277eb55d0a230e673e734f153e8"
+    },
+    {
+      "path": "qa/README.md",
+      "size_bytes": 1913,
+      "sha256": "412809ff21555f3acd0dc2c191ba17954f6cb19f528f76530a45ee200b582ab4"
+    },
+    {
+      "path": "qa/contracts-typecheck.txt",
+      "size_bytes": 148,
+      "sha256": "cfcbb208ea1828d0b7cd72c5fea37316b2899bb1883680b236b8bc56f90095e4"
+    },
+    {
+      "path": "qa/live-controls-test-output.tap",
+      "size_bytes": 7005,
+      "sha256": "a92679e8a7261bb61b073038aaf95624a5664c8f2662ebef202add9ead1c6430"
+    },
+    {
+      "path": "qa/policy-test-output.tap",
+      "size_bytes": 4407,
+      "sha256": "6d331eff65a9a14286cfb2a2f6c000bf2489aa1f183ba2ba0b12a372747eed83"
+    },
+    {
+      "path": "qa/reader-smoke-test.json",
+      "size_bytes": 721,
+      "sha256": "8ade9c0d7325f01b16fdfc1f4902599feb5dfcc79263c2704beefce007ca67d1"
+    },
+    {
+      "path": "qa/validation-results.json",
+      "size_bytes": 16845,
+      "sha256": "dede9955d216e81d2c5b5373d0c2b56fefc0c88561b735636ec5deb9278afe49"
+    },
+    {
+      "path": "reference-code/README.md",
+      "size_bytes": 1943,
+      "sha256": "5b810ac9b5b0fa16bd2a3a6dfd7d2073537a32c71423e6519bbdcda956c5078f"
+    },
+    {
+      "path": "reference-code/live-controls.mjs",
+      "size_bytes": 9527,
+      "sha256": "4a9eeeab3d7799702d8c85339aa4bb7a193a1994f7842b5181b9ed728ee8ee2a"
+    },
+    {
+      "path": "reference-code/live-controls.test.mjs",
+      "size_bytes": 10095,
+      "sha256": "8458aae03d3d0bb355928b6bad362a495b8786dfaa65a123087ec38a8afb0010"
+    },
+    {
+      "path": "reference-code/policy.mjs",
+      "size_bytes": 4272,
+      "sha256": "d29cb243a0146f029b36e6e97f113366ec29d4651e78b0c6767e094d135f7094"
+    },
+    {
+      "path": "reference-code/policy.test.mjs",
+      "size_bytes": 4420,
+      "sha256": "1d18ad2314dd383c921099876b972e1fe1dcf54dc5a0db9fa4810d5a90da0b17"
+    },
+    {
+      "path": "references/README.md",
+      "size_bytes": 918,
+      "sha256": "e0a49f55c7faf3b02410b2503ab8217419384a6ccb9fcd6553a5f8ea90a58263"
+    },
+    {
+      "path": "references/claude-design/ReDial Admin Dashboard.dc.html",
+      "size_bytes": 28776,
+      "sha256": "19145af97def5f3cd0e4b3ce111ab99eceab13160519a5fadfc7db0b8679f536"
+    },
+    {
+      "path": "references/claude-design/ReDial App.dc.html",
+      "size_bytes": 49689,
+      "sha256": "7e162f134a36841abb57a20c5148ff456c69abfe1a2104a4019e7dcd441382dd"
+    },
+    {
+      "path": "references/claude-design/ReDial Site.dc.html",
+      "size_bytes": 17840,
+      "sha256": "b54cea854f6501d3b03d6b85d5acbfbae296bc3d3dfb95fff3a791d9d1429a2b"
+    },
+    {
+      "path": "references/claude-design/ios-frame.jsx",
+      "size_bytes": 16507,
+      "sha256": "24642b887be3d26ab5d1ff445ad98c363cffd33746c539a117da570ac7b6eb54"
+    },
+    {
+      "path": "references/claude-design/support.js",
+      "size_bytes": 69150,
+      "sha256": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe"
+    },
+    {
+      "path": "research/live-controls-sources.json",
+      "size_bytes": 4059,
+      "sha256": "11be806ceb1dacdd93a38b0916c30eb902e078b50e7151f7f758be18fd21ea7b"
+    },
+    {
+      "path": "research/live-controls-sources.md",
+      "size_bytes": 3581,
+      "sha256": "f0c8e68bbfef6966bf7d8f1e4daf6ae43e818a012c63a3192aac0a0e6c48801a"
+    },
+    {
+      "path": "research/original-files.sha256.json",
+      "size_bytes": 852,
+      "sha256": "7ddb030035704f4753f8bc6eb024b9cfbe24512b2fc58966d97c7060e574f26e"
+    },
+    {
+      "path": "research/sources.json",
+      "size_bytes": 10319,
+      "sha256": "09ccc966685fff2a8456c11e46a0284dfe53c8b8d2af9d46f43d86088655c4a9"
+    },
+    {
+      "path": "research/sources.md",
+      "size_bytes": 11139,
+      "sha256": "af48206546114b8939de0a7afdde60b6c08b405d983ae74b34c0ee5742e6635d"
+    }
+  ]
+}

@@ -1,0 +1,460 @@
+TAP version 13
+# Subtest: all four named capabilities can pass trusted policy gates
+ok 1 - all four named capabilities can pass trusted policy gates
+  ---
+  duration_ms: 1.379273
+  type: 'test'
+  ...
+# Subtest: legacy join_call is not live monitor permission
+ok 2 - legacy join_call is not live monitor permission
+  ---
+  duration_ms: 0.22399
+  type: 'test'
+  ...
+# Subtest: wrong tenant denied
+ok 3 - wrong tenant denied
+  ---
+  duration_ms: 0.105301
+  type: 'test'
+  ...
+# Subtest: wrong line denied
+ok 4 - wrong line denied
+  ---
+  duration_ms: 0.105667
+  type: 'test'
+  ...
+# Subtest: expired or revoked grant denied
+ok 5 - expired or revoked grant denied
+  ---
+  duration_ms: 0.244135
+  type: 'test'
+  ...
+# Subtest: missing capability does not become true
+ok 6 - missing capability does not become true
+  ---
+  duration_ms: 0.110662
+  type: 'test'
+  ...
+# Subtest: missing consent denied
+ok 7 - missing consent denied
+  ---
+  duration_ms: 0.457433
+  type: 'test'
+  ...
+# Subtest: budget and entitlement gate optional use
+ok 8 - budget and entitlement gate optional use
+  ---
+  duration_ms: 0.12379
+  type: 'test'
+  ...
+# Subtest: direct stream does not claim full control topology
+ok 9 - direct stream does not claim full control topology
+  ---
+  duration_ms: 0.66596
+  type: 'test'
+  ...
+# Subtest: unknown feature rejected without object prototype lookup
+ok 10 - unknown feature rejected without object prototype lookup
+  ---
+  duration_ms: 1.656608
+  type: 'test'
+  ...
+# Subtest: only current controller can direct agent
+ok 11 - only current controller can direct agent
+  ---
+  duration_ms: 0.180723
+  type: 'test'
+  ...
+# Subtest: Gavel starts pending without premature human speech
+ok 12 - Gavel starts pending without premature human speech
+  ---
+  duration_ms: 0.140737
+  type: 'test'
+  ...
+# Subtest: stale version cannot begin takeover
+ok 13 - stale version cannot begin takeover
+  ---
+  duration_ms: 0.057633
+  type: 'test'
+  ...
+# Subtest: second takeover cannot race the first
+ok 14 - second takeover cannot race the first
+  ---
+  duration_ms: 0.053768
+  type: 'test'
+  ...
+# Subtest: transfer conflict blocks takeover
+ok 15 - transfer conflict blocks takeover
+  ---
+  duration_ms: 0.04877
+  type: 'test'
+  ...
+# Subtest: ready operator closes AI input and output fences
+ok 16 - ready operator closes AI input and output fences
+  ---
+  duration_ms: 0.085307
+  type: 'test'
+  ...
+# Subtest: stale epoch cannot change media state
+ok 17 - stale epoch cannot change media state
+  ---
+  duration_ms: 0.046238
+  type: 'test'
+  ...
+# Subtest: partial AI detach evidence rejected
+ok 18 - partial AI detach evidence rejected
+  ---
+  duration_ms: 0.079177
+  type: 'test'
+  ...
+# Subtest: commit before AI detach rejected
+ok 19 - commit before AI detach rejected
+  ---
+  duration_ms: 0.112007
+  type: 'test'
+  ...
+# Subtest: human success requires provider confirmation
+ok 20 - human success requires provider confirmation
+  ---
+  duration_ms: 0.158613
+  type: 'test'
+  ...
+# Subtest: completed takeover has human only and no agent session
+ok 21 - completed takeover has human only and no agent session
+  ---
+  duration_ms: 0.227683
+  type: 'test'
+  ...
+# Subtest: failure before endpoint ready preserves AI flow
+ok 22 - failure before endpoint ready preserves AI flow
+  ---
+  duration_ms: 0.111513
+  type: 'test'
+  ...
+# Subtest: failure after fences chooses fallback, not silent AI return
+ok 23 - failure after fences chooses fallback, not silent AI return
+  ---
+  duration_ms: 0.05662
+  type: 'test'
+  ...
+# Subtest: ended call ignores late operator event
+ok 24 - ended call ignores late operator event
+  ---
+  duration_ms: 0.072452
+  type: 'test'
+  ...
+# Subtest: old AI epoch cannot emit effects
+ok 25 - old AI epoch cannot emit effects
+  ---
+  duration_ms: 0.071922
+  type: 'test'
+  ...
+# Subtest: valid guidance stays session scoped
+ok 26 - valid guidance stays session scoped
+  ---
+  duration_ms: 0.103038
+  type: 'test'
+  ...
+# Subtest: guidance old agent is rejected
+ok 27 - guidance old agent is rejected
+  ---
+  duration_ms: 0.048759
+  type: 'test'
+  ...
+# Subtest: expired and blank/oversized guidance is rejected
+ok 28 - expired and blank/oversized guidance is rejected
+  ---
+  duration_ms: 0.100298
+  type: 'test'
+  ...
+# Subtest: submitted or canceled guidance is not replayed
+ok 29 - submitted or canceled guidance is not replayed
+  ---
+  duration_ms: 0.079317
+  type: 'test'
+  ...
+# Subtest: handoff forbids guidance to disappearing AI
+ok 30 - handoff forbids guidance to disappearing AI
+  ---
+  duration_ms: 0.101087
+  type: 'test'
+  ...
+# Subtest: invalid guidance timing and scope rejected
+ok 31 - invalid guidance timing and scope rejected
+  ---
+  duration_ms: 0.07876
+  type: 'test'
+  ...
+# Subtest: known approved target accepted
+ok 32 - known approved target accepted
+  ---
+  duration_ms: 0.134833
+  type: 'test'
+  ...
+# Subtest: cross-tenant directory target rejected
+ok 33 - cross-tenant directory target rejected
+  ---
+  duration_ms: 0.05723
+  type: 'test'
+  ...
+# Subtest: loop and disallowed route rejected
+ok 34 - loop and disallowed route rejected
+  ---
+  duration_ms: 0.071251
+  type: 'test'
+  ...
+# Subtest: extension requires actual route test flag
+ok 35 - extension requires actual route test flag
+  ---
+  duration_ms: 0.04904
+  type: 'test'
+  ...
+# Subtest: custom destination needs action-bound approval
+ok 36 - custom destination needs action-bound approval
+  ---
+  duration_ms: 0.058227
+  type: 'test'
+  ...
+# Subtest: custom destination requires independent dial permission
+ok 37 - custom destination requires independent dial permission
+  ---
+  duration_ms: 0.160955
+  type: 'test'
+  ...
+# Subtest: hours and reserve checks block dialing
+ok 38 - hours and reserve checks block dialing
+  ---
+  duration_ms: 0.108248
+  type: 'test'
+  ...
+# Subtest: a target answering does not establish warm acceptance
+ok 39 - a target answering does not establish warm acceptance
+  ---
+  duration_ms: 0.118783
+  type: 'test'
+  ...
+# Subtest: accepted target plus confirmed bridge completes warm transfer
+ok 40 - accepted target plus confirmed bridge completes warm transfer
+  ---
+  duration_ms: 0.073322
+  type: 'test'
+  ...
+# Subtest: caller hangup or missing bridge prevents transfer completion
+ok 41 - caller hangup or missing bridge prevents transfer completion
+  ---
+  duration_ms: 0.077491
+  type: 'test'
+  ...
+# Subtest: invalid clock input rejected rather than implicitly allowed
+ok 42 - invalid clock input rejected rather than implicitly allowed
+  ---
+  duration_ms: 0.547604
+  type: 'test'
+  ...
+# Subtest: AI audio can continue at current epoch while endpoint is prepared
+ok 43 - AI audio can continue at current epoch while endpoint is prepared
+  ---
+  duration_ms: 0.100924
+  type: 'test'
+  ...
+# Subtest: AI audio stops when readiness closes fences
+ok 44 - AI audio stops when readiness closes fences
+  ---
+  duration_ms: 0.0597
+  type: 'test'
+  ...
+# Subtest: unknown caller is screened
+ok 45 - unknown caller is screened
+  ---
+  duration_ms: 1.851357
+  type: 'test'
+  ...
+# Subtest: unverified transport is rejected
+ok 46 - unverified transport is rejected
+  ---
+  duration_ms: 0.224096
+  type: 'test'
+  ...
+# Subtest: unverified ownership is rejected
+ok 47 - unverified ownership is rejected
+  ---
+  duration_ms: 0.156828
+  type: 'test'
+  ...
+# Subtest: missing route uses fallback
+ok 48 - missing route uses fallback
+  ---
+  duration_ms: 0.149496
+  type: 'test'
+  ...
+# Subtest: route cycle cannot ring
+ok 49 - route cycle cannot ring
+  ---
+  duration_ms: 0.089562
+  type: 'test'
+  ...
+# Subtest: redirect depth guard
+ok 50 - redirect depth guard
+  ---
+  duration_ms: 0.145587
+  type: 'test'
+  ...
+# Subtest: explicit block wins over VIP
+ok 51 - explicit block wins over VIP
+  ---
+  duration_ms: 0.082593
+  type: 'test'
+  ...
+# Subtest: paused screening rings approved destination
+ok 52 - paused screening rings approved destination
+  ---
+  duration_ms: 0.111098
+  type: 'test'
+  ...
+# Subtest: paused mode cannot ring unsafe destination
+ok 53 - paused mode cannot ring unsafe destination
+  ---
+  duration_ms: 0.543005
+  type: 'test'
+  ...
+# Subtest: known caller bypasses unknown mode
+ok 54 - known caller bypasses unknown mode
+  ---
+  duration_ms: 0.740903
+  type: 'test'
+  ...
+# Subtest: every-call mode includes saved contacts
+ok 55 - every-call mode includes saved contacts
+  ---
+  duration_ms: 0.136653
+  type: 'test'
+  ...
+# Subtest: explicit VIP can bypass every-call mode
+ok 56 - explicit VIP can bypass every-call mode
+  ---
+  duration_ms: 0.061441
+  type: 'test'
+  ...
+# Subtest: unmatched number cannot claim VIP
+ok 57 - unmatched number cannot claim VIP
+  ---
+  duration_ms: 0.04508
+  type: 'test'
+  ...
+# Subtest: flagged caller in spam-only mode is screened
+ok 58 - flagged caller in spam-only mode is screened
+  ---
+  duration_ms: 1.002865
+  type: 'test'
+  ...
+# Subtest: unflagged caller in spam-only mode bypasses
+ok 59 - unflagged caller in spam-only mode bypasses
+  ---
+  duration_ms: 0.109321
+  type: 'test'
+  ...
+# Subtest: missing spam evidence is not a spam verdict
+ok 60 - missing spam evidence is not a spam verdict
+  ---
+  duration_ms: 0.054774
+  type: 'test'
+  ...
+# Subtest: declined processing never opens AI
+ok 61 - declined processing never opens AI
+  ---
+  duration_ms: 0.042548
+  type: 'test'
+  ...
+# Subtest: provider failure falls back
+ok 62 - provider failure falls back
+  ---
+  duration_ms: 0.044966
+  type: 'test'
+  ...
+# Subtest: quota exhaustion falls back
+ok 63 - quota exhaustion falls back
+  ---
+  duration_ms: 0.038699
+  type: 'test'
+  ...
+# Subtest: urgent claim cannot override quota
+ok 64 - urgent claim cannot override quota
+  ---
+  duration_ms: 0.034936
+  type: 'test'
+  ...
+# Subtest: urgent claim does not connect an unknown caller
+ok 65 - urgent claim does not connect an unknown caller
+  ---
+  duration_ms: 0.033189
+  type: 'test'
+  ...
+# Subtest: VIP unreachable destination falls back
+ok 66 - VIP unreachable destination falls back
+  ---
+  duration_ms: 0.035438
+  type: 'test'
+  ...
+# Subtest: policy returns an immutable decision
+ok 67 - policy returns an immutable decision
+  ---
+  duration_ms: 0.169849
+  type: 'test'
+  ...
+# Subtest: does not mutate input
+ok 68 - does not mutate input
+  ---
+  duration_ms: 0.06546
+  type: 'test'
+  ...
+# Subtest: rejects null context
+ok 69 - rejects null context
+  ---
+  duration_ms: 0.309999
+  type: 'test'
+  ...
+# Subtest: rejects unknown mode
+ok 70 - rejects unknown mode
+  ---
+  duration_ms: 0.07851
+  type: 'test'
+  ...
+# Subtest: rejects a negative redirect count
+ok 71 - rejects a negative redirect count
+  ---
+  duration_ms: 0.102232
+  type: 'test'
+  ...
+# Subtest: rejects a fractional redirect count
+ok 72 - rejects a fractional redirect count
+  ---
+  duration_ms: 0.218219
+  type: 'test'
+  ...
+# Subtest: rejects truthy strings as trusted booleans
+ok 73 - rejects truthy strings as trusted booleans
+  ---
+  duration_ms: 0.106336
+  type: 'test'
+  ...
+# Subtest: rejects a spam verdict without a signal
+ok 74 - rejects a spam verdict without a signal
+  ---
+  duration_ms: 0.137014
+  type: 'test'
+  ...
+# Subtest: rejects nonboolean urgency input
+ok 75 - rejects nonboolean urgency input
+  ---
+  duration_ms: 0.07509
+  type: 'test'
+  ...
+1..75
+# tests 75
+# suites 0
+# pass 75
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 131.935373

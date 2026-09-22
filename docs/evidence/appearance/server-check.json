@@ -1,0 +1,13 @@
+{
+  "address": "http://127.0.0.1:4317",
+  "verifiedAt": "2026-09-19T21:21:28.026Z",
+  "browser": "Microsoft Edge",
+  "cinematicLight": true,
+  "persistentTheme": true,
+  "customCalendarBothThemes": true,
+  "customTime": true,
+  "pageErrors": [],
+  "tests": 44,
+  "referenceTests": 75,
+  "originalKitFiles": 92
+}

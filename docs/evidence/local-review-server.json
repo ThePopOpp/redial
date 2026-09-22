@@ -1,0 +1,47 @@
+{
+  "verifiedAt": "2026-09-19T19:35:44.478Z",
+  "address": "http://127.0.0.1:4317",
+  "routes": [
+    {
+      "path": "/demo/overview",
+      "status": 200,
+      "heading": "Good to see you, Alex."
+    },
+    {
+      "path": "/demo/live",
+      "status": 200,
+      "heading": "Stay close. Stay in control."
+    },
+    {
+      "path": "/demo/ops",
+      "status": 200,
+      "heading": "The bigger picture."
+    },
+    {
+      "path": "/features/insider",
+      "status": 200,
+      "heading": "Insider.\nYour call, considered."
+    },
+    {
+      "path": "/features/gavel",
+      "status": 200,
+      "heading": "Gavel.\nYour call, considered."
+    },
+    {
+      "path": "/features/audible",
+      "status": 200,
+      "heading": "Audible.\nYour call, considered."
+    },
+    {
+      "path": "/features/directory",
+      "status": 200,
+      "heading": "Directory.\nYour call, considered."
+    }
+  ],
+  "errors": [],
+  "sessionStatus": 200,
+  "mode": "local_simulation",
+  "pid": 28648,
+  "project": "C:\\Users\\jwate\\Projects\\Redial\\Redial GPT",
+  "startedAt": "2026-09-19T19:35:05.2224445Z"
+}

@@ -1,0 +1,30 @@
+﻿{
+    "recordedAt":  "2026-09-20T01:23:25.0608926Z",
+    "scope":  "Existing cinematic landing before enlarged overlays, audio and interactive guidance",
+    "files":  [
+                  {
+                      "file":  "src/components/landing/experience.tsx",
+                      "sha256":  "a76a9ea4c04881cad3a310c82cd5749122e634d3516af3036b2b5d2878899dcf"
+                  },
+                  {
+                      "file":  "src/components/landing/phone-screen.tsx",
+                      "sha256":  "964d4eaf8ff0346f4b8260a2f203fdcdbf3550b32e17f128ac7ad4d4549fbe23"
+                  },
+                  {
+                      "file":  "src/components/landing/scene.tsx",
+                      "sha256":  "1ab532c6fd3ee4b1f8be02d6a570dfe2ad47f917035b02b23d33b5d952e7ad82"
+                  },
+                  {
+                      "file":  "src/lib/landing/timeline.ts",
+                      "sha256":  "b126ca2a5a959652dc3689bfc70af9af0893f0ab8e47b0e4828ab70b5d4ecd5e"
+                  },
+                  {
+                      "file":  "src/app/motion.css",
+                      "sha256":  "2c2b82461fbbf96b2e94da19fa2aad28d59809617c0c683555dab9efbcff3b61"
+                  },
+                  {
+                      "file":  "src/app/page.tsx",
+                      "sha256":  "c25529d3b26194fbab46b795503a053f61d7b324a37a8817fef3b4eb65a6d0bc"
+                  }
+              ]
+}

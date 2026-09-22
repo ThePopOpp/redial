@@ -1,0 +1,127 @@
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+test('contacts validate, persist on reload, and remain removable', async ({ page }) => {
+  await page.goto('/demo/contacts');
+  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByLabel('Name', { exact: true }).fill('Review Contact');
+  await dialog.getByLabel('Phone number').fill('+16021234567');
+  await dialog.getByRole('button', { name: 'Save locally' }).click();
+  await expect(dialog.getByRole('alert')).toContainText('fictional');
+  await dialog.getByLabel('Phone number').fill('+16025550149');
+  await dialog.getByRole('button', { name: 'Save locally' }).click();
+  await expect(dialog).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByText('Review Contact', { exact: true })).toBeVisible();
+  await page.getByLabel('Search contacts').fill('Review Contact');
+  await page.getByRole('button', { name: 'Remove', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm locally' }).click();
+  await expect(page.getByRole('heading', { name: 'No matching contacts' })).toBeVisible();
+});
+test('Insider, Audible, Gavel and Directory expose truthful state transitions', async ({ page }) => {
+  await page.goto('/demo/live');
+  await page.getByRole('button', { name: 'Simulate muted listening' }).click();
+  await expect(page.getByRole('button', { name: 'Leave simulated listener' })).toBeVisible();
+  await page.getByRole('button', { name: 'Leave simulated listener' }).click();
+  await expect(page.getByText('AI: attached in simulation', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Write private guidance' }).click();
+  await page.getByRole('dialog').getByLabel('Private guidance').fill('Ask whether an afternoon delivery works.');
+  await page.getByRole('button', { name: 'Queue simulated guidance' }).click();
+  await expect(page.locator('.guidance-item')).toContainText('queued');
+  await page.getByRole('button', { name: 'Simulate delivery acknowledgment' }).click();
+  await expect(page.locator('.guidance-item')).toContainText('simulated acknowledged');
+  await page.getByRole('button', { name: 'Begin simulated takeover' }).click();
+  await expect(page.getByRole('button', { name: 'Transfer unavailable' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Simulate endpoint acceptance' }).click();
+  await expect(page.getByText('AI: attached in simulation', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Simulate AI detach & human unmute' }).click();
+  await expect(page.getByText('Human: owns simulated call', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'AI guidance unavailable' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Choose destination' }).click();
+  await page.getByRole('button', { name: 'Simulate ringing' }).click();
+  await page.getByRole('button', { name: 'Simulate failure / cancel' }).click();
+  await expect(page.getByText('Human: owns simulated call', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Choose destination' }).click();
+  await page.getByRole('button', { name: 'Simulate ringing' }).click();
+  await page.getByRole('button', { name: 'Simulate target acceptance' }).click();
+  await expect(page.locator('.live-status')).toContainText('transferred out');
+  await page.screenshot({ path: 'test-results/controls-1440.png', fullPage: true });
+});
+test('local support replies appear in member view and campaign revisions invalidate approval', async ({ page }) => {
+  await page.goto('/demo/help');
+  await page.getByRole('button', { name: 'Create request' }).click();
+  await page.getByLabel('Subject', { exact: true }).fill('Review question');
+  await page.getByLabel('What happened?').fill('How do I change the example policy?');
+  await page.getByRole('dialog').getByRole('button', { name: 'Save locally' }).click();
+  await page.goto('/demo/ops/support');
+  const ticket = page.locator('.workspace-card').filter({ has: page.getByRole('heading', { name: 'Review question', exact: true }) });
+  await ticket.getByRole('button', { name: 'Reply / update' }).click();
+  await page.getByRole('combobox', { name: 'Status', exact: true }).click();
+  await page.getByRole('option', { name: 'resolved', exact: true }).click();
+  await page.getByLabel('Reply', { exact: true }).fill('Open Screening and save a local policy.');
+  await page.getByRole('dialog').getByRole('button', { name: 'Save locally' }).click();
+  await page.goto('/demo/help');
+  await page.locator('summary').filter({ hasText: 'Review question' }).click();
+  await expect(page.getByText('Open Screening and save a local policy.', { exact: true })).toBeVisible();
+  await page.goto('/demo/ops/campaigns');
+  await page.getByRole('button', { name: 'Request local review' }).click();
+  await page.goto('/demo/ops/approvals');
+  const approval = page.locator('.record-row').filter({ hasText: 'An introduction to a calmer phone' });
+  await approval.getByRole('button', { name: 'Approve locally' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm locally' }).click();
+  await page.goto('/demo/ops/campaigns');
+  await expect(page.getByText('approved · v1', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Edit draft' }).click();
+  await page.getByLabel('Campaign title').fill('Revised introduction');
+  await page.getByRole('dialog').getByRole('button', { name: 'Save locally' }).click();
+  await expect(page.getByText('draft · v2', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Sending unavailable' })).toBeDisabled();
+});
+test('billing creates a simulated annual payment and operations can refund it once', async ({ page }) => {
+  await page.goto('/demo/billing');
+  await page.getByRole('combobox', { name: 'Billing frequency' }).click();
+  await page.getByRole('option', { name: 'Annual · ten monthly payments' }).click();
+  const plan = page.locator('.workspace-card').filter({ has: page.getByRole('heading', { name: 'Estate Managed', exact: true }) });
+  await plan.getByRole('button', { name: 'Review this plan' }).click();
+  await expect(page.getByRole('dialog')).toContainText('$690 per year');
+  await page.getByRole('button', { name: 'Confirm locally' }).click();
+  await page.goto('/demo/ops/revenue');
+  await page.getByRole('button', { name: 'Review refund' }).click();
+  await page.getByRole('button', { name: 'Confirm locally' }).click();
+  await expect(page.getByText('simulated refunded', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Review refund' })).toHaveCount(0);
+});
+test('mobile menu and dialogs keep keyboard focus contained and return it on close', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/demo/contacts');
+  await page.getByRole('button', { name: 'Open workspace menu' }).click();
+  await page.getByRole('link', { name: 'Overview', exact: true }).focus();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Open workspace menu' })).toBeFocused();
+  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  const audit = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  expect(audit.violations).toEqual([]);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Add', exact: true })).toBeFocused();
+});
+const remainingRoutes = ['overview', 'screening', 'agent', 'directory', 'contacts', 'callbacks', 'numbers', 'connections', 'people', 'billing', 'settings', 'help', 'onboarding', 'mobile', 'extension', 'ops', 'ops/customers', 'ops/revenue', 'ops/support', 'ops/voice', 'ops/features', 'ops/crm', 'ops/campaigns', 'ops/content', 'ops/agents', 'ops/approvals', 'ops/tasks', 'ops/audit', 'ops/settings'];
+for (const width of [390, 1440]) test(`all workspace routes render without overflow or browser errors at ${width}px`, async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.setViewportSize({ width, height: 1000 });
+  const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
+  for (const route of remainingRoutes) {
+    await page.goto(`/demo/${route}`);
+    await expect(page.locator('.workspace-heading'), route).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), route).toBe(true);
+    if (['overview', 'screening', 'directory', 'billing', 'ops/crm', 'ops'].includes(route)) {
+      const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+      expect(result.violations, route).toEqual([]);
+    }
+    if (['overview', 'ops', 'ops/crm'].includes(route)) await page.screenshot({ path: `test-results/${route.replaceAll('/', '-')}-${width}.png`, fullPage: true });
+  }
+  expect(errors).toEqual([]);
+});

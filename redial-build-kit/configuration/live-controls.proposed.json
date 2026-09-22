@@ -1,0 +1,73 @@
+{
+  "kit_version": "1.1",
+  "status": "proposal_not_approved_or_provider_configured",
+  "enabled": false,
+  "names": {
+    "insider": "Insider",
+    "gavel": "Gavel",
+    "audible": "Audible",
+    "directory": "Directory"
+  },
+  "topology": "twilio_conference_ai_application",
+  "provider_verified": false,
+  "features": {
+    "insider": {
+      "enabled": false,
+      "commercial_approval_id": null,
+      "provider_evidence_id": null
+    },
+    "gavel": {
+      "enabled": false,
+      "commercial_approval_id": null,
+      "provider_evidence_id": null
+    },
+    "audible": {
+      "enabled": false,
+      "commercial_approval_id": null,
+      "provider_evidence_id": null
+    },
+    "directory": {
+      "enabled": false,
+      "commercial_approval_id": null,
+      "provider_evidence_id": null
+    }
+  },
+  "proposed_paid_plan_candidates": [
+    "concierge_byo",
+    "estate_byo",
+    "concierge_managed",
+    "estate_managed"
+  ],
+  "changes_existing_prices": false,
+  "automatic_overage_charges": false,
+  "controls": {
+    "max_monitor_sessions_per_user_per_call": 1,
+    "max_active_routing_operations_per_call": 1,
+    "audible_max_characters": 1000,
+    "audible_next_turn_default_ttl_seconds": 60,
+    "audible_default_timing": "next_turn",
+    "post_handoff_monitoring_default": false,
+    "recording_enabled_by_insider": false,
+    "automatic_agent_return_after_gavel": false,
+    "custom_destination_requires_action_bound_approval": true,
+    "live_ai_destination_consultation_enabled": false
+  },
+  "usage_observation": [
+    "ai_session_seconds",
+    "monitor_participant_seconds",
+    "human_participant_seconds",
+    "destination_leg_seconds",
+    "conference_participant_seconds",
+    "application_leg_seconds"
+  ],
+  "usage_note": "Provider cost observations are not automatic customer billable meters; map to approved commercial rules without double charging.",
+  "activation_gates": [
+    "line_grant",
+    "entitlement",
+    "current_call_state",
+    "provider_and_topology_evidence",
+    "required_notice_and_consent",
+    "device_readiness",
+    "spend_limits"
+  ]
+}

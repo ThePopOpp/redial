@@ -1,0 +1,3 @@
+$ tsc --noEmit --strict --target ES2022 --module NodeNext --moduleResolution NodeNext contracts/domain.ts contracts/live-call-controls.ts
+exit code: 0
+No diagnostics.

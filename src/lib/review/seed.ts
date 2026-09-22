@@ -1,0 +1,33 @@
+import type { ReviewState } from './model';
+
+export function makeReviewState(now = new Date().toISOString()): ReviewState {
+  const ago = (hours: number) => new Date(Date.parse(now) - hours * 3600_000).toISOString();
+  return {
+    schemaVersion: 1, version: 1, mode: 'local_simulation', createdAt: now, updatedAt: now,
+    profile: { name: 'Alex Morgan', timezone: 'America/Phoenix' },
+    calls: [
+      { id: 'delivery-example', caller: 'Jordan · Delivery company', phone: '+16025550142', category: 'Delivery', outcome: 'message', at: ago(1), duration: 68, unread: true, summary: 'Jordan would like to confirm a delivery window. A callback was requested; no time was confirmed.', transcript: [{ speaker: 'Redial agent', text: "Hi, you've reached Alex's AI assistant. May I ask who's calling and what this is about?" }, { speaker: 'Caller', text: "This is Jordan from the delivery company. I'd like to confirm a delivery window." }, { speaker: 'Redial agent', text: 'I can pass that request along. What would you like Alex to know?' }, { speaker: 'Caller', text: 'Please ask Alex to call back about the afternoon delivery.' }] },
+      { id: 'studio-example', caller: 'Sam · Northlight Studio', phone: '+16025550143', category: 'Project inquiry', outcome: 'message', at: ago(3), duration: 96, unread: true, summary: 'Sam is asking about a design consultation next week. They requested a callback to discuss the project.', transcript: [{ speaker: 'Redial agent', text: 'May I ask what your call is about?' }, { speaker: 'Caller', text: 'We would like to talk about a new project. Could Alex call us back?' }] },
+      { id: 'sales-example', caller: 'Unrecognized caller', phone: '+16025550144', category: 'Suspected solicitation', outcome: 'blocked', at: ago(5), duration: 17, unread: false, summary: 'Example of a call ended under an explicit block rule. The label is illustrative, not an identity verification.', transcript: [] },
+      { id: 'casey-example', caller: 'Casey Taylor', phone: '+16025550145', category: 'Known contact', outcome: 'connected', at: ago(7), duration: 212, unread: false, summary: 'Example of a matched VIP contact routed to an approved endpoint. No audio or transcript is retained.', transcript: [] },
+      { id: 'missed-example', caller: 'Unrecognized caller', phone: '+16025550146', category: 'No message', outcome: 'missed', at: ago(22), duration: 8, unread: false, summary: 'The illustrative caller left before a message was captured.', transcript: [] },
+    ],
+    callbacks: [{ id: 'callback-example', name: 'Sam · Northlight Studio', phone: '+16025550143', scheduledAt: new Date(Date.parse(now) + 86400_000).toISOString(), timezone: 'America/Phoenix', note: 'Discuss the project brief. Reminder only; no automatic call.', done: false }],
+    contacts: [{ id: 'casey', name: 'Casey Taylor', phone: '+16025550145', policy: 'vip' }, { id: 'sam', name: 'Sam · Northlight Studio', phone: '+16025550143', policy: 'standard' }],
+    directory: [{ id: 'office', name: 'Office reception', phone: '+16025550147', kind: 'phone', extension: '', enabled: true, version: 1 }, { id: 'team', name: 'Casey · Team member', phone: '+16025550145', kind: 'internal', extension: '', enabled: true, version: 1 }, { id: 'accounts', name: 'Accounts desk', phone: '+16025550148', kind: 'extension', extension: '204', enabled: false, version: 1 }],
+    screening: { mode: 'unknown', vip: true, paused: false, maxSeconds: 120, version: 1 },
+    agent: { name: 'Alex’s assistant', voice: 'Calm', greeting: "Hi, you've reached Alex's AI assistant. May I ask who's calling and what this is about?", instructions: 'Ask for a name, reason for calling and preferred callback details. Take a concise message. Never share access codes, passwords or private information. Urgency does not establish identity.', version: 1 },
+    people: [{ id: 'alex', name: 'Alex Morgan', email: 'alex@example.test', role: 'owner', status: 'active', grants: ['read_summary', 'read_transcript', 'manage_rules', 'monitor_live', 'takeover_live', 'direct_agent', 'transfer_call'] }, { id: 'casey', name: 'Casey Taylor', email: 'casey@example.test', role: 'billing', status: 'active', grants: [] }],
+    preferences: { transcript: true, recording: false, retentionDays: 90, email: true, push: false, marketing: false },
+    tickets: [{ id: 'ticket-example', subject: 'Help choosing a connection', body: 'I would like to understand dedicated numbers and conditional forwarding.', status: 'open', priority: 'normal', replies: [] }],
+    billing: { plan: 'Concierge BYO', cadence: 'monthly', status: 'simulated_active', periodEnd: new Date(Date.parse(now) + 30 * 86400_000).toISOString(), payments: [] },
+    setup: { connection: 'dedicated', step: 1, acknowledged: false },
+    live: { id: 'live-example', agentSessionId: 'agent-example-1', mode: 'ai_active', phase: 'idle', listening: false, agentAttached: true, targetId: null, guidance: [], events: [{ id: 'event-start', message: 'Illustrative caller and independent AI participant joined the simulated conference.', at: now }] },
+    leads: [{ id: 'lead-1', name: 'Jamie Lee', company: 'Juniper Workshop', email: 'jamie@example.test', stage: 'qualified', marketingConsent: true }, { id: 'lead-2', name: 'Drew Park', company: 'Park Consulting', email: 'drew@example.test', stage: 'new', marketingConsent: false }, { id: 'lead-3', name: 'Morgan Reed', company: 'Reed Studio', email: 'morgan@example.test', stage: 'pilot', marketingConsent: true }],
+    campaigns: [{ id: 'campaign-1', title: 'An introduction to a calmer phone', body: 'A draft introduction to Redial, including setup limitations and private call controls. No message is sent from this review.', status: 'draft', version: 1 }],
+    content: [{ id: 'article-1', title: 'Dedicated numbers and forwarding', slug: 'connection-options', body: 'A dedicated number can receive calls before ringing your destination. Conditional forwarding may act only after your existing phone rings. Complete a route and fallback test before activation.', status: 'draft' }],
+    tasks: [{ id: 'task-1', title: 'Verify a dedicated test line and fallback', owner: 'Engineering', done: false }, { id: 'task-2', title: 'Review proposed plan limits and seller details', owner: 'Owner', done: false }, { id: 'task-3', title: 'Review monitoring notice and consent', owner: 'Owner', done: false }],
+    approvals: [{ id: 'approval-1', title: 'Support assistant: draft a setup response', kind: 'agent', resourceId: 'ticket-example', status: 'pending', version: 1 }],
+    audit: [{ id: 'audit-start', action: 'review.created', at: now, detail: 'Synthetic workspace created. No external service activity.' }],
+  };
+}

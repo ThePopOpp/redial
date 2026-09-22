@@ -1,0 +1,232 @@
+{
+  "address": "http://127.0.0.1:4317",
+  "verifiedAt": "2026-09-19T21:26:25.693Z",
+  "checks": [
+    {
+      "width": 360,
+      "route": "/",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 360,
+      "route": "/",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 360,
+      "route": "/pricing",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 360,
+      "route": "/pricing",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 360,
+      "route": "/demo/overview",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 360,
+      "route": "/demo/overview",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 360,
+      "route": "/demo/ops",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 360,
+      "route": "/demo/ops",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 390,
+      "route": "/",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 390,
+      "route": "/",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 390,
+      "route": "/pricing",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 390,
+      "route": "/pricing",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 390,
+      "route": "/demo/overview",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 390,
+      "route": "/demo/overview",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 390,
+      "route": "/demo/ops",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 390,
+      "route": "/demo/ops",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 768,
+      "route": "/pricing",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 768,
+      "route": "/pricing",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 768,
+      "route": "/demo/overview",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 768,
+      "route": "/demo/overview",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 768,
+      "route": "/demo/ops",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 768,
+      "route": "/demo/ops",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 1440,
+      "route": "/",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 1440,
+      "route": "/",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 1440,
+      "route": "/pricing",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 1440,
+      "route": "/pricing",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 1440,
+      "route": "/demo/overview",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 1440,
+      "route": "/demo/overview",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 1440,
+      "route": "/demo/ops",
+      "position": "middle",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    },
+    {
+      "width": 1440,
+      "route": "/demo/ops",
+      "position": "bottom",
+      "headerTop": 0,
+      "themeToggleVisibleAndOperable": true
+    }
+  ],
+  "browserErrors": [],
+  "mobileMenuAfterScroll": true
+}

@@ -1,0 +1,54 @@
+{
+  "status": "targeted_review_only_no_source_modules_copied_into_application",
+  "sources": [
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "path": "package.json",
+      "observed_blob_sha": "e22d9923f414d38615b302684e52e096a3f0adf8",
+      "candidate_use": "dependency and test conventions",
+      "target_path": null,
+      "approved": false
+    },
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "path": "extension/manifest.json",
+      "observed_blob_sha": "921c59ae25225c7cd4c01af6c1b19fa5956b7a99",
+      "candidate_use": "MV3 side panel structure; remove cookies/original host",
+      "target_path": null,
+      "approved": false
+    },
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "path": "extension/src/background.ts",
+      "observed_blob_sha": "0c8911f4cea8d091730919036b792552da1c4054",
+      "candidate_use": "typed messages; require sender validation",
+      "target_path": null,
+      "approved": false
+    },
+    {
+      "repository": "Qallus/Channel-Cast-OS",
+      "path": "package.json",
+      "observed_blob_sha": "51987901064d624ef4d688ddd8ddee3e63f69d7d",
+      "candidate_use": "component and test conventions",
+      "target_path": null,
+      "approved": false
+    },
+    {
+      "repository": "Qallus/Channel-Cast-OS",
+      "path": "README.md",
+      "observed_blob_sha": null,
+      "candidate_use": "documentation organization only",
+      "target_path": null,
+      "approved": false,
+      "note": "File content reviewed; record an immutable source commit/blob again during local inventory."
+    },
+    {
+      "repository": "Qallus/Channel-Cast-OS",
+      "path": "Dockerfile",
+      "observed_blob_sha": "f46124abb654956908202a183b0c42e1e11b71e2",
+      "candidate_use": "standalone multi-stage pattern; adapt and harden",
+      "target_path": null,
+      "approved": false
+    }
+  ]
+}

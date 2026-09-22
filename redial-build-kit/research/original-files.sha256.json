@@ -1,0 +1,29 @@
+{
+  "unchanged_user_uploads": [
+    {
+      "filename": "ReDial Site.dc.html",
+      "size_bytes": 17840,
+      "sha256": "b54cea854f6501d3b03d6b85d5acbfbae296bc3d3dfb95fff3a791d9d1429a2b"
+    },
+    {
+      "filename": "ReDial App.dc.html",
+      "size_bytes": 49689,
+      "sha256": "7e162f134a36841abb57a20c5148ff456c69abfe1a2104a4019e7dcd441382dd"
+    },
+    {
+      "filename": "ReDial Admin Dashboard.dc.html",
+      "size_bytes": 28776,
+      "sha256": "19145af97def5f3cd0e4b3ce111ab99eceab13160519a5fadfc7db0b8679f536"
+    },
+    {
+      "filename": "ios-frame.jsx",
+      "size_bytes": 16507,
+      "sha256": "24642b887be3d26ab5d1ff445ad98c363cffd33746c539a117da570ac7b6eb54"
+    },
+    {
+      "filename": "support.js",
+      "size_bytes": 69150,
+      "sha256": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe"
+    }
+  ]
+}

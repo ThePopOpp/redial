@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0f1011;color:#ffffff;}
+a{color:#f5f5f7;text-decoration:none;}
+a:hover{color:#cacaca;}
+*{box-sizing:border-box;}
+::placeholder{color:#6a6b6b;}
+</style>
+</helmet>
+<div style="display:flex;min-height:100vh;background:#0f1011;font-family:'Inter',sans-serif;">
+  <div style="width:236px;flex-shrink:0;border-right:1px solid rgba(255,255,255,0.08);padding:32px 20px;display:flex;flex-direction:column;gap:40px;position:sticky;top:0;height:100vh;">
+    <div style="display:flex;align-items:center;gap:12px;padding:0 12px;">
+      <div style="width:28px;height:28px;border:1px solid #ffffff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:#ffffff;">R</div>
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:#f5f5f7;line-height:1;">ReDial</div>
+        <div style="font-family:'Roboto Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#847dff;margin-top:3px;">Admin</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6a6b6b;padding:0 12px 8px;">Business</div>
+      <sc-for list="{{ navItems }}" as="nv" hint-placeholder-count="6">
+        <div onClick="{{ nv.go }}" style="padding:10px 12px;border-radius:8px;font-size:15px;cursor:pointer;color:{{ nv.color }};background:{{ nv.bg }};transition:background-color 0.2s ease;display:flex;align-items:center;justify-content:space-between;" style-hover="background:#3f4041;">
+          <span>{{ nv.label }}</span>
+          <sc-if value="{{ nv.badge }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family:'Roboto Mono',monospace;font-size:10px;color:#0f1011;background:#dd90d8;border-radius:9999px;padding:2px 8px;">{{ nv.badge }}</span>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:16px;">
+      <a href="ReDial App.dc.html" style="border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);border-radius:16px;padding:16px;display:block;transition:background-color 0.2s ease;" style-hover="background:rgba(255,255,255,0.12);">
+        <div style="font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#9f9fa0;margin-bottom:6px;">Switch</div>
+        <div style="font-size:14px;font-weight:300;color:#f5f5f7;">Member app →</div>
+      </a>
+      <div style="display:flex;align-items:center;gap:10px;padding:0 12px;">
+        <div style="width:8px;height:8px;border-radius:9999px;background:#00b3dd;"></div>
+        <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9f9fa0;">All systems live</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:1;min-width:0;padding:56px 56px 80px;max-width:1180px;">
+
+    <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+      <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6a6b6b;margin-bottom:16px;">September 2026 · month to date</div>
+      <h1 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:60px;line-height:0.95;margin:0 0 12px;color:#ffffff;">The business, at a <em>glance</em>.</h1>
+      <p style="font-size:18px;font-weight:300;color:#9f9fa0;line-height:1.5;max-width:560px;margin:0 0 48px;">2,847 members kept 364,000 calls off their phones this month. Twelve need your attention.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:60px;">
+        <div style="background:#cacaca;border-radius:16px;padding:28px;">
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#3f4041;margin-bottom:16px;">MRR</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:42px;line-height:1;color:#000000;">$31,480</div>
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;color:#3f4041;margin-top:10px;">▲ 8.2% vs Aug</div>
+        </div>
+        <div style="background:#2e2e2e;border-radius:16px;padding:28px;">
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9f9fa0;margin-bottom:16px;">Active members</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:42px;line-height:1;color:#ffffff;">2,847</div>
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;color:#9f9fa0;margin-top:10px;">▲ 214 new</div>
+        </div>
+        <div style="background:#2e2e2e;border-radius:16px;padding:28px;">
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9f9fa0;margin-bottom:16px;">Calls screened</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:42px;line-height:1;color:#ffffff;">364k</div>
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;color:#9f9fa0;margin-top:10px;">61% spam</div>
+        </div>
+        <div style="background:#2e2e2e;border-radius:16px;padding:28px;">
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9f9fa0;margin-bottom:16px;">Churn</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:42px;line-height:1;color:#ffffff;">1.9%</div>
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;color:#9f9fa0;margin-top:10px;">▼ 0.4 pts</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:12px;align-items:start;">
+        <div>
+          <h2 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:30px;margin:0 0 20px;color:#f5f5f7;">Needs attention</h2>
+          <div style="display:flex;flex-direction:column;">
+            <sc-for list="{{ alerts }}" as="al" hint-placeholder-count="4">
+              <div onClick="{{ al.go }}" style="display:flex;align-items:center;gap:20px;padding:18px 16px;border-top:1px solid rgba(255,255,255,0.07);cursor:pointer;border-radius:8px;transition:background-color 0.2s ease;" style-hover="background:#1a1b1c;">
+                <div style="width:8px;height:8px;border-radius:9999px;background:{{ al.dot }};flex-shrink:0;"></div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:15px;color:#f5f5f7;margin-bottom:3px;">{{ al.title }}</div>
+                  <div style="font-size:13px;font-weight:300;color:#9f9fa0;">{{ al.desc }}</div>
+                </div>
+                <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#6a6b6b;flex-shrink:0;">{{ al.tag }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#2e2e2e;border-radius:16px;padding:28px;">
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9f9fa0;margin-bottom:20px;">Provider health</div>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <sc-for list="{{ health }}" as="h" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:8px;height:8px;border-radius:9999px;background:{{ h.dot }};flex-shrink:0;"></div>
+                <div style="flex:1;font-size:14px;color:#f5f5f7;">{{ h.name }}</div>
+                <div style="font-family:'Roboto Mono',monospace;font-size:11px;color:#9f9fa0;">{{ h.stat }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isCustomers }}" hint-placeholder-val="{{ false }}">
+      <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6a6b6b;margin-bottom:16px;">Customers</div>
+      <h1 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:56px;line-height:0.95;margin:0 0 40px;color:#ffffff;">2,847 people behind the <em>door</em>.</h1>
+      <div style="display:flex;gap:10px;margin-bottom:32px;flex-wrap:wrap;align-items:center;">
+        <input placeholder="Search name, email, or number…" style="flex:1;min-width:240px;background:#000000;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 22px;color:#fafafa;font-size:15px;font-family:'Inter',sans-serif;outline:none;">
+        <sc-for list="{{ custFilters }}" as="f" hint-placeholder-count="4">
+          <div onClick="{{ f.pick }}" style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.15);border-radius:9999px;padding:8px 16px;cursor:pointer;color:{{ f.color }};background:{{ f.bg }};transition:background-color 0.2s ease;">{{ f.label }}</div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <div style="display:flex;gap:20px;padding:0 16px 12px;font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#6a6b6b;">
+          <div style="flex:2;">Member</div>
+          <div style="flex:1.2;">Number</div>
+          <div style="width:90px;">Plan</div>
+          <div style="width:110px;">Calls / mo</div>
+          <div style="width:90px;">Status</div>
+        </div>
+        <sc-for list="{{ customers }}" as="cu" hint-placeholder-count="7">
+          <div style="display:flex;align-items:center;gap:20px;padding:16px;border-top:1px solid rgba(255,255,255,0.07);border-radius:8px;cursor:pointer;transition:background-color 0.2s ease;" style-hover="background:#1a1b1c;">
+            <div style="flex:2;min-width:0;display:flex;align-items:center;gap:14px;">
+              <div style="width:36px;height:36px;border-radius:9999px;background:#2e2e2e;border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:14px;color:#f5f5f7;flex-shrink:0;">{{ cu.initial }}</div>
+              <div style="min-width:0;">
+                <div style="font-size:15px;color:#f5f5f7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ cu.name }}</div>
+                <div style="font-size:13px;font-weight:300;color:#9f9fa0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ cu.email }}</div>
+              </div>
+            </div>
+            <div style="flex:1.2;font-family:'Roboto Mono',monospace;font-size:12px;color:#9f9fa0;">{{ cu.number }}</div>
+            <div style="width:90px;font-size:13px;color:#f5f5f7;">{{ cu.plan }}</div>
+            <div style="width:110px;font-family:'Roboto Mono',monospace;font-size:12px;color:#9f9fa0;">{{ cu.calls }}</div>
+            <div style="width:90px;"><span style="font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:{{ cu.statusColor }};border:1px solid rgba(255,255,255,0.15);border-radius:9999px;padding:4px 10px;">{{ cu.status }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPayments }}" hint-placeholder-val="{{ false }}">
+      <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6a6b6b;margin-bottom:16px;">Payments</div>
+      <h1 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:56px;line-height:0.95;margin:0 0 40px;color:#ffffff;">Money in, <em>quietly</em>.</h1>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:48px;">
+        <div style="background:#2e2e2e;border-radius:16px;padding:28px;">
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9f9fa0;margin-bottom:16px;">Collected · Sep</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:38px;line-height:1;color:#ffffff;">$29,104</div>
+        </div>
+        <div style="background:#2e2e2e;border-radius:16px;padding:28px;">
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9f9fa0;margin-bottom:16px;">Outstanding</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:38px;line-height:1;color:#ffffff;">$1,268</div>
+        </div>
+        <div style="background:#2e2e2e;border-radius:16px;padding:28px;">
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9f9fa0;margin-bottom:16px;">Failed charges</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:38px;line-height:1;color:#dd90d8;">9</div>
+        </div>
+        <div style="background:#2e2e2e;border-radius:16px;padding:28px;">
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9f9fa0;margin-bottom:16px;">Refunds</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:38px;line-height:1;color:#ffffff;">$96</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+        <h2 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:30px;margin:0;color:#f5f5f7;">Recent transactions</h2>
+        <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#9f9fa0;cursor:pointer;" style-hover="color:#ffffff;">Export CSV →</div>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <sc-for list="{{ payments }}" as="pm" hint-placeholder-count="6">
+          <div style="display:flex;align-items:center;gap:20px;padding:16px;border-top:1px solid rgba(255,255,255,0.07);border-radius:8px;transition:background-color 0.2s ease;" style-hover="background:#1a1b1c;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:12px;color:#6a6b6b;width:60px;flex-shrink:0;">{{ pm.date }}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:15px;color:#f5f5f7;">{{ pm.name }}</div>
+              <div style="font-size:13px;font-weight:300;color:#9f9fa0;">{{ pm.desc }}</div>
+            </div>
+            <div style="font-family:'Roboto Mono',monospace;font-size:13px;color:#f5f5f7;flex-shrink:0;">{{ pm.amount }}</div>
+            <div style="width:100px;text-align:right;flex-shrink:0;"><span style="font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:{{ pm.statusColor }};border:1px solid rgba(255,255,255,0.15);border-radius:9999px;padding:4px 10px;">{{ pm.status }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isComms }}" hint-placeholder-val="{{ false }}">
+      <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6a6b6b;margin-bottom:16px;">Communication</div>
+      <h1 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:56px;line-height:0.95;margin:0 0 40px;color:#ffffff;">Talk to the <em>house</em>.</h1>
+      <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:12px;align-items:start;margin-bottom:60px;">
+        <div>
+          <h2 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:30px;margin:0 0 20px;color:#f5f5f7;">Support inbox <span style="font-family:'Roboto Mono',monospace;font-size:12px;color:#dd90d8;vertical-align:middle;">· 12 open</span></h2>
+          <div style="display:flex;flex-direction:column;">
+            <sc-for list="{{ tickets }}" as="tk" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:16px;padding:16px;border-top:1px solid rgba(255,255,255,0.07);border-radius:8px;cursor:pointer;transition:background-color 0.2s ease;" style-hover="background:#1a1b1c;">
+                <div style="width:8px;height:8px;border-radius:9999px;background:{{ tk.dot }};flex-shrink:0;"></div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:15px;color:#f5f5f7;margin-bottom:3px;">{{ tk.subject }}</div>
+                  <div style="font-size:13px;font-weight:300;color:#9f9fa0;">{{ tk.from }} · {{ tk.age }}</div>
+                </div>
+                <div style="font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#6a6b6b;flex-shrink:0;">{{ tk.channel }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#2e2e2e;border-radius:16px;padding:28px;">
+          <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9f9fa0;margin-bottom:16px;">Broadcast</div>
+          <div style="font-size:14px;font-weight:300;color:#f5f5f7;line-height:1.55;margin-bottom:16px;">Announce a feature, maintenance window, or price change — in-app, email, or SMS.</div>
+          <textarea placeholder="e.g. New: schedule callbacks straight from a transcript…" style="width:100%;min-height:100px;background:#000000;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:14px 16px;color:#fafafa;font-size:14px;font-family:'Inter',sans-serif;outline:none;resize:vertical;margin-bottom:12px;"></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <div style="font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ffffff;border:1px solid rgba(255,255,255,0.4);border-radius:9999px;padding:5px 12px;cursor:pointer;">In-app</div>
+            <div style="font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9f9fa0;border:1px solid rgba(255,255,255,0.15);border-radius:9999px;padding:5px 12px;cursor:pointer;">Email</div>
+            <div style="font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9f9fa0;border:1px solid rgba(255,255,255,0.15);border-radius:9999px;padding:5px 12px;cursor:pointer;">SMS</div>
+          </div>
+          <button style="background:#ffffff;color:#000000;border:none;border-radius:8px;padding:12px 18px;font-size:15px;font-family:'Inter',sans-serif;cursor:pointer;width:100%;">Send to 2,847 members →</button>
+        </div>
+      </div>
+      <h2 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:30px;margin:0 0 20px;color:#f5f5f7;">Recent broadcasts</h2>
+      <div style="display:flex;flex-direction:column;">
+        <sc-for list="{{ broadcasts }}" as="bc" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:20px;padding:16px;border-top:1px solid rgba(255,255,255,0.07);">
+            <div style="font-family:'Roboto Mono',monospace;font-size:12px;color:#6a6b6b;width:60px;flex-shrink:0;">{{ bc.date }}</div>
+            <div style="flex:1;min-width:0;font-size:15px;font-weight:300;color:#f5f5f7;">{{ bc.text }}</div>
+            <div style="font-family:'Roboto Mono',monospace;font-size:11px;color:#9f9fa0;flex-shrink:0;">{{ bc.reach }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isProviders }}" hint-placeholder-val="{{ false }}">
+      <div style="font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6a6b6b;margin-bottom:16px;">Platform</div>
+      <h1 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:56px;line-height:0.95;margin:0 0 12px;color:#ffffff;">Every pipe, <em>watched</em>.</h1>
+      <p style="font-size:18px;font-weight:300;color:#9f9fa0;line-height:1.5;max-width:560px;margin:0 0 48px;">Carrier and voice-provider integrations across all member accounts, with live latency and error rates.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;">
+        <sc-for list="{{ integrations }}" as="ig" hint-placeholder-count="8">
+          <div style="background:#1a1b1c;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;transition:background-color 0.2s ease;" style-hover="background:#2e2e2e;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="width:8px;height:8px;border-radius:9999px;background:{{ ig.dot }};"></div>
+              <div style="font-size:17px;color:#f5f5f7;">{{ ig.name }}</div>
+            </div>
+            <div style="font-family:'Roboto Mono',monospace;font-size:11px;color:#9f9fa0;line-height:1.9;">{{ ig.members }} members · {{ ig.latency }}<br>errors 24h: {{ ig.errors }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1280px&quot;}}">
+class Component extends DCLogic {
+  state = { screen: 'overview', custFilter: 'All' };
+  go(screen) { return () => this.setState({ screen }); }
+  renderVals() {
+    const s = this.state;
+    const navDefs = [
+      ['overview', 'Overview', null], ['customers', 'Customers', null], ['payments', 'Payments', '9'],
+      ['comms', 'Communication', '12'], ['providers', 'Integrations', null]
+    ];
+    const navItems = navDefs.map(([id, label, badge]) => ({
+      label, badge, go: this.go(id),
+      bg: s.screen === id ? 'rgba(255,255,255,0.1)' : 'transparent',
+      color: s.screen === id ? '#ffffff' : '#9f9fa0'
+    }));
+
+    const alerts = [
+      { dot: '#dd90d8', title: '9 failed charges awaiting retry', desc: 'Mostly expired cards. Dunning emails sent; 3 retries scheduled tonight.', tag: 'Billing', go: this.go('payments') },
+      { dot: '#dd90d8', title: 'Space xAI latency up 18% since 14:00', desc: 'p95 at 640 ms — callers may notice a pause. No dropped calls yet.', tag: 'Voice', go: this.go('providers') },
+      { dot: '#f5f5f7', title: '12 open support tickets', desc: 'Oldest is 26 hours: number-porting question from an Estate member.', tag: 'Support', go: this.go('comms') },
+      { dot: '#6a6b6b', title: '41 trial members expire this week', desc: 'Doorstep members at their 20-call cap — good upgrade moment.', tag: 'Growth', go: this.go('customers') }
+    ];
+
+    const health = [
+      { dot: '#00b3dd', name: 'Twilio', stat: '99.99%' },
+      { dot: '#00b3dd', name: 'Telnyx', stat: '99.97%' },
+      { dot: '#dd90d8', name: 'Space xAI', stat: 'p95 640ms' },
+      { dot: '#00b3dd', name: 'OpenAI Realtime', stat: '99.95%' },
+      { dot: '#00b3dd', name: 'ElevenLabs', stat: '99.98%' },
+      { dot: '#00b3dd', name: 'Stripe billing', stat: 'OK' }
+    ];
+
+    const allCustomers = [
+      { initial: 'M', name: 'Marcus Hale', email: 'marcus@qallus.co', number: '+1 (415) 555-0134', plan: 'Estate', calls: '128', status: 'Active', statusColor: '#00b3dd' },
+      { initial: 'P', name: 'Priya Raman', email: 'priya.r@gmail.com', number: '+1 (628) 555-0190', plan: 'Concierge', calls: '212', status: 'Active', statusColor: '#00b3dd' },
+      { initial: 'D', name: 'Devon Carter', email: 'dcarter@outlook.com', number: '+1 (312) 555-0166', plan: 'Concierge', calls: '96', status: 'Past due', statusColor: '#dd90d8' },
+      { initial: 'A', name: 'Aiko Tanaka', email: 'aiko@tanaka.dev', number: '+1 (206) 555-0142', plan: 'Doorstep', calls: '20 / 20', status: 'At cap', statusColor: '#dd90d8' },
+      { initial: 'S', name: 'Sofia Mendez', email: 'sofia.m@yahoo.com', number: '+1 (917) 555-0128', plan: 'Estate', calls: '341', status: 'Active', statusColor: '#00b3dd' },
+      { initial: 'R', name: 'Ray Bloom', email: 'ray@bloomlaw.com', number: '+1 (415) 555-0175', plan: 'Concierge', calls: '64', status: 'Active', statusColor: '#00b3dd' },
+      { initial: 'N', name: 'Nadia Osei', email: 'nadia.osei@me.com', number: '+1 (773) 555-0119', plan: 'Doorstep', calls: '11', status: 'Trial', statusColor: '#9f9fa0' },
+      { initial: 'J', name: 'Jonas Weber', email: 'jweber@proton.me', number: '+1 (503) 555-0183', plan: 'Concierge', calls: '157', status: 'Canceling', statusColor: '#9f9fa0' }
+    ];
+    const filterDefs = ['All', 'Past due', 'Trial', 'At cap'];
+    const custFilters = filterDefs.map(label => ({
+      label, pick: () => this.setState({ custFilter: label }),
+      bg: s.custFilter === label ? 'rgba(255,255,255,0.12)' : 'transparent',
+      color: s.custFilter === label ? '#ffffff' : '#9f9fa0'
+    }));
+    const customers = s.custFilter === 'All' ? allCustomers : allCustomers.filter(c => c.status === s.custFilter);
+
+    const payments = [
+      { date: 'Sep 17', name: 'Sofia Mendez', desc: 'Estate · monthly', amount: '$29.00', status: 'Paid', statusColor: '#00b3dd' },
+      { date: 'Sep 17', name: 'Devon Carter', desc: 'Concierge · monthly · card expired', amount: '$12.00', status: 'Failed', statusColor: '#dd90d8' },
+      { date: 'Sep 16', name: 'Ray Bloom', desc: 'Concierge · monthly', amount: '$12.00', status: 'Paid', statusColor: '#00b3dd' },
+      { date: 'Sep 16', name: 'Priya Raman', desc: 'Concierge · annual renewal', amount: '$120.00', status: 'Paid', statusColor: '#00b3dd' },
+      { date: 'Sep 15', name: 'Jonas Weber', desc: 'Concierge · refund on cancel', amount: '−$12.00', status: 'Refunded', statusColor: '#9f9fa0' },
+      { date: 'Sep 15', name: 'Marcus Hale', desc: 'Estate · monthly', amount: '$29.00', status: 'Paid', statusColor: '#00b3dd' },
+      { date: 'Sep 14', name: 'Aiko Tanaka', desc: 'Doorstep → Concierge upgrade', amount: '$12.00', status: 'Paid', statusColor: '#00b3dd' }
+    ];
+
+    const tickets = [
+      { dot: '#dd90d8', subject: 'Can I port my number out?', from: 'Estate · Lena Fischer', age: '26 h', channel: 'Email' },
+      { dot: '#dd90d8', subject: 'Agent answered a saved contact', from: 'Concierge · Ray Bloom', age: '5 h', channel: 'In-app' },
+      { dot: '#f5f5f7', subject: 'How do I switch to ElevenLabs?', from: 'Concierge · Priya Raman', age: '3 h', channel: 'In-app' },
+      { dot: '#f5f5f7', subject: 'Card declined but I updated it', from: 'Concierge · Devon Carter', age: '2 h', channel: 'SMS' },
+      { dot: '#6a6b6b', subject: 'Love it — feature idea: shared family block list', from: 'Estate · Sofia Mendez', age: '40 min', channel: 'Email' }
+    ];
+
+    const broadcasts = [
+      { date: 'Sep 12', text: 'New: schedule callbacks straight from a transcript.', reach: '2,791 in-app · 68% seen' },
+      { date: 'Sep 03', text: 'Maintenance: voice routing failover test, no downtime expected.', reach: '2,740 email · 51% open' },
+      { date: 'Aug 28', text: 'Estate plan now supports five members.', reach: '2,702 in-app · 72% seen' }
+    ];
+
+    const integrations = [
+      { dot: '#00b3dd', name: 'Twilio', members: '2,214', latency: 'p95 88 ms', errors: '2' },
+      { dot: '#00b3dd', name: 'Telnyx', members: '388', latency: 'p95 94 ms', errors: '0' },
+      { dot: '#00b3dd', name: 'Vonage', members: '141', latency: 'p95 102 ms', errors: '1' },
+      { dot: '#00b3dd', name: 'SIP trunks', members: '104', latency: 'p95 110 ms', errors: '0' },
+      { dot: '#dd90d8', name: 'Space xAI', members: '1,822', latency: 'p95 640 ms ▲', errors: '14' },
+      { dot: '#00b3dd', name: 'OpenAI Realtime', members: '612', latency: 'p95 310 ms', errors: '3' },
+      { dot: '#00b3dd', name: 'ElevenLabs', members: '289', latency: 'p95 290 ms', errors: '0' },
+      { dot: '#00b3dd', name: 'Vapi / Retell / Bland', members: '124', latency: 'p95 340 ms', errors: '1' }
+    ];
+
+    return {
+      navItems, alerts, health, custFilters, customers, payments, tickets, broadcasts, integrations,
+      isOverview: s.screen === 'overview', isCustomers: s.screen === 'customers',
+      isPayments: s.screen === 'payments', isComms: s.screen === 'comms', isProviders: s.screen === 'providers'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+﻿[
+    {
+        "sha256":  "EDCA4BE8E66C27592B3DD32C98FEC18300267B1C7DE26B2656EEAA7AE3FFB22C",
+        "path":  "src/app/layout.tsx"
+    },
+    {
+        "sha256":  "12B4A9D724F4105414E356A689B44E29736ED4A392C44BA40B84FA62F938DA7C",
+        "path":  "src/app/story-interactions.css"
+    }
+]

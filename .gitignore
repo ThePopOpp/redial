@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.npm-cache/
+.playwright/
+test-results/
+playwright-report/
+*.tsbuildinfo
+.env*
+!.env.example
+.references/
+*.log
+.redial/

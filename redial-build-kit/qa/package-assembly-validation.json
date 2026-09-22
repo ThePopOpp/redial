@@ -1,0 +1,23 @@
+{
+  "product_specification_version": "1.1",
+  "packaging_version": "1.1.1",
+  "source_archive": "REDIAL_PRODUCT_AND_BUILD_KIT_v1.1.zip",
+  "source_archive_sha256": "54a8f7fb5cb3f857188ba473584224ffd15da882e921d2bc925d5f5f2a222b0a",
+  "source_file_count": 78,
+  "unchanged_source_files": 77,
+  "regenerated_source_file": "FILE_MANIFEST.json",
+  "original_design_files_byte_identical": true,
+  "source_v1_1_contains_all_v1_0_paths": true,
+  "reference_tests": {
+    "exit_code": 0,
+    "tests": 75,
+    "passed": 75,
+    "failed": 0,
+    "output": "qa/packaged-reference-tests.tap"
+  },
+  "contracts_typecheck": {
+    "exit_code": 0,
+    "output": "qa/packaged-contracts-typecheck.txt"
+  },
+  "scope": "Local package assembly, source preservation, JSON parsing, isolated reference tests and shared-contract checks only. No providers, live calls, charges, application builds, legal review or deployment tested."
+}

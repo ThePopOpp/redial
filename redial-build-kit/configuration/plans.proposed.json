@@ -1,0 +1,85 @@
+{
+  "status": "proposal_not_approved_or_provider_configured",
+  "currency": "USD",
+  "prepared_at": "2026-09-18",
+  "annual_usage_window": "monthly_no_rollover",
+  "automatic_overage_charges": false,
+  "null_limit_meaning": "Not applicable to this commercial meter; not a promise of unlimited provider use.",
+  "provider_ids": null,
+  "plans": [
+    {
+      "id": "doorstep_byo",
+      "name": "Doorstep BYO",
+      "mode": "byo",
+      "monthly_minor": 0,
+      "annual_minor": null,
+      "people": 1,
+      "lines": 1,
+      "screened_calls": 20,
+      "ai_minutes": null,
+      "member_app_minutes": null,
+      "history_days": 7
+    },
+    {
+      "id": "concierge_byo",
+      "name": "Concierge BYO",
+      "mode": "byo",
+      "monthly_minor": 1200,
+      "annual_minor": 12000,
+      "people": 1,
+      "lines": 1,
+      "screened_calls": 1000,
+      "ai_minutes": null,
+      "member_app_minutes": null,
+      "history_days": 90
+    },
+    {
+      "id": "estate_byo",
+      "name": "Estate BYO",
+      "mode": "byo",
+      "monthly_minor": 2900,
+      "annual_minor": 29000,
+      "people": 5,
+      "lines": 5,
+      "screened_calls": 5000,
+      "ai_minutes": null,
+      "member_app_minutes": null,
+      "history_days": 90
+    },
+    {
+      "id": "concierge_managed",
+      "name": "Concierge Managed",
+      "mode": "managed",
+      "monthly_minor": 2900,
+      "annual_minor": 29000,
+      "people": 1,
+      "lines": 1,
+      "screened_calls": null,
+      "ai_minutes": 50,
+      "member_app_minutes": 50,
+      "history_days": 90
+    },
+    {
+      "id": "estate_managed",
+      "name": "Estate Managed",
+      "mode": "managed",
+      "monthly_minor": 6900,
+      "annual_minor": 69000,
+      "people": 5,
+      "lines": 5,
+      "screened_calls": null,
+      "ai_minutes": 100,
+      "member_app_minutes": 150,
+      "history_days": 90
+    }
+  ],
+  "exclusions": [
+    "taxes",
+    "premium_or_international_calls",
+    "SMS_unless_separately_included",
+    "PSTN_forwarding_unless_separately_included",
+    "outbound_calls_unless_separately_included",
+    "conference_or_recording_addons"
+  ],
+  "byo_note": "Member pays telephony and AI providers directly. Internal processing and abuse limits still apply."
+}

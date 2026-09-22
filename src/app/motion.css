@@ -1,0 +1,97 @@
+/* Scroll and pointer values are supplied by the deterministic story timeline.
+   No looping timer advances the illustrative call or its control outcomes. */
+.story-sticky { --pointer-x: 0; --pointer-y: 0; --scene-tint: 171 147 255; }
+.call-story .story-sticky { --scene-tint: inherit; }
+.story-atmosphere > span:first-child { background: radial-gradient(ellipse, rgb(var(--scene-tint) / .13), transparent 65%); transform: translate3d(calc(var(--pointer-x) * -28px),calc(var(--pointer-y) * -18px),0); }
+.story-atmosphere > span:nth-child(2) { background: radial-gradient(ellipse, rgb(var(--scene-tint) / .07), transparent 68%); transform: translate3d(calc(var(--pointer-x) * 42px),calc(var(--pointer-y) * 24px),0); }
+.story-grid { inset: -340px -100px -120px; background-image: linear-gradient(rgb(var(--scene-tint) / .06) 1px,transparent 1px),linear-gradient(90deg,rgb(var(--scene-tint) / .045) 1px,transparent 1px); background-size: 100px 100px; transform: translate3d(calc(var(--pointer-x) * -12px),calc(var(--journey-offset) + var(--pointer-y) * -12px),0); opacity: calc(.3 + var(--trace-opacity) * .7); mask-image: radial-gradient(ellipse at 65% 65%,#000,transparent 65%); }
+.story-light-column { position: absolute; height: 150%; width: 24%; top: -38%; left: 56%; transform: translate3d(calc(var(--pointer-x) * 70px),calc(var(--travel) * 90px),0) rotate(-32deg); background: linear-gradient(90deg,transparent,rgb(var(--scene-tint) / .045),rgb(var(--scene-tint) / .10),transparent); filter: blur(35px); mask-image: linear-gradient(#000,transparent 90%); }
+.story-light-haze { position: absolute; inset: 0; background: radial-gradient(ellipse at calc(66% + var(--pointer-x) * 8%) calc(40% + var(--pointer-y) * 12%),rgb(var(--scene-tint) / .075),transparent 57%); }
+.story-depth-meter { position: absolute; right: 24px; top: 31%; z-index: 4; display: flex; flex-direction: column; align-items: center; gap: 20px; color: var(--muted-foreground); opacity: .65; pointer-events: none; }
+.story-depth-meter > span { writing-mode: vertical-rl; font: 8px var(--font-metadata); letter-spacing: .19em; }
+.story-depth-meter > div { display: flex; position: relative; flex-direction: column; justify-content: space-between; height: 140px; width: 12px; }
+.story-depth-meter i { display: block; width: 4px; height: 1px; background: currentColor; opacity: .4; }
+.story-depth-meter i:nth-child(4n + 1) { width: 9px; opacity: .7; }
+.story-depth-meter b { position: absolute; top: calc(var(--journey-progress) * 100%); left: -3px; width: 15px; height: 2px; background: var(--violet); box-shadow: 0 0 12px rgb(var(--scene-tint) / .5); }
+.story-depth-meter small { font-size: 16px; }
+.story-pointer { position: absolute; top: 0; left: 0; width: 0; height: 0; z-index: 8; pointer-events: none; opacity: 0; transition: opacity .25s; }
+.story-pointer[data-visible=true] { opacity: 1; }
+.story-pointer::before { content: ''; position: absolute; width: 42px; height: 42px; border: 1px solid rgb(var(--scene-tint) / .45); border-radius: 50%; translate: -50% -50%; box-shadow: 0 0 30px rgb(var(--scene-tint) / .13),inset 0 0 20px rgb(var(--scene-tint) / .07); transition: width .25s,height .25s,border-color .25s; }
+.story-pointer::after { content: ''; position: absolute; width: 160px; height: 160px; translate: -50% -50%; background: radial-gradient(circle,rgb(var(--scene-tint) / .07),transparent 70%); }
+.story-pointer[data-hover=true]::before { width: 64px; height: 64px; border-color: rgb(var(--scene-tint) / .8); }
+.story-floating-card { translate: calc(var(--pointer-x) * -14px) calc(var(--pointer-y) * -10px + var(--travel) * -20px); background: linear-gradient(135deg,color-mix(in srgb,var(--card) 93%,transparent),color-mix(in srgb,var(--card) 76%,transparent)); backdrop-filter: blur(22px); box-shadow: 0 20px 60px #0002,inset 0 1px rgb(var(--scene-tint) / .14); border-color: color-mix(in srgb,var(--border) 70%,rgb(var(--scene-tint))); }
+.floating-symbol { box-shadow: inset 0 1px rgb(var(--scene-tint) / .2),0 0 20px rgb(var(--scene-tint) / .06); }
+.story-scroll-cue > svg { transform: translateY(calc(var(--travel) * 7px)); }
+.story-primary, .story-demo-link, .story-feature-pill { position: relative; }
+.story-primary { transition: box-shadow .2s,transform .2s; }
+.story-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgb(var(--scene-tint) / .16); }
+.story-demo-link svg { transition: transform .2s; }
+.story-demo-link:hover svg { transform: translateX(4px); }
+.story-screen-host { background: #08090e; }
+.phone-display { width: 300px; height: 620px; position: relative; isolation: isolate; }
+.phone-screen-layer { position: absolute; inset: 0; transform-origin: 50% 25%; }
+.phone-glass-reflection, .phone-glass-edge { position: absolute; z-index: 4; inset: 0; border-radius: 35px; pointer-events: none; }
+.phone-glass-reflection { background: radial-gradient(ellipse at var(--gloss-x,50%) var(--gloss-y,15%),#eee8ff13,transparent 60%),linear-gradient(118deg,#fff0 20%,#fff05 40%,#fff0 57%); mix-blend-mode: screen; }
+.phone-glass-edge { border: 1px solid #ffffff21; box-shadow: inset 2px 1px 2px #ffffff15,inset -2px -1px 4px #0008; }
+.story-phone-ui { --phone-tint: 171 147 255; background: radial-gradient(ellipse at calc(25% + var(--phone-phase,0) * 55%) -5%,rgb(var(--phone-tint) / .18),transparent 62%),linear-gradient(155deg,#171721,#090b11); }
+.story-phone-ui::before { content: ''; position: absolute; left: -100px; top: -140px; width: 410px; height: 330px; background: radial-gradient(ellipse,rgb(var(--phone-tint) / .09),transparent 65%); transform: translateY(calc(var(--phone-phase,0) * 180px)); pointer-events: none; }
+.phone-island { box-shadow: inset 0 1px 2px #ffffff12,0 1px #ffffff0a; }
+.phone-island::after { content: ''; position: absolute; right: 10px; top: 8px; width: 7px; height: 7px; border: 1px solid #242e40; border-radius: 50%; background: radial-gradient(circle at 30% 25%,#365567,#101427 40%,#030306 75%); }
+.phone-app-header { margin-bottom: 14px; }
+.phone-caller-heading { padding-bottom: 13px; }
+.phone-control-bar { flex-shrink: 0; padding-top: 9px; padding-bottom: 23px; }
+.phone-control-bar > div { gap: 6px; padding-block: 8px; }
+.screen-3 .phone-bubble { padding: 10px 12px; }
+.screen-3 .phone-transcript { gap: 10px; }
+.screen-3 .phone-conversation-label { margin-block: 14px; }
+.handoff-screen { padding-top: 18px; }
+.handoff-icons { margin-bottom: 18px; }
+.handoff-screen h3 { margin-block: 12px; }
+.directory-screen { padding-top: 18px; }
+.directory-screen > h3 { margin-bottom: 18px; }
+.directory-screen .transfer-labels { margin-bottom: 16px; }
+.caller-orbit { transform: translateY(calc(var(--phone-phase,0) * -9px)); }
+.caller-orbit > span:first-child { transform: scale(calc(1 + var(--phone-phase,0) * .48)); opacity: calc(1 - var(--phone-phase,0) * .7); border-color: rgb(var(--phone-tint) / .27); }
+.caller-orbit > span:nth-child(2) { transform: scale(calc(1 + var(--phone-phase,0) * .28)); border-color: rgb(var(--phone-tint) / .35); }
+.caller-orbit > div { background: radial-gradient(ellipse at 29% 19%,#ece0ff 0%,#b8a2df 8%,#7d63a5 30%,#423357 63%,#1b1725 90%); color: #f4eaff; text-shadow: 0 2px 5px #0005; border-color: #ccb2f17a; box-shadow: inset 2px 3px 8px #ffffff4d,inset -5px -7px 13px #100f27aa,0 18px 30px #0005,0 0 40px rgb(var(--phone-tint) / .12); transform: rotate(calc(var(--phone-energy,0) * 2deg)); }
+.phone-call-buttons i { box-shadow: inset 0 1px 1px #ffffff2b,0 7px 15px #0004; background: linear-gradient(145deg,#703a50,#3b2034); }
+.phone-call-buttons > span:last-child i { background: linear-gradient(145deg,#577f6c,#263e35); }
+.phone-call-buttons > span:last-child svg { transform: rotate(calc(var(--phone-energy,0) * 7deg)); }
+.assistant-orb { position: relative; isolation: isolate; width: 84px; height: 84px; background: radial-gradient(circle at 27% 22%,#f4ecff,#aa9bdd 12%,#70649b 32%,#333449 65%,#121423); border: 1px solid #bfb1f887; box-shadow: inset 3px 4px 8px #ffffff4f,inset -5px -8px 12px #121027b3,0 12px 25px #0005,0 0 45px rgb(var(--phone-tint) / .2); transform: rotate(calc(var(--phone-energy) * 4deg)) scale(calc(1 + var(--phone-energy) * .025)); }
+.assistant-orb::before { content: ''; position: absolute; inset: -12px; border: 1px solid rgb(var(--phone-tint) / .20); border-radius: 50%; transform: rotateX(55deg) rotate(var(--phone-orbit)); }
+.assistant-orb::after { content: ''; position: absolute; inset: -19px; border: 1px solid rgb(var(--phone-tint) / .11); border-radius: 50%; transform: rotateY(48deg) rotate(calc(var(--phone-orbit) * -1)); }
+.assistant-orb svg { filter: drop-shadow(0 2px 4px #0005); }
+.phone-bubble, .audible-panel, .destination-card, .summary-note { box-shadow: inset 0 1px #ffffff10,0 9px 22px #0002; background: linear-gradient(140deg,rgb(var(--phone-tint) / .14),rgb(var(--phone-tint) / .055)); border-color: rgb(var(--phone-tint) / .27); }
+.phone-bubble.caller { background: linear-gradient(140deg,#253544,#15212c); border-color: #78abc13b; }
+.phone-bubble.agent { transform-origin: 0 0; }
+.phone-bubble.caller { transform-origin: 100% 0; }
+.phone-state-dot { background: rgb(var(--phone-tint)); box-shadow: 0 0 0 3px rgb(var(--phone-tint) / .09),0 0 9px rgb(var(--phone-tint) / .2); }
+.story-waveform i { background: linear-gradient(rgb(var(--phone-tint)),#ddd5fc); box-shadow: 0 0 6px rgb(var(--phone-tint) / .18); }
+.insider-panel { border: 1px solid rgb(var(--phone-tint) / .18); border-radius: 12px; padding: 13px 8px; background: radial-gradient(ellipse at 50% 0%,rgb(var(--phone-tint) / .12),transparent 90%); }
+.insider-panel .story-waveform { margin: 9px 0; height: 23px; }
+.insider-panel strong { font-size: 16px; }
+.audible-panel { position: relative; overflow: hidden; background: linear-gradient(140deg,#5b367153,#29234080); }
+.audible-panel p { min-height: 18px; }
+.guidance-caret { display: inline-block; width: 1px; height: 12px; background: #ccb1ff; margin-left: 3px; vertical-align: -1px; opacity: calc(1 - var(--phone-phase)); }
+.guidance-delivery { position: absolute; inset: auto 0 0; height: 2px; background: linear-gradient(90deg,#a68eff,#d6c8fc); box-shadow: 0 0 12px #a68eff; transform-origin: left; }
+.phone-control-bar .selected { border-color: rgb(var(--phone-tint) / .65); color: rgb(var(--phone-tint)); background: linear-gradient(rgb(var(--phone-tint) / .18),rgb(var(--phone-tint) / .07)); box-shadow: inset 0 1px rgb(var(--phone-tint) / .18),0 0 18px rgb(var(--phone-tint) / .04); }
+.phone-control-bar .selected svg { transform: translateY(calc(var(--phone-energy) * -1px)); filter: drop-shadow(0 0 4px rgb(var(--phone-tint) / .4)); }
+.handoff-icons > span { background: radial-gradient(circle at 30% 20%,rgb(var(--phone-tint) / .3),#20212e); box-shadow: inset 0 1px #fff3,0 7px 15px #0004; border-color: rgb(var(--phone-tint) / .4); }
+.handoff-active { background: linear-gradient(120deg,#305c4140,#1c312533); box-shadow: inset 0 1px #b6f7cb14; }
+.transfer-path > i { position: relative; height: 2px; background: #6f77922e; }
+.transfer-path > i::after { content: ''; position: absolute; inset: 0; background: rgb(var(--phone-tint)); box-shadow: 0 0 8px rgb(var(--phone-tint) / .5); transform: scaleX(var(--route-fill,0)); transform-origin: left; }
+.transfer-path > span { background: rgb(var(--phone-tint) / .4); border-color: rgb(var(--phone-tint)); }
+.phone-progress i:first-child { box-shadow: 0 0 8px #ae8bdf80; }
+.preview-continue { box-shadow: inset 0 1px #fff7,0 7px 20px #0004; }
+.light .story-light-column { opacity: .7; }
+.light .story-grid { opacity: calc(.45 + var(--trace-opacity) * .4); }
+.is-static .story-depth-meter, .is-static .story-light-column, .is-static .story-light-haze, .is-static .story-pointer { display: none; }
+.is-static .story-chapter { filter: none !important; }
+@media (max-width:1100px) { .story-depth-meter { right: 12px; opacity: .45; } }
+@media (max-width:767px) {
+  .story-depth-meter, .story-pointer { display: none; }
+  .story-light-column { width: 45%; left: 40%; top: -10%; filter: blur(24px); }
+  .story-atmosphere > span:first-child { width: 150vw; height: 170vw; right: -30vw; top: 35%; }
+  .story-grid { mask-image: radial-gradient(ellipse at 50% 80%,#000,transparent 60%); }
+}
+@media (hover:none), (pointer:coarse), (prefers-reduced-motion:reduce) { .story-pointer { display: none; } }

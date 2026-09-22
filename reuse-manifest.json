@@ -1,0 +1,162 @@
+{
+  "reviewed_at": "2026-09-19",
+  "status": "read_only_review_no_source_company_code_copied",
+  "candidates": [
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "commit": "6237ce2c722dc9eb73860aeeb73d7fdcc044290d",
+      "path": "lib/admin/server-auth.ts",
+      "source": "https://github.com/ThePopOpp/ctrl-p/blob/6237ce2c722dc9eb73860aeeb73d7fdcc044290d/lib/admin/server-auth.ts",
+      "classification": "reject",
+      "target": "Future server auth",
+      "dependencies": "@supabase/supabase-js, next",
+      "requirements": "Active staff check only; add separate staff MFA and tenant/line grants; reject broad privileged client default.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "commit": "6237ce2c722dc9eb73860aeeb73d7fdcc044290d",
+      "path": "components/ui/button.tsx",
+      "source": "https://github.com/ThePopOpp/ctrl-p/blob/6237ce2c722dc9eb73860aeeb73d7fdcc044290d/components/ui/button.tsx",
+      "classification": "reference_only",
+      "target": "src/components/ui/button.tsx",
+      "dependencies": "Radix Slot, CVA, clsx, Tailwind",
+      "requirements": "Use official licensed shadcn source instead; keep accessible focus/disabled states.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "commit": "6237ce2c722dc9eb73860aeeb73d7fdcc044290d",
+      "path": "components/ui/table.tsx",
+      "source": "https://github.com/ThePopOpp/ctrl-p/blob/6237ce2c722dc9eb73860aeeb73d7fdcc044290d/components/ui/table.tsx",
+      "classification": "reference_only",
+      "target": "Future call/billing tables",
+      "dependencies": "React, class utility",
+      "requirements": "Semantic table and scroll pattern; no current copy.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "commit": "6237ce2c722dc9eb73860aeeb73d7fdcc044290d",
+      "path": "extension/src/background.ts",
+      "source": "https://github.com/ThePopOpp/ctrl-p/blob/6237ce2c722dc9eb73860aeeb73d7fdcc044290d/extension/src/background.ts",
+      "classification": "adapt_later",
+      "target": "Future apps/extension",
+      "dependencies": "Chrome MV3 APIs",
+      "requirements": "Validate message schema and sender; remove capture/harvest code.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "commit": "6237ce2c722dc9eb73860aeeb73d7fdcc044290d",
+      "path": "extension/manifest.json",
+      "source": "https://github.com/ThePopOpp/ctrl-p/blob/6237ce2c722dc9eb73860aeeb73d7fdcc044290d/extension/manifest.json",
+      "classification": "adapt_later",
+      "target": "Future apps/extension",
+      "dependencies": "Chrome MV3",
+      "requirements": "Remove cookies, capture permissions, source hosts; authenticate explicitly.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "commit": "6237ce2c722dc9eb73860aeeb73d7fdcc044290d",
+      "path": "vitest.config.ts",
+      "source": "https://github.com/ThePopOpp/ctrl-p/blob/6237ce2c722dc9eb73860aeeb73d7fdcc044290d/vitest.config.ts",
+      "classification": "reference_only",
+      "target": "Future domain tests",
+      "dependencies": "Vitest, TypeScript",
+      "requirements": "Use Node policy tests now and Playwright for shell; no copied config.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "commit": "6237ce2c722dc9eb73860aeeb73d7fdcc044290d",
+      "path": "components/admin/admin-communications.tsx",
+      "source": "https://github.com/ThePopOpp/ctrl-p/blob/6237ce2c722dc9eb73860aeeb73d7fdcc044290d/components/admin/admin-communications.tsx",
+      "classification": "reject",
+      "target": "Future call console",
+      "dependencies": "Twilio Voice SDK, Supabase",
+      "requirements": "Raw destinations/client mute are not approved dialing/provider-enforced silence; no copied business data.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "Qallus/Channel-Cast-OS",
+      "commit": "ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078",
+      "path": "lib/supabase/server.ts",
+      "source": "https://github.com/Qallus/Channel-Cast-OS/blob/ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078/lib/supabase/server.ts",
+      "classification": "adapt_later",
+      "target": "Future server auth client",
+      "dependencies": "@supabase/ssr, next",
+      "requirements": "Request-scoped cookies; verify current official API and fail closed; no copy.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "Qallus/Channel-Cast-OS",
+      "commit": "ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078",
+      "path": "middleware.ts",
+      "source": "https://github.com/Qallus/Channel-Cast-OS/blob/ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078/middleware.ts",
+      "classification": "reject",
+      "target": "Future request auth",
+      "dependencies": "@supabase/ssr, next",
+      "requirements": "Missing config/network exception returns NextResponse.next; must deny instead.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "Qallus/Channel-Cast-OS",
+      "commit": "ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078",
+      "path": "components/auth/login-form.tsx",
+      "source": "https://github.com/Qallus/Channel-Cast-OS/blob/ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078/components/auth/login-form.tsx",
+      "classification": "reject",
+      "target": "Future auth forms",
+      "dependencies": "React, Supabase, UI primitives",
+      "requirements": "Unvalidated next redirect and inactive controls must not carry over.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "Qallus/Channel-Cast-OS",
+      "commit": "ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078",
+      "path": "components/layout/app-sidebar.tsx",
+      "source": "https://github.com/Qallus/Channel-Cast-OS/blob/ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078/components/layout/app-sidebar.tsx",
+      "classification": "reference_only",
+      "target": "Future member/staff shells",
+      "dependencies": "React, next, lucide",
+      "requirements": "Grouped links useful; source roles/navigation/auth omitted.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "Qallus/Channel-Cast-OS",
+      "commit": "ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078",
+      "path": "components/comm/communications.tsx",
+      "source": "https://github.com/Qallus/Channel-Cast-OS/blob/ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078/components/comm/communications.tsx",
+      "classification": "reject",
+      "target": "Future call console",
+      "dependencies": "Twilio Voice SDK",
+      "requirements": "Default recording and outbound campaign coupling conflict with Redial; no import.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "Qallus/Channel-Cast-OS",
+      "commit": "ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078",
+      "path": "Dockerfile",
+      "source": "https://github.com/Qallus/Channel-Cast-OS/blob/ba9e5ff50bf532e6eaaf40f323e14bfbf4b69078/Dockerfile",
+      "classification": "adapt_later",
+      "target": "Future M9 Dockerfile",
+      "dependencies": "Node, npm, Next standalone",
+      "requirements": "Add non-root runtime; remove agent and .data coupling; no deployment now.",
+      "copied": false,
+      "license": "No license found; confirm ownership/reuse rights before importing."
+    }
+  ]
+}

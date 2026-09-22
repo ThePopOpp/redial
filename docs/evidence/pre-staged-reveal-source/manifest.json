@@ -1,0 +1,38 @@
+﻿[
+    {
+        "file":  "src/lib/landing/timeline.ts",
+        "sha256":  "B126CA2A5A959652DC3689BFC70AF9AF0893F0AB8E47B0E4828AB70B5D4ECD5E"
+    },
+    {
+        "file":  "src/lib/landing/story-demo.ts",
+        "sha256":  "7D217828B203FBC1FE60E1E1C5FD39CB6724C1AB69C2305113C579F88F0FEC78"
+    },
+    {
+        "file":  "src/components/landing/story-callout.tsx",
+        "sha256":  "7FB6E58653AF860D46112F8B7A1083B77EAEB8BCCF693A338A0249C5A15295F3"
+    },
+    {
+        "file":  "src/components/landing/use-sample-audio.ts",
+        "sha256":  "3092B5E1BC6C0E3F5A30244CAA5BF5AE5EBED2BEAC6145BF1F1955FE754A81F2"
+    },
+    {
+        "file":  "src/components/landing/experience.tsx",
+        "sha256":  "204C88C6DA1B404E0D75D515D2A802849D614C954E2B7980DA4DEAEB5562AB6C"
+    },
+    {
+        "file":  "src/components/landing/three-scene.ts",
+        "sha256":  "8627314E8E387D1D4D057D5C5E8322CF0935042AEDAD9DA84F8C354B21552CE7"
+    },
+    {
+        "file":  "src/app/story-interactions.css",
+        "sha256":  "5454BA9F32AF676F48FD9A93A8158D08F978214E178E9155D2B59F7B0E7E1AE3"
+    },
+    {
+        "file":  "tests/story-interactions.spec.ts",
+        "sha256":  "B8F0C38DF7F0C025AFD80C9682398B4ECB825D8206850CEC4EBA01DE1AB7C373"
+    },
+    {
+        "file":  "tests/motion.spec.ts",
+        "sha256":  "D54D26A3FF4AED5288143846E186965FA191691C6629BD4209AD11521C3D5418"
+    }
+]
