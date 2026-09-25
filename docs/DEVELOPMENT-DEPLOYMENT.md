@@ -30,14 +30,19 @@ The image uses pinned Node 24.15.0, pinned npm 11.12.1, locked dependencies, a m
 | `SUPABASE_PUBLISHABLE_KEY` | Enabled `sb_publishable_...` key from that project; no service-role/server key needed in this increment |
 | `TWILIO_ACCOUNT_SID` | Development account/subaccount's `AC...` SID |
 | `TWILIO_AUTH_TOKEN` | Matching account/subaccount token; keep server-side |
-| `REDIAL_EMAIL_PROVIDER` | `disabled` (default), `resend`, or `smtp` |
+| `REDIAL_EMAIL_PROVIDER` | `resend` for the owner's selected development setup; `disabled` and standalone `smtp` are also supported |
+| `REDIAL_EMAIL_FALLBACK_PROVIDER` | `smtp` for Hostinger fallback; `disabled` to omit fallback. SMTP fallback requires Resend primary. |
 | `EMAIL_FROM` | Your verified sender address, e.g. `hello@redial.si` if you own that mailbox/domain |
 | `RESEND_API_KEY` | Set for Resend; prefer sending-only access for eventual delivery |
 | `SMTP_HOST` | `smtp.hostinger.com` for Hostinger Email |
-| `SMTP_PORT` / `SMTP_SECURE` | `465` / `true`, or `587` / `false` with required STARTTLS |
+| `SMTP_PORT` / `SMTP_SECURE` | Owner-selected Hostinger settings: `465` / `true` (implicit TLS) |
 | `SMTP_USER` / `SMTP_PASSWORD` | Full mailbox address and mailbox password, not the Hostinger account password |
 
 Leave both Supabase values empty to omit it; leave both Twilio values empty to omit it. Partial provider configuration fails validation. SMTP requires TLS and certificate verification. Provider secrets are never `NEXT_PUBLIC_*` values. No feature flag or environment variable in this increment enables live call handling.
+
+The owner selected **Resend primary, Hostinger SMTP fallback**. Both `.env.example` and the prepared `.env.coolify.local` record that choice. Add `EMAIL_FROM`, `RESEND_API_KEY`, `SMTP_USER` and `SMTP_PASSWORD` in Coolify before deploying with those settings. The missing values deliberately fail validation; no placeholder credential or sender address is treated as working. For a preview with no email configuration, set both email provider variables to `disabled`. IMAP/POP settings are not needed for outgoing mail.
+
+This records and validates the fallback configuration; it does **not** implement automatic message failover. The later delivery worker needs durable message state and provider reconciliation before retrying through another provider, so an ambiguous Resend timeout does not send a duplicate through SMTP. Managed Supabase Auth's SMTP configuration is separate and does not inherit these application fallback settings.
 
 ## Supabase, Twilio, and email checks
 
@@ -55,7 +60,7 @@ node --env-file=.env.coolify.local scripts/check-environment.mjs
 node --env-file=.env.coolify.local scripts/check-providers.mjs
 ```
 
-The first command validates configuration and prints only status labels. The second makes explicit, read-only checks: Supabase Auth settings, Twilio account credentials/status, and either Resend sender-domain verification or SMTP TLS/authentication. It never sends email, dials, purchases a number, modifies a provider or prints provider response bodies. SMTP authentication does not prove delivery or sender acceptance. A Resend sending-only key cannot list domains; the check reports that limitation and exits unsuccessfully until you verify the domain in Resend. Do not broaden a sending key's permissions just for this check.
+The first command validates configuration and prints only status labels. The second makes explicit, read-only checks: Supabase Auth settings, Twilio account credentials/status, and email provider checks. With the selected setup, it reports **Resend primary** and **SMTP fallback** separately and checks SMTP even if the Resend check fails. It never sends email, dials, purchases a number, modifies a provider or prints provider response bodies. SMTP authentication does not prove delivery or sender acceptance. A Resend sending-only key cannot list domains; the check reports that limitation and exits unsuccessfully. Verify the domain in Resend's dashboard; doing so does not grant this key permission to list domains. Do not broaden a sending key's permissions just for this check.
 
 Supabase project access was verified on September 25, 2026. Its public schema and migration history are empty. Security Advisor reported execute privileges for `public.rls_auto_enable()` under anon/authenticated; review that helper when implementing schema/RLS. No Supabase schema, grants or Auth configuration was changed here.
 
@@ -86,7 +91,7 @@ For a development rollback: record the running commit/image, stop the applicatio
 
 Use fictional data while customer identity and retention controls are unfinished. Drafts expire after eight hours; completed submissions stay on the development server until deleted. Both preview views depend on the originating browser cookie. Losing that cookie does not delete server data or grant another reviewer access.
 
-Deployment still needs the owner's Coolify application target, DNS access/records, Twilio credentials, and email-provider choice/credentials. No production service, DNS, live call, or email delivery has been changed or tested.
+Deployment still needs the owner's Coolify application target, DNS access/records, Twilio credentials, verified sender address, Resend API key, and Hostinger mailbox credentials. The email-provider choice is resolved. No production service, DNS, live call, or email delivery has been changed or tested.
 
 ## Official references
 

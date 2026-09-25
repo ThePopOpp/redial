@@ -1,5 +1,12 @@
 # Working decision log
 
+## 2026-09-25 - Resend primary with Hostinger SMTP fallback
+
+- Record the owner's email choice: Resend primary, `smtp.hostinger.com:465` with implicit TLS as fallback. Add `REDIAL_EMAIL_FALLBACK_PROVIDER=smtp` alongside `REDIAL_EMAIL_PROVIDER=resend` in the environment template and ignored workstation deployment file. Preserve the prepared Supabase key and development access password.
+- Validate both providers' required credentials when fallback is selected. Provider checks independently inspect Resend and SMTP without sending mail, and continue to inspect fallback if the primary check fails. Report only redacted statuses.
+- Sender address, Resend key and Hostinger mailbox credentials are still missing. Do not infer a mailbox from the domain or configure IMAP/POP for outgoing mail. Automatic message failover belongs to the later durable delivery implementation; no queued message, Auth setting or external service was changed.
+- Validation: lint, typecheck, all 12 environment/access/email diagnostic tests, the Docker build and container smoke checks passed; all 92 kit originals remain unchanged. Provider response tests use mocks and send no messages. The prepared deployment file reports the missing sender and credentials as expected. Browser UI is unchanged.
+
 ## 2026-09-25 ? Protected Coolify development preparation
 
 - Inventory began on main at fb31575, matching GitHub. Existing untracked .codex/, .vscode/, and docs/3d-phone/ were preserved and excluded from the deployment change. The original 92-file kit remains unchanged.

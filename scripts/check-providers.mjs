@@ -1,5 +1,5 @@
-import nodemailer from 'nodemailer';
 import { readRuntime } from '../config/runtime.mjs';
+import { checkEmailProviders } from '../config/email-checks.mjs';
 
 // Operator-invoked, read-only probes. Never send mail, provision numbers, place
 // calls, change Auth settings, or log provider response bodies/credentials.
@@ -30,26 +30,10 @@ try {
     if (account.sid !== config.twilio.accountSid || account.status !== 'active') throw new Error();
     return 'active account credentials verified; no numbers or call routes changed';
   });
-  await probe('Email', async () => {
-    if (config.email.provider === 'disabled') return 'disabled';
-    if (config.email.provider === 'resend') {
-      const response = await get('https://api.resend.com/domains', { Authorization: `Bearer ${config.email.resendKey}` });
-      if (response.status === 403) { process.exitCode = 1; return 'domain verification unavailable with this key; verify the sender domain in Resend (keep sending-only permissions)'; }
-      if (!response.ok) throw new Error();
-      const result = await response.json();
-      const domain = config.email.from.split('@')[1].toLowerCase();
-      if (!result.data?.some(item => item.name.toLowerCase() === domain && item.status === 'verified')) {
-        process.exitCode = 1; return 'sender domain is not verified in the returned domains; check the Resend dashboard';
-      }
-      return 'sender domain verified; no email sent';
-    }
-    const smtp = config.email.smtp;
-    const transport = nodemailer.createTransport({ host: smtp.host, port: smtp.port, secure: smtp.secure, requireTLS: true,
-      auth: { user: smtp.user, pass: smtp.password }, tls: { minVersion: 'TLSv1.2' },
-      connectionTimeout: 15000, greetingTimeout: 15000, socketTimeout: 15000, logger: false, debug: false });
-    try { await transport.verify(); } finally { transport.close(); }
-    return 'SMTP TLS and authentication verified; no email sent (sender acceptance remains untested)';
-  });
+  for (const check of await checkEmailProviders(config.email)) {
+    console.log(`Email ${check.role} (${check.provider}): ${check.detail}`);
+    if (['unverified', 'failed'].includes(check.status)) process.exitCode = 1;
+  }
 } catch (error) {
   console.error(error.message); process.exitCode = 1;
 }

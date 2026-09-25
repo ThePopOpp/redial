@@ -80,6 +80,7 @@ try {
   assert.equal(member.account.submission.profile.fullName, draft.fullName);
   assert.equal(docker('exec', name, 'id', '-u'), '1000');
   assert.equal(docker('exec', name, 'node', '-e', "const fs=require('fs');process.stdout.write(String(fs.existsSync('/app/.env.coolify.local')))"), 'false');
+  assert.match(docker('exec', name, 'node', 'scripts/check-providers.mjs'), /Email primary \(disabled\): disabled/);
   docker('restart', name); base = address(); await ready();
   const restored = await (await get('/api/onboarding', { headers: sessionHeaders })).json();
   assert.equal(restored.saved.id, saved.saved.id);

@@ -37,15 +37,18 @@ export function readRuntime(env = process.env) {
     if (!/^[0-9a-f]{32}$/i.test(twilio.authToken)) errors.push('TWILIO_AUTH_TOKEN must be a 32-character account token');
   }
   const provider = value('REDIAL_EMAIL_PROVIDER') || 'disabled';
-  const email = { provider, from: value('EMAIL_FROM'), resendKey: value('RESEND_API_KEY'), smtp: {
+  const fallbackProvider = value('REDIAL_EMAIL_FALLBACK_PROVIDER') || 'disabled';
+  const email = { provider, fallbackProvider, from: value('EMAIL_FROM'), resendKey: value('RESEND_API_KEY'), smtp: {
     host: value('SMTP_HOST'), port: Number(value('SMTP_PORT') || '465'), secure: (value('SMTP_SECURE') || 'true') === 'true',
     user: value('SMTP_USER'), password: env.SMTP_PASSWORD ?? '',
   } };
   if (!['disabled', 'resend', 'smtp'].includes(provider)) errors.push('REDIAL_EMAIL_PROVIDER must be disabled, resend, or smtp');
+  if (!['disabled', 'smtp'].includes(fallbackProvider)) errors.push('REDIAL_EMAIL_FALLBACK_PROVIDER must be disabled or smtp');
+  if (fallbackProvider === 'smtp' && provider !== 'resend') errors.push('SMTP fallback requires REDIAL_EMAIL_PROVIDER=resend');
   if (provider !== 'disabled') {
     if (!/^[^\r\n<>]+@[^\s<>]+\.[^\s<>]+$/.test(email.from)) errors.push('EMAIL_FROM must be a bare sender email address');
     if (provider === 'resend' && !requireValue('RESEND_API_KEY').startsWith('re_')) errors.push('RESEND_API_KEY must be a Resend API key');
-    if (provider === 'smtp') {
+    if (provider === 'smtp' || fallbackProvider === 'smtp') {
       requireValue('SMTP_HOST'); requireValue('SMTP_USER'); requireValue('SMTP_PASSWORD');
       if (!/^[a-z0-9.-]+$/i.test(email.smtp.host)) errors.push('SMTP_HOST must be a hostname');
       if (![465, 587].includes(email.smtp.port)) errors.push('SMTP_PORT must be 465 or 587');
@@ -60,6 +63,6 @@ export function readRuntime(env = process.env) {
 
 export function configurationSummary(config) {
   return { deployment: config.deployment, supabase: config.supabase.publishableKey ? 'configured' : 'not configured',
-    twilio: config.twilio.authToken ? 'configured' : 'not configured', email: config.email.provider,
+    twilio: config.twilio.authToken ? 'configured' : 'not configured', email: config.email.provider, emailFallback: config.email.fallbackProvider,
     liveAuthentication: 'not implemented', liveCalling: 'not implemented', emailDelivery: 'not implemented' };
 }
