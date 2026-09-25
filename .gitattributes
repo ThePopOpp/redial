@@ -1,3 +1,5 @@
 # Preserve the original handoff and recorded evidence byte-for-byte on all platforms.
 redial-build-kit/** -text
 docs/evidence/** -text
+# Keep MIME draft CRLFs and avoid reviewing encoded attachments as text diffs.
+public/email/*.eml -text -diff

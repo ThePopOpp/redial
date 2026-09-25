@@ -1,5 +1,11 @@
 # Working decision log
 
+## 2026-09-25 - Personal first-look email
+
+- Create an Outlook-oriented email teaser with Redial's existing brand, an actual app phone mockup, all four v1.1 controls, and buttons to the homepage and `/demo/live` simulator. Keep editable HTML and plain text alongside a generated copy/paste preview and unsent EML with a CID image. No recipient list, sender credentials, tracking or send action is added.
+- Preserve the working app. The image uses the existing local Three.js screen with a fictional caller; presentation changes were applied only in the capture browser. Personalization remains explicit `[First name]` and `[Your name]` placeholders.
+- Desktop/mobile preview, copy payload, links, image loading and MIME image integrity were verified. Actual Outlook rendering remains untested. Public HTTPS currently returns a self-signed certificate error; this is an author-only readiness note, not part of the copied email. See `EMAIL-TEASER.md`.
+
 ## 2026-09-25 - Resend primary with Hostinger SMTP fallback
 
 - Record the owner's email choice: Resend primary, `smtp.hostinger.com:465` with implicit TLS as fallback. Add `REDIAL_EMAIL_FALLBACK_PROVIDER=smtp` alongside `REDIAL_EMAIL_PROVIDER=resend` in the environment template and ignored workstation deployment file. Preserve the prepared Supabase key and development access password.

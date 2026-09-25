@@ -1,0 +1,39 @@
+Subject: An early look at Redial: your calls, on your terms
+
+A FIRST LOOK AT WHAT WE'RE BUILDING
+
+Your phone rings. Your day stays yours.
+
+Meet Redial, the AI call assistant we're building to give you context before you decide how to respond.
+
+Hi [First name],
+
+I wanted you to be among the first to see Redial. We're rethinking that moment when an unfamiliar number interrupts your day.
+
+The idea: let an AI assistant handle the first hello, find out who's calling and why, and give you a live transcript. Then you choose what happens next.
+
+FOUR WAYS TO STAY IN CONTROL
+
+Insider - Listen in. Hear the conversation while your microphone stays off.
+Gavel - Take over. Step into the conversation and let the AI step out.
+Audible - Guide the assistant. Send a private instruction to shape its next question.
+Directory - Make the right connection. Send the caller to an approved person or destination.
+
+Try the simulator and tell me what you think. Which calls would you let Redial handle, and when would you want to jump in?
+
+I'd love your feedback.
+[Your name]
+
+TAKE A FIRST LOOK
+A quieter day starts with a hello.
+Explore the story. Then try the controls for yourself.
+
+Get Started - interactive call simulator:
+https://redial.si/demo/live
+
+Visit Redial:
+https://redial.si/
+
+Redial - A little more intention on the line.
+Development preview. Simulator uses example calls.
+You're receiving a personal first look. Reply directly with your thoughts.
