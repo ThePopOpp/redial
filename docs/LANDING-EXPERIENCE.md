@@ -45,3 +45,19 @@ Pinned `three@0.186.0` and `@types/three@0.186.0` were resolved from the registr
 Validation is recorded in `evidence/landing-results.json`. Tests cover rendering and reverse scrolling, desktop/mobile views, fallback and reduced motion, full form completion/reload/deletion, strict server completion checks, draft isolation/origin/version handling, and regression coverage for existing screens. Automated accessibility scans do not establish a complete manual accessibility audit or provider evidence.
 
 The review remains at `http://127.0.0.1:4317/`. Direct form entry is `http://127.0.0.1:4317/#onboarding`. Production services remain untouched; real auth, carrier/provider verification and service activation remain separate integration gates.
+
+## Screening backdrop placement — 2026-09-22
+
+Following the supplied mock-up, SCREEN CALLS now spans roughly 90% of the viewport, horizontally centered at 56% of the story stage height behind the phone and copy. The existing glow and scroll dissolve remain. Updated src/app/story-interactions.css and the existing typography browser assertions in tests/story-interactions.spec.ts to reflect the new composition rather than the previous top-right placement.
+
+Validation: lint, typecheck, optimized build and all 11 story-interactions browser tests passed in Edge. Typography checks cover light/dark modes at 360, 390, 768, 1024 and 1440px; desktop and mobile screenshots were visually inspected. All 92 kit hashes passed. Restarted the local review at http://127.0.0.1:4317/. No dependency or integration changes; the documented ESLint compatibility exception and existing acceptance gates remain.
+
+
+## Screening scroll choreography — 2026-09-22
+
+The opening screening composition now holds a horizontally centered phone, a small card overlapping its lower-left edge on desktop, and the oversized SCREEN CALLS label. The entire chapter copy is hidden and inert during this beat. Chapter progress 1.28–1.46 moves the phone/card left while the label blurs and fades. Copy slides in at 1.46–1.60, after the label disappears, overlapping the existing card expansion. Copy remains fully readable through 1.72 before its exit. Native scroll distance controls these beats; there is no wheel-event counting or scroll hijacking. Mobile keeps its centered phone/card layout while sharing the label/copy timing. Reduced motion retains the readable linear presentation.
+
+Implementation uses shared screeningChoreography timing in src/lib/landing/timeline.ts, consumed by the phone pose, label and card; experience.tsx gates copy visibility and its entrance. Earlier backdrop placement changes remain. No new dependencies or provider settings.
+
+Validation: optimized build, lint, typecheck, 75 policy/reference tests, all 92 original kit hashes, and 23 Edge browser tests across landing, motion and story interactions passed. The new sequence test checks the centered hold, overlapping card, leftward movement, label/copy separation, expansion, reverse playback and reduced motion. Screenshots in test-results/screening-sequence-{hold,shift,enter,read}.png were visually inspected, along with mobile and light-mode compositions. The local review remains on port 4317; this supplies UI evidence only. Existing integration gates and the ESLint compatibility exception remain.
+

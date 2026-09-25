@@ -27,7 +27,11 @@
 .story-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgb(var(--scene-tint) / .16); }
 .story-demo-link svg { transition: transform .2s; }
 .story-demo-link:hover svg { transform: translateX(4px); }
-.story-screen-host { background: #08090e; }
+.story-screen-host { background: #08090e; backface-visibility: hidden; }
+.transcript-edge-glow { position: absolute; inset: -14px; z-index: 7; pointer-events: none; filter: blur(9px); background: radial-gradient(ellipse clamp(110px,17vw,260px) clamp(90px,19svh,180px) at 0 0,#ed48df 5%,#c653e9a8 28%,transparent 76%),radial-gradient(ellipse clamp(130px,21vw,310px) clamp(85px,15svh,145px) at 100% 0,#ff947ecf 4%,#ea779c80 26%,transparent 78%),radial-gradient(ellipse clamp(100px,13vw,200px) clamp(125px,25svh,240px) at 0 100%,#9e68fbe6 7%,#bf66d98c 31%,transparent 78%),radial-gradient(ellipse clamp(150px,24vw,360px) clamp(110px,21svh,200px) at 100% 100%,#66edf1 6%,#63cfe999 30%,transparent 80%); }
+.transcript-edge-glow::before { content: ''; position: absolute; inset: 18px; border-radius: 44px 60px 35px 52px; padding: 5px; background: linear-gradient(125deg,#f15ae5 0%,#ac79ff99 32%,#ff9c99 56%,#6ce5f3 82%,#a68affb3 100%); mask: linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); mask-composite: exclude; filter: blur(6px); }
+.light .transcript-edge-glow { filter: blur(9px) saturate(.7); }
+@media (max-width:767px) { .transcript-edge-glow::before { border-radius: 26px 38px 24px 32px; padding: 4px; filter: blur(4px); } }
 .phone-display { width: 300px; height: 620px; position: relative; isolation: isolate; }
 .phone-screen-layer { position: absolute; inset: 0; transform-origin: 50% 25%; }
 .phone-glass-reflection, .phone-glass-edge { position: absolute; z-index: 4; inset: 0; border-radius: 35px; pointer-events: none; }

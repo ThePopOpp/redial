@@ -91,3 +91,25 @@
 - No provider integration or fake success controls. The v1.1 named features are described as planned; call console and Directory operations follow M2/M3a. Prices remain proposed; checkout disabled by omission.
 - npm registry requests initially failed with EACCES under network restrictions. Approved read-only registry access succeeded. Install/check evidence will record any further environment limitations.
 - Tooling exception: ESLint 9.39.5 is end-of-life, but Next 16.3.5's bundled React/import/a11y plugins reject ESLint 10.11.0 (invalid peers and getFilename runtime error verified locally). Restored exact ESLint 9.39.5 for this local increment instead of suppressing rules or overriding peers. Upgrade the compatible lint toolchain before release; runtime Next/React remain current. See https://eslint.org/version-support/.
+# 2026-09-22 dashboard data increment
+
+Implemented Supabase-backed member forms for personal and business workspaces, scoped line grants, Auth callbacks, and a separate MFA-gated staff support inbox. Details, environment names, test boundaries and Coolify preparation are in [DASHBOARD-SUPABASE.md](DASHBOARD-SUPABASE.md). Runtime uses user sessions and RLS, never a service-role client or demo fallback. Existing kit and source references remain unchanged.
+
+This is an initial data-core increment, not full v1.1 completion: bounded typed JSON records hold member drafts until the corresponding normalized provider domains are implemented. Existing verified accounts can accept in-app invitations; invitation emails/token expiry are deferred. No fixture or saved setting activates providers. No production deployment or provider mutation was performed. Earlier closed-route documentation describes the prior baseline; configured routes now require real server-verified identity, current membership, and separate staff role/MFA. M1 and later milestone gates remain open.
+
+## 2026-09-22 — Contact import from phone
+
+Adapted the user-requested Channel Cast interaction as original Redial code: authenticated QR handoff, explicit phone picker, local vCard review, selected/all imports and transactional line-scoped persistence. Source provenance, exact dependency versions, migration, evidence and device limitations are in [CONTACT-PHONE-IMPORT.md](CONTACT-PHONE-IMPORT.md). No source-company code was copied or changed. No production or provider action was performed.
+
+
+## 2026-09-22 — Animated phone setup simulator
+
+Added a seven-step Android/iPhone walkthrough modal to demo and authenticated Contacts. It demonstrates QR, sign-in, optional home-screen shortcut and contact selection without invoking device APIs or writing data. See [PHONE-SETUP-SIMULATOR.md](PHONE-SETUP-SIMULATOR.md) for sources, boundaries and evidence. Two walkthrough and four dashboard browser tests passed; seven existing workflow tests also passed. No deployment, dependency, migration or live-service changes.
+
+
+
+## 2026-09-25 ? Provider setup and live-launch preparation
+
+Added a separate incoming-call wizard for Mint, T-Mobile, Verizon, AT&T and Other providers. Provider documentation is distinguished from actual Redial compatibility; no universal carrier code or inherited MVNO support is assumed. A member can save only a line-scoped draft, not verification or activation evidence. Dedicated-number, conditional and all-call paths remain pending an assigned, tested destination. Country/device/OS/plan are captured to support later compatibility review.
+
+The current web app is not a voice engine. Added an explicit Connections implementation checklist, redacted offline config checker and a deployment/pilot/rollback runbook in `docs/LIVE-LAUNCH-PREPARATION.md`. Separate gateway and worker implementation remains required; no placeholder service is presented as ready. Provider and privileged database keys remain outside the web environment. Tests and open release gates are recorded in `docs/release-evidence/2026-09-25-carrier-setup.md`. Existing work and all kit originals were preserved.

@@ -1,0 +1,52 @@
+import { test, expect } from '@playwright/test';
+
+test('Mint setup preview distinguishes a saved plan from a connected line', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto('/demo/numbers');
+  await page.getByRole('button', { name: 'Set up incoming calls' }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await expect(dialog.getByRole('alert')).toContainText('phone model');
+  await dialog.getByLabel('Phone model').fill('Pixel example');
+  await dialog.getByLabel('Software version').fill('Example OS');
+  await dialog.getByLabel('Plan name or type').fill('Prepaid');
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await dialog.getByLabel('Number you plan to forward').fill('+16025550149');
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await expect(dialog.getByRole('link', { name: /Mint Mobile/ })).toHaveAttribute('href', 'https://www.mintmobile.com/help/how-to-turn-on-off-call-forwarding/');
+  await expect(dialog.getByText('Destination not assigned')).toBeVisible();
+  await expect(dialog.locator('a[href^="tel:"]')).toHaveCount(0);
+  await page.screenshot({ path: 'test-results/carrier-setup-desktop.png', animations: 'disabled' });
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await expect(dialog.getByRole('alert')).toContainText('Confirm both');
+  await dialog.getByLabel('I own this line').check();
+  await dialog.getByLabel('I understand this saves').check();
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Finish preview' }).click();
+  await expect(dialog.getByRole('status')).toContainText('No calls connected');
+  await expect(dialog.getByText('Not connected · verification required')).toBeVisible();
+});
+
+test('mobile other-provider path supports a dedicated number without invented carrier codes', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/demo/numbers');
+  await page.getByRole('button', { name: 'Set up incoming calls' }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByLabel('Country', { exact: true }).selectOption('GB');
+  await expect(dialog.getByLabel('Mobile provider')).toHaveValue('other');
+  await dialog.getByLabel('Provider name').fill('Example carrier');
+  await dialog.getByLabel('Phone model').fill('Example phone');
+  await dialog.getByLabel('Software version').fill('Example OS');
+  await dialog.getByLabel('Plan name or type').fill('Example plan');
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await dialog.getByRole('button', { name: /Use a dedicated Redial number/ }).click();
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await expect(dialog.getByText('Destination not assigned')).toBeVisible();
+  expect(await dialog.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
+  await page.screenshot({ path: 'test-results/carrier-setup-mobile.png' });
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Set up incoming calls' })).toBeFocused();
+});

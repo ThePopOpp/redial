@@ -38,11 +38,14 @@ The script records its process in `.redial/server.json`; it never stops an exist
 | `/demo/billing`, `/demo/settings`, `/demo/help` | Simulated membership, privacy preferences, export/reset and support requests |
 | `/demo/ops` | Operations, support replies, simulated refunds, CRM, content, campaigns, approvals, tasks and audit |
 | `/demo/mobile`, `/demo/extension` | Responsive web companion previews; no native or extension installation |
-| `/app/*`, `/ops/*` | Closed until real identity, workspace access and separate staff MFA exist |
+| `/app/*` | Supabase member dashboard: verified account, current workspace membership and line permissions required |
+| `/ops`, `/ops/support` | Supabase support inbox: separate active staff role and TOTP MFA required |
 
 Demo edits persist for eight hours in `.redial/reviews/`, isolated by an opaque HTTP-only browser cookie. Use fictional information in `/demo`. The landing-page onboarding form stores the details you choose to enter separately in `.redial/onboarding/`, with its own cookie. Unsubmitted drafts expire after eight hours; completing the form with the storage acknowledgment saves a persistent profile shared by the local member and admin views until explicitly deleted. Neither flow creates an authenticated account or activates a service. Calls, charges, email and campaigns remain simulated; providers are not configured. Microphone/camera access stays disabled. Fonts and UI assets are local.
 
 ## Verify
+
+For the real dashboard, environment variables, migrations and prepared Coolify Docker setup, see [Dashboard and Supabase setup](docs/DASHBOARD-SUPABASE.md). Real access remains closed until configured. Personal and business workspaces are supported; voice, billing and delivery integrations remain inactive.
 
 ```powershell
 npm run lint
@@ -52,6 +55,8 @@ npm run test:reference
 npm run verify:kit
 $env:PLAYWRIGHT_CHANNEL = 'msedge'
 npm run test:e2e
+npm run test:database
+npm run test:dashboard
 ```
 
 Playwright starts/stops a separate local test server at port 3210. On systems without Edge, install Playwright Chromium with `npx playwright install chromium` and omit `PLAYWRIGHT_CHANNEL`. Windows sandbox restrictions may block browser/server teardown; use a normal local terminal. The suite covers domain transitions, API isolation/origin/idempotency/concurrency, interactive workflows, responsive layouts, keyboard navigation and selected automated WCAG checks. It does not establish provider, RLS, native-device or production security evidence.

@@ -86,22 +86,60 @@ test('every phone overlay grows and rises, with background typography only in sc
   await scrub(page, .05); await expect(card.getByRole('heading')).toHaveText('A call, considered.');
 });
 
-for (const theme of ['dark', 'light']) test(`SCREEN CALLS is fully readable without masking in ${theme} mode`, async ({ page }) => {
+test('screening holds a centered phone, then clears the label before copy enters and rewinds', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 }); await page.goto('/');
+  const scene = page.locator('.story-scene'), phone = page.locator('.story-screen-host');
+  const card = page.locator('.story-callout'), word = page.locator('.story-feature-word'), copy = page.locator('#story-screening');
+  await expect(scene).toHaveAttribute('data-rendered', 'true');
+  await scrub(page, 1.1);
+  const centered = (await phone.boundingBox())!, small = (await card.boundingBox())!;
+  expect(Math.abs(centered.x + centered.width / 2 - 720)).toBeLessThan(25);
+  expect(small.x).toBeLessThan(centered.x);
+  expect(small.x + small.width).toBeGreaterThan(centered.x);
+  await expect(copy).toBeHidden(); await expect(copy).toHaveAttribute('inert');
+  await page.screenshot({ path: 'test-results/screening-sequence-hold.png' });
+  await scrub(page, 1.26);
+  expect((await phone.boundingBox())!.x).toBeCloseTo(centered.x, 0);
+  await expect(copy).toBeHidden(); await expect(word).toHaveCSS('filter', 'blur(0px)');
+  await scrub(page, 1.40);
+  expect((await phone.boundingBox())!.x).toBeLessThan(centered.x - 100);
+  expect((await card.boundingBox())!.x).toBeLessThan(small.x - 80);
+  await expect(copy).toBeHidden();
+  expect(Number(await word.evaluate(el => getComputedStyle(el).opacity))).toBeLessThan(.5);
+  await page.screenshot({ path: 'test-results/screening-sequence-shift.png' });
+  await scrub(page, 1.52);
+  await expect(word).toHaveCSS('opacity', '0'); await expect(copy).toBeVisible();
+  const entering = (await copy.boundingBox())!, growing = (await card.boundingBox())!;
+  expect(growing.width).toBeGreaterThan(small.width * 1.3);
+  await page.screenshot({ path: 'test-results/screening-sequence-enter.png' });
+  await scrub(page, 1.68);
+  await expect(copy).toHaveCSS('opacity', '1');
+  expect((await copy.boundingBox())!.x).toBeLessThan(entering.x - 30);
+  expect((await card.boundingBox())!.width).toBeGreaterThan(growing.width);
+  await page.screenshot({ path: 'test-results/screening-sequence-read.png' });
+  await scrub(page, 1.1);
+  await expect(copy).toBeHidden(); await expect(word).toHaveCSS('filter', 'blur(0px)');
+  expect((await phone.boundingBox())!.x).toBeCloseTo(centered.x, 0);
+  expect((await card.boundingBox())!.x).toBeCloseTo(small.x, 0);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(copy).toBeVisible(); await expect(copy).not.toHaveAttribute('inert');
+});
+
+for (const theme of ['dark', 'light']) test(`SCREEN CALLS is oversized and centered behind the scene in ${theme} mode`, async ({ page }) => {
   await page.addInitScript(theme => localStorage.setItem('redial-appearance', theme), theme);
   for (const [width, height] of [[1440, 1000], [1440, 900], [1024, 768], [768, 1024], [390, 844], [360, 667]]) {
     await page.setViewportSize({ width, height }); await page.goto('/');
     await expect(page.locator('.story-scene')).toHaveAttribute('data-rendered', 'true'); await scrub(page, 1.1);
     const word = page.locator('.story-feature-word'), bounds = (await word.boundingBox())!;
-    const copy = (await page.locator('#story-screening .story-kicker').boundingBox())!;
+    const stage = (await page.locator('.story-sticky').boundingBox())!;
     await expect(word).toHaveText('SCREEN CALLS'); await expect(word).toHaveCSS('filter', 'blur(0px)');
+    await expect(page.locator('#story-screening')).toBeHidden();
     await expect(page.locator('.story-feature-backdrop')).toHaveCSS('mask-image', 'none');
     expect(bounds.x).toBeGreaterThanOrEqual(16); expect(bounds.x + bounds.width).toBeLessThanOrEqual(width - 16);
-    expect(bounds.y).toBeGreaterThan(height < 740 ? 105 : 110);
-    expect(bounds.y + bounds.height).toBeLessThan(copy.y);
-    if (width >= 768) {
-      const phone = (await page.locator('.story-screen-host').boundingBox())!;
-      expect(bounds.x).toBeGreaterThan(phone.x + phone.width);
-    }
+    expect(bounds.x + bounds.width / 2).toBeCloseTo(width / 2, 0);
+    expect(bounds.width).toBeGreaterThan(width * .85);
+    expect(bounds.y + bounds.height / 2).toBeGreaterThan(stage.y + stage.height * .5);
+    expect(bounds.y + bounds.height / 2).toBeLessThan(stage.y + stage.height * .6);
     await page.screenshot({ path: `test-results/screen-readable-${theme}-${width}-${height}.png` });
   }
 });

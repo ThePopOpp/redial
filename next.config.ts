@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 const config: NextConfig = {
+  output: process.env.REDIAL_STANDALONE === '1' ? 'standalone' : undefined,
   poweredByHeader: false,
   turbopack: { root: process.cwd() },
   async headers() {

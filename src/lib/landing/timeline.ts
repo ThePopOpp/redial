@@ -19,7 +19,7 @@ export const formZoomEnd = 8.999;
 // leave the call story in a different state when the reader scrolls backward.
 const poses = [
   [2.1, -.15, 0, .12, -.38, -.09, 1],
-  [-2.2, -.05, -.3, .12, .40, .075, .96],
+  [0, -.05, -.3, .12, .08, 0, .96],
   [2.15, -.12, .1, -.04, -.14, -.035, 1.06],
   [2.05, -.06, 0, .07, -.25, .04, 1],
   [-2.25, -.12, .1, -.06, .28, -.04, 1.02],
@@ -46,6 +46,15 @@ export function stagedReveal(position: number, chapter: number) {
   const dissolve = smooth((phase - .40) / .22) * (1 - smooth((phase - .86) / .14));
   return { rise, dissolve, phoneOpacity: 1 - dissolve, details: smooth((phase - .48) / .12) };
 }
+// Hold the centered phone and label, then make room for the copy. Sharing these
+// scroll boundaries keeps the scene, card and typography synchronized in reverse.
+export function screeningChoreography(position: number) {
+  return {
+    shift: smooth((position - 1.28) / .18),
+    soften: smooth((position - 1.28) / .18),
+    copy: smooth((position - 1.46) / .14),
+  };
+}
 export function timeline(progress: number, mobile = false) {
   const position = clamp(progress) * 9;
   const index = Math.min(8, Math.floor(position));
@@ -54,18 +63,45 @@ export function timeline(progress: number, mobile = false) {
   const zoom = smooth((position - 8.10) / .90);
   const transition = index === 8 ? zoom : smooth((local - .62) / .38);
   const pose = poses[index].map((value, axis) => mix(value, poses[index + 1][axis], transition));
+  if (index === 1) {
+    const { shift } = screeningChoreography(position);
+    pose[0] = mix(mix(0, -2.2, shift), poses[2][0], transition);
+    pose[4] = mix(mix(.08, .40, shift), poses[2][4], transition);
+    pose[5] = mix(.075 * shift, poses[2][5], transition);
+  }
   const travel = index === 8 ? 0 : Math.sin(transition * Math.PI);
   // A shallow descending camera arc gives each slide real depth without
   // scroll hijacking or moving any of the interactive onboarding fields.
-  pose[1] -= travel * .55;
-  pose[2] -= travel * .65;
-  pose[3] += travel * .11;
-  pose[5] += travel * (index % 2 ? -.075 : .075);
+  const arc = index % 3;
+  pose[1] -= travel * [.55, .38, .46][arc];
+  pose[2] -= travel * [.65, .48, .72][arc];
+  pose[3] += travel * [.11, -.055, .075][arc];
+  pose[5] += travel * (index % 2 ? -.055 : .055);
+  // Reverse the resting three-quarter view on both sides, including the
+  // centered-to-left screening move. Keep all motion scroll-reversible.
+  pose[4] *= -1;
+  // A restrained side turn bridges each feature as the next phone
+  // reforms, then settle face-forward before its card expands.
+  let turn = 0;
+  let turnTarget = 0;
+  for (let boundary = 2; boundary <= 7; boundary++) {
+    const sweep = smooth((position - boundary + .18) / .16) * (1 - smooth((position - boundary) / .28));
+    // Direction follows the actual phone side, not chapter parity (two
+    // consecutive chapters can both place the phone on the right).
+    const direction = Math.sign(poses[boundary][0]);
+    const angle = [1.25, 1.04, 1.16, 1.20, 1.08, 1.18][boundary - 2];
+    turn += sweep * direction;
+    turnTarget += sweep * direction * angle;
+  }
+  pose[4] = pose[4] * (1 - Math.abs(turn)) + turnTarget;
+  pose[3] -= Math.abs(turn) * .10;
+  pose[5] += turn * .045;
   const reveal = index < 8 ? stagedReveal(position, index) : null;
   if (reveal) { pose[6] *= 1 + reveal.dissolve * .10; pose[3] -= reveal.dissolve * .055; }
   if (mobile) { pose[0] = 0; pose[1] = index >= 8 ? mix(-1.6, -2.1, transition) : -1.65; pose[6] *= .64; pose[4] *= .65; }
   const outline = Math.max(...[0, 3, 7].map(chapter => tracingPass(position - chapter, .08, .22, .38, .04)));
   const traceDraw = Math.max(...[0, 3, 7].map(chapter => smooth((position - chapter - .08) / .14) * (1 - smooth((position - chapter - .28) / .10))));
   const tone = tones[index].map((value, channel) => Math.round(mix(value, tones[index + 1][channel], transition)));
-  return { position, chapter: Math.min(8, Math.floor(position + .13)), local, transition, travel, pose, outline, traceDraw, tone, zoom, phoneOpacity: reveal?.phoneOpacity ?? 1, cameraZ: 11.5 + travel * .3, formReveal: zoom, sceneOpacity: 1, screenOpacity: 1 };
+  const transcriptGlow = smooth((position - 1.88) / .18) * (1 - smooth((position - 2.76) / .22));
+  return { position, chapter: Math.min(8, Math.floor(position + .13)), local, transition, travel, pose, outline, traceDraw, tone, zoom, transcriptGlow, phoneOpacity: reveal?.phoneOpacity ?? 1, cameraZ: 11.5 + travel * .3, formReveal: zoom, sceneOpacity: 1, screenOpacity: 1 };
 }

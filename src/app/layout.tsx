@@ -8,6 +8,9 @@ import '@fontsource/roboto-mono/400.css';
 import './globals.css';
 import './review.css';
 import './forms.css';
+import './contact-import.css';
+import './phone-wizard.css';
+import './carrier-setup.css';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
@@ -17,5 +20,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" suppressHydrationWarning><body><ThemeProvider><a className="skip-link" href="#main">Skip to content</a><div className="preview-banner">Local preview <span aria-hidden="true">·</span> Services are not connected</div>{children}</ThemeProvider></body></html>;
+  return <html lang="en" suppressHydrationWarning><body><ThemeProvider><a className="skip-link" href="#main">Skip to content</a><div className="preview-banner">Local preview <span aria-hidden="true">·</span> Calls and billing are not active</div>{children}</ThemeProvider></body></html>;
 }
