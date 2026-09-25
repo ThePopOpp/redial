@@ -4,7 +4,7 @@ A runnable local web review of Redial v1.1, preserving the complete build kit an
 
 ## Development hosting
 
-The project now includes a password-protected Docker deployment for Coolify, persistent preview storage, and runtime configuration checks for Supabase, Twilio, Resend or Hostinger SMTP. Start with [the development deployment guide](docs/DEVELOPMENT-DEPLOYMENT.md) and [.env.example](.env.example). The suggested hostname is `dev.redial.si`. Live customer accounts, calling and email delivery remain pending; adding provider variables does not activate them.
+The project now includes a password-protected Docker deployment for Coolify, persistent preview storage, and runtime configuration checks for Supabase, Twilio, Resend or Hostinger SMTP. Deploy the `main` branch with the **Dockerfile** build pack; start with [the development deployment guide](docs/DEVELOPMENT-DEPLOYMENT.md) and [.env.example](.env.example). The suggested hostname is `dev.redial.si`. Live customer accounts, calling and email delivery remain pending; adding provider variables does not activate them.
 
 ## Review locally
 

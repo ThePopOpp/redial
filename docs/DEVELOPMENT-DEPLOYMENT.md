@@ -8,7 +8,7 @@ The landing page, phone animation, seven-step form, shared member/admin setup vi
 
 ## Coolify application
 
-1. Create an application from `https://github.com/ThePopOpp/redial.git`, branch `development/coolify-foundation`. Choose **Dockerfile** as the build pack, repository root as the base directory, `/Dockerfile` as the Dockerfile path, and port **3000** inside the container. Do not set a custom start command.
+1. Create an application from `https://github.com/ThePopOpp/redial.git`, branch **`main`**. The deployment foundation is included on `main` so the owner's existing Coolify application can keep its locked default branch. Choose **Dockerfile** as the build pack, repository root (`/`) as the base directory, `/Dockerfile` as the Dockerfile path, and port **3000** inside the container. Do not set a custom start command. Port 3000 is container-internal; leave host port mappings empty.
 2. Set the domain to **`https://dev.redial.si`**. Create a DNS `A` record named `dev` pointing to the VPS IPv4 address. Add `AAAA` only if IPv6 is actually routed. Coolify's reverse proxy must preserve Host and redirect HTTP to HTTPS. Expose only the reverse proxy's web ports publicly; do not publish the application port directly.
 3. In **Environment Variables**, add the values from the root `.env.example` as **runtime** variables. Keep them out of build arguments. A prepared, Git-ignored `.env.coolify.local` exists on the development workstation with the Supabase project URL, publishable key and a generated preview password. Transfer it through Coolify's private environment editor; do not paste it into GitHub, logs, or chat.
 4. Add persistent storage mounted at **`/app/.redial`**. Use a dedicated volume for this development application. The container runs as UID/GID **1000:1000**; a bind mount must be writable by that user. Do not mount the project source, an existing application volume, or a production backup.
@@ -83,7 +83,7 @@ npm run test:container
 
 The container smoke test creates uniquely named temporary resources on a random loopback port. It checks unauthenticated denial, allowed-host/origin checks, health endpoints, secure cookies, shared form views, non-root execution and stored form data after restart. It removes only its own container, volume and temporary environment file. Existing servers on 3000, 3001 and 4317 are not changed by this test.
 
-GitHub Actions runs the checks and selected browser regressions without provider secrets. It does not deploy to a VPS. Use a known passing commit when configuring Coolify; automatic deploys should target only this development branch until release gates are complete.
+GitHub Actions runs the checks and selected browser regressions without provider secrets. It does not deploy to a VPS. The owner's Coolify development application tracks `main`; that branch name does not make the application a production release. Keep `REDIAL_DEPLOYMENT=development` and the password gate enabled. Any automatic deployment must target only this development application until release gates are complete.
 
 September 25 local evidence: lint, typecheck, optimized local and Docker builds, 8 environment/access tests, all 75 reference tests, all 70 browser tests, and the 92-file kit integrity check passed. Container tests verified both shared form projections and persistence across restart. The configured credential values were absent from generated browser assets, and the prepared environment file was excluded from the container. Supabase's read-only key check passed; Twilio, email delivery, public DNS/TLS, VPS deployment and GitHub-hosted CI are not covered by that result.
 
@@ -92,6 +92,16 @@ For a development rollback: record the running commit/image, stop the applicatio
 Use fictional data while customer identity and retention controls are unfinished. Drafts expire after eight hours; completed submissions stay on the development server until deleted. Both preview views depend on the originating browser cookie. Losing that cookie does not delete server data or grant another reviewer access.
 
 Deployment still needs the owner's Coolify application target, DNS access/records, Twilio credentials, verified sender address, Resend API key, and Hostinger mailbox credentials. The email-provider choice is resolved. No production service, DNS, live call, or email delivery has been changed or tested.
+
+## Missing Dockerfile in the first deployment
+
+The owner's September 25 deployment fetched `main` at `fb315753057e9de031dfa35c66293d83a9301448` and failed before any application build: `failed to read dockerfile: open Dockerfile: no such file or directory`. That commit predates the Dockerfile and deployment foundation, which were initially pushed only to `development/coolify-foundation`.
+
+Bring the existing deployment commits onto `main` with a fast-forward and deploy the latest `main` commit. The next deployment log must show a newer commit than `fb31575`. If Coolify still imports the old commit, check its source revision/commit pin and use the latest branch revision; clearing the build cache cannot add a file missing from the selected Git commit. Keep the Dockerfile build pack and root paths above. Do not paste only the Dockerfile into the older application: the image also requires the runtime configuration, startup scripts, access checks, and lockfile changes from the same foundation.
+
+After the image builds, startup still validates the runtime variables and writable data volume. A subsequent configuration error is separate from the missing-file failure. A local build or GitHub push does not prove the VPS deployment succeeded.
+
+September 25 branch-fix verification: lint, typecheck, all 12 deployment tests, the 92-file kit integrity check, the Docker image build (including the optimized Next build), and the isolated container smoke test passed. The container test covered authentication, host/origin restrictions, readiness, secure cookies, non-root execution, persisted onboarding after restart, and deletion. This fix changes deployment instructions and promotes the existing foundation; it does not change application behavior or configure the VPS.
 
 ## Official references
 
