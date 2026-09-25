@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next';
 
 const config: NextConfig = {
+  // Docker uses standalone output; local review keeps the normal `next start`
+  // layout so existing scripts and fixture paths remain unchanged.
+  output: process.env.REDIAL_BUILD_STANDALONE === '1' ? 'standalone' : undefined,
+  outputFileTracingExcludes: { '*': ['.redial/**', '.env*', '.codex/**', '.vscode/**', 'docs/**', 'redial-build-kit/**', 'tests/**'] },
   poweredByHeader: false,
   turbopack: { root: process.cwd() },
   async headers() {

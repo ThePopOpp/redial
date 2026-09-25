@@ -84,7 +84,7 @@ export function LandingExperience() {
       <section id="onboarding" className="landing-onboarding" aria-label="Start your Redial setup" data-stage={reduced || frame.position >= formZoomEnd ? 'ready' : frame.position >= formPreviewStart ? 'embedded' : 'hidden'} inert={!reduced && frame.position < formZoomEnd}>
         <div ref={onboarding} className="onboarding-viewport"><OnboardingForm /></div>
       </section>
-      <div className="landing-availability"><span className="availability-dot" /><p>Illustrative experience. Redial’s live calling services are in development. Setup saves locally; it does not activate a number.</p><button className="motion-toggle" onClick={() => setMotionOverride(!reduced)} disabled={unavailable} aria-pressed={reduced}><VolumeX size={14} />{unavailable ? 'Static experience' : reduced ? 'Enable motion' : 'Reduce motion'}</button></div>
+      <div className="landing-availability"><span className="availability-dot" /><p>Illustrative experience. Redial’s live calling services are in development. Setup saves on the preview server; it does not activate a number.</p><button className="motion-toggle" onClick={() => setMotionOverride(!reduced)} disabled={unavailable} aria-pressed={reduced}><VolumeX size={14} />{unavailable ? 'Static experience' : reduced ? 'Enable motion' : 'Reduce motion'}</button></div>
     </main>
     <footer className="landing-footer"><Brand /><p>A little more intention on the line.</p><div><Link href="/compatibility">Connection options</Link><Link href="/demo/overview">The workspace</Link><a href="#main">Back to the beginning ↑</a></div></footer>
   </div>;

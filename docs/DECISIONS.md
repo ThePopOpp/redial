@@ -1,5 +1,16 @@
 # Working decision log
 
+## 2026-09-25 ? Protected Coolify development preparation
+
+- Inventory began on main at fb31575, matching GitHub. Existing untracked .codex/, .vscode/, and docs/3d-phone/ were preserved and excluded from the deployment change. The original 92-file kit remains unchanged.
+- The owner requested a Coolify development deployment for redial.si and confirmed the new Supabase project is development. This extends the previous local-only scope to a protected development site; it does not authorize production activation. Draft hostname is dev.redial.si pending the owner's choice.
+- Use a pinned multistage Docker image and runtime-only provider configuration. Keep local review behavior and ports intact. Permit hosted preview APIs only with an exact configured origin/Host, Basic development access, secure cookies and a dedicated persistent volume. This shared preview password is not member/staff authentication. One process/instance is required by the existing file store.
+- Supabase MCP and a read-only Auth endpoint check verified the development project's publishable key. The key and generated development password were saved only in Git-ignored .env.coolify.local. Supabase has no public tables or applied migrations. Existing rls_auto_enable() privilege advisories need review during the identity/RLS increment; no database writes were made.
+- Add pinned Nodemailer 10.0.10 and explicit read-only provider diagnostics. Twilio and email credentials are not available; neither is described as connected. No emails, test calls, webhooks or service provisioning were performed. Managed Supabase Auth SMTP remains separate from app environment variables.
+- Preserve the UI and update storage acknowledgments to say preview server instead of this computer. Form submissions still share one browser-scoped record between the member/admin preview views. They do not become real Supabase accounts.
+- See DEVELOPMENT-DEPLOYMENT.md for Coolify configuration, provider variables, validation evidence, remaining M1 gates and rollback limits. Publish on development/coolify-foundation; no automatic VPS deployment is added.
+
+
 ## 2026-09-22 — Keep onboarding inside the zooming phone
 
 - Replace the final outline-to-card transition with one solid-phone zoom containing the actual onboarding form. Preserve all earlier story effects, existing form behavior and local-only service boundaries. The clean pre-edit baseline is Git commit `87e3880`.

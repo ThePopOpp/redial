@@ -11,11 +11,15 @@
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",
     "review": "next start --hostname 127.0.0.1 --port 4317",
-    "lint": "eslint src tests *.ts *.mjs",
+    "lint": "eslint src tests config scripts *.ts *.mjs",
     "typecheck": "next typegen && tsc --noEmit",
     "test:reference": "node --test redial-build-kit/reference-code/policy.test.mjs redial-build-kit/reference-code/live-controls.test.mjs",
     "test:e2e": "playwright test",
-    "verify:kit": "node scripts/verify-kit.mjs"
+    "verify:kit": "node scripts/verify-kit.mjs",
+    "check:environment": "node scripts/check-environment.mjs",
+    "check:providers": "node scripts/check-providers.mjs",
+    "test:deployment": "node --test tests/deployment.test.mjs",
+    "test:container": "node tests/container-smoke.mjs"
   },
   "dependencies": {
     "@fontsource/dm-serif-display": "5.3.0",
@@ -32,6 +36,7 @@
     "lucide-react": "1.47.0",
     "next": "16.3.5",
     "next-themes": "0.4.6",
+    "nodemailer": "10.0.10",
     "react": "19.3.0",
     "react-day-picker": "9.14.0",
     "react-dom": "19.3.0",

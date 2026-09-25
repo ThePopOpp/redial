@@ -55,7 +55,7 @@ export function Editor({ title, description, label = 'Add', fields, command, ini
         const errors = validateDates(data, fields); setFieldErrors(errors);
         if (Object.keys(errors).length) { form.querySelector<HTMLElement>(`[data-field="${Object.keys(errors)[0]}"]`)?.focus(); return; }
         if (await run({ type: command, ...initial, ...(transform ? transform(data) : data) })) setOpen(false);
-      }}><Fields fields={fields} errors={fieldErrors} onFieldChange={name => setFieldErrors(current => ({ ...current, [name]: "" }))} /><p className="small-label">This changes synthetic data on this computer only.</p>{error && <p className="error-message" role="alert">{error}</p>}<div className="actions"><Button disabled={busy} type="submit">{busy ? 'Saving…' : submit}</Button><DialogClose asChild><Button variant="outline" type="button">Cancel</Button></DialogClose></div></form>
+      }}><Fields fields={fields} errors={fieldErrors} onFieldChange={name => setFieldErrors(current => ({ ...current, [name]: "" }))} /><p className="small-label">This changes synthetic data on the preview server only.</p>{error && <p className="error-message" role="alert">{error}</p>}<div className="actions"><Button disabled={busy} type="submit">{busy ? 'Saving…' : submit}</Button><DialogClose asChild><Button variant="outline" type="button">Cancel</Button></DialogClose></div></form>
     </DialogContent>
   </Dialog>;
 }

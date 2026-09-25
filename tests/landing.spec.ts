@@ -86,7 +86,7 @@ test('seven-step setup saves real form input, resumes, and deletes independently
   await expect(form).toHaveAttribute('data-step', '7');
   await expect(form).toContainText('Morgan Review');
   await expect(form).toContainText('Dedicated number');
-  await form.getByRole('checkbox', { name: /Save my details on this computer/ }).check();
+  await form.getByRole('checkbox', { name: /Save my details on this preview server/ }).check();
   await form.getByRole('button', { name: 'Finish setup', exact: true }).click();
   await expect(form).toHaveAttribute('data-complete', 'true');
   await expect(form).toContainText('Your number is not connected yet');

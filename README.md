@@ -2,6 +2,10 @@
 
 A runnable local web review of Redial v1.1, preserving the complete build kit and its ordered acceptance gates. The member and operations workspaces use persistent synthetic data, including interactive Insider, Gavel, Audible and Directory simulations. Real authentication, provider integrations and native clients are still pending; this is not the completed production system.
 
+## Development hosting
+
+The project now includes a password-protected Docker deployment for Coolify, persistent preview storage, and runtime configuration checks for Supabase, Twilio, Resend or Hostinger SMTP. Start with [the development deployment guide](docs/DEVELOPMENT-DEPLOYMENT.md) and [.env.example](.env.example). The suggested hostname is `dev.redial.si`. Live customer accounts, calling and email delivery remain pending; adding provider variables does not activate them.
+
 ## Review locally
 
 Use Node 24 (tested 24.15.0) and npm 11 (tested 11.12.1).
