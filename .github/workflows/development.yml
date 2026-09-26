@@ -1,0 +1,34 @@
+name: Development checks
+on:
+  pull_request:
+  push:
+    branches: [main, 'development/**']
+permissions:
+  contents: read
+concurrency:
+  group: development-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm install --global npm@11.12.1 --ignore-scripts
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test:deployment
+      - run: npm run test:reference
+      - run: npm run verify:kit
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e -- tests/api.spec.ts tests/onboarding-handoff.spec.ts tests/landing.spec.ts tests/shell.spec.ts
+      - run: docker build --tag redial:development .
+      - run: npm run test:container

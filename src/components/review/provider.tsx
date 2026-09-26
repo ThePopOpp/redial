@@ -21,11 +21,11 @@ export function ReviewProvider({ children }: { children: React.ReactNode }) {
   const locked = useRef(false);
   async function initialize() {
     try { const next = await fetchReviewState(); setError(''); setState(next); }
-    catch (error) { setError(error instanceof Error ? error.message : 'The local server is unavailable.'); }
+    catch (error) { setError(error instanceof Error ? error.message : 'The preview server is unavailable.'); }
   }
   useEffect(() => {
     let active = true;
-    fetchReviewState().then(next => { if (active) setState(next); }).catch(error => { if (active) setError(error instanceof Error ? error.message : 'The local server is unavailable.'); });
+    fetchReviewState().then(next => { if (active) setState(next); }).catch(error => { if (active) setError(error instanceof Error ? error.message : 'The preview server is unavailable.'); });
     return () => { active = false; };
   }, []);
   async function run(command: unknown, message = 'Saved to this local review.') {

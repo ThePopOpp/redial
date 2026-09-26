@@ -1,14 +1,14 @@
 import 'server-only';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { supabaseConfig } from './config';
+import { supabaseConfig, appOrigin } from './config';
 
 export async function serverSupabase() {
   const config = supabaseConfig();
   if (!config) return null;
   const jar = await cookies();
   return createServerClient(config.url, config.key, {
-    cookieOptions: { httpOnly: true, sameSite: 'lax', secure: process.env.APP_BASE_URL?.startsWith('https://') ?? false },
+    cookieOptions: { httpOnly: true, sameSite: 'lax', secure: appOrigin().startsWith('https://') },
     cookies: {
       getAll: () => jar.getAll(),
       setAll: values => {

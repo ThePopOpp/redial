@@ -49,7 +49,7 @@ Sign in through `/staff-sign-in`; enroll a TOTP authenticator using the displaye
 
 Use the repository-root `Dockerfile` build pack and port **3000**. Set your HTTPS domain in Coolify and use the same origin for `APP_BASE_URL` and Supabase redirects. Configure the variables above as runtime variables. The image uses pinned Node/npm, a lockfile install, a standalone Next server and a non-root runtime user. `.env*`, local state and Git history are excluded from the build context.
 
-Use `/api/health` for container liveness. `/api/ready` returns 503 when Supabase is not configured or Auth is unreachable; a 200 only establishes Auth reachability, not database migrations, RLS correctness or provider readiness. Do not cache authenticated pages, callbacks or server-action responses at the reverse proxy/CDN.
+Use `/api/health/live` for container liveness. `/api/health/ready` returns 503 when Supabase is not configured or Auth is unreachable; a 200 only establishes Auth reachability, not database migrations, RLS correctness or provider readiness. Do not cache authenticated pages, callbacks or server-action responses at the reverse proxy/CDN.
 
 Real dashboard records live in Supabase. The separate demo/local-onboarding flows still use `.redial` filesystem storage and are not migrated into authenticated accounts. Container replacement discards those local drafts unless separately persisted. They must remain clearly labeled previews. Do not treat the public local-admin preview as staff authorization. Before public launch, retire or explicitly isolate the local-only onboarding surfaces and complete the release gates.
 

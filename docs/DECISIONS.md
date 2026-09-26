@@ -1,5 +1,40 @@
 # Working decision log
 
+## 2026-09-25 - Reconcile the Supabase dashboard and Coolify deployment tracks
+
+- Two computers diverged from `fb31575`. This workstation held an uncommitted Supabase identity/dashboard track (auth, `/app`, `/ops`, four migrations, the RLS suite, carrier setup, contact import, phone simulator); `origin/main` held a committed Coolify deployment track (`config/runtime.mjs`, access gate, Resend/Hostinger diagnostics, CI, container tests, teaser email). The local work was committed first as `36093c6`: `src/proxy.ts`, `Dockerfile`, `.dockerignore` and `.env.example` existed untracked locally and tracked on the remote, so a merge or forced checkout would have destroyed files held in no commit.
+- `src/proxy.ts` is merged rather than chosen, because both jobs are required. Order is load-bearing: content-free `/api/health/live` first, then `readRuntime()` failing closed with 503, then the Basic-auth/Host perimeter, then the Supabase session refresh scoped to authenticated paths. A rejected request costs no Supabase round trip and a failed password never refreshes a session cookie. The matcher widens to `/:path*` for the perimeter; the proxy is still not an authorization grant.
+- Deployment files resolve to the remote: pinned `node:24.15.0-bookworm-slim`, `scripts/start-container.mjs`, the allowlist Docker context, `REDIAL_BUILD_STANDALONE` and `outputFileTracingExcludes`. `.env.example` is rewritten into web, worker and operator blocks so the secret boundary is visible in the template.
+- `REDIAL_SITE_URL` replaces `APP_BASE_URL` as the single configured origin, shared by `config/runtime.mjs`, the access gate, `appOrigin()` and the launch gate. `APP_BASE_URL` remains a deprecated fallback for one release. Health endpoints consolidate on `/api/health/live` and `/api/health/ready`; the Supabase auth-reachability probe folds into readiness alongside the data-volume write probe, and the duplicate `/api/health` and `/api/ready` routes are removed.
+- `config/runtime.mjs` gains a loopback escape for `REDIAL_SITE_URL` and `SUPABASE_URL` when `REDIAL_DEPLOYMENT=local`, without which the browser-test Supabase double and local development both fail validation. Hosted modes remain HTTPS-only and still fail closed, as the deployment tests assert. The launch gate reports under the new key name and extends its forbidden-secret set to `SQUARE_*`, `TWILIO_API_SECRET` and `OPENROUTER_API_KEY`; provider secrets stay blocked in the web environment.
+- `package-lock.json` had to be regenerated inside the pinned Linux image: npm on Windows omits the OS-gated `@img/sharp-wasm32` subtree, so `npm ci` failed in the container on missing `@emnapi/core` and `@emnapi/runtime`. The repaired lockfile adds exactly those four entries, removes none, and drifts no direct dependency version.
+- Validation on the merged tree: lint, typecheck, 15 node environment/access/launch tests, all 75 reference tests, all 81 browser tests, 29 RLS assertions against a throwaway Postgres container, 5 dashboard integration tests against the HTTP double, the 92-file kit integrity check, the Docker image build and the container smoke test all passed. No migration was applied to a hosted project, no provider was contacted, no DNS or Coolify change was made, and no live call, email or charge occurred.
+- Note: this file already contained one non-UTF-8 byte in an earlier heading before this change. Existing bytes were left untouched rather than rewritten.
+
+## 2026-09-25 - Personal first-look email
+
+- Create an Outlook-oriented email teaser with Redial's existing brand, an actual app phone mockup, all four v1.1 controls, and buttons to the homepage and `/demo/live` simulator. Keep editable HTML and plain text alongside a generated copy/paste preview and unsent EML with a CID image. No recipient list, sender credentials, tracking or send action is added.
+- Preserve the working app. The image uses the existing local Three.js screen with a fictional caller; presentation changes were applied only in the capture browser. Personalization remains explicit `[First name]` and `[Your name]` placeholders.
+- Desktop/mobile preview, copy payload, links, image loading and MIME image integrity were verified. Actual Outlook rendering remains untested. Public HTTPS currently returns a self-signed certificate error; this is an author-only readiness note, not part of the copied email. See `EMAIL-TEASER.md`.
+
+## 2026-09-25 - Resend primary with Hostinger SMTP fallback
+
+- Record the owner's email choice: Resend primary, `smtp.hostinger.com:465` with implicit TLS as fallback. Add `REDIAL_EMAIL_FALLBACK_PROVIDER=smtp` alongside `REDIAL_EMAIL_PROVIDER=resend` in the environment template and ignored workstation deployment file. Preserve the prepared Supabase key and development access password.
+- Validate both providers' required credentials when fallback is selected. Provider checks independently inspect Resend and SMTP without sending mail, and continue to inspect fallback if the primary check fails. Report only redacted statuses.
+- Sender address, Resend key and Hostinger mailbox credentials are still missing. Do not infer a mailbox from the domain or configure IMAP/POP for outgoing mail. Automatic message failover belongs to the later durable delivery implementation; no queued message, Auth setting or external service was changed.
+- Validation: lint, typecheck, all 12 environment/access/email diagnostic tests, the Docker build and container smoke checks passed; all 92 kit originals remain unchanged. Provider response tests use mocks and send no messages. The prepared deployment file reports the missing sender and credentials as expected. Browser UI is unchanged.
+
+## 2026-09-25 ? Protected Coolify development preparation
+
+- Inventory began on main at fb31575, matching GitHub. Existing untracked .codex/, .vscode/, and docs/3d-phone/ were preserved and excluded from the deployment change. The original 92-file kit remains unchanged.
+- The owner requested a Coolify development deployment for redial.si and confirmed the new Supabase project is development. This extends the previous local-only scope to a protected development site; it does not authorize production activation. Draft hostname is dev.redial.si pending the owner's choice.
+- Use a pinned multistage Docker image and runtime-only provider configuration. Keep local review behavior and ports intact. Permit hosted preview APIs only with an exact configured origin/Host, Basic development access, secure cookies and a dedicated persistent volume. This shared preview password is not member/staff authentication. One process/instance is required by the existing file store.
+- Supabase MCP and a read-only Auth endpoint check verified the development project's publishable key. The key and generated development password were saved only in Git-ignored .env.coolify.local. Supabase has no public tables or applied migrations. Existing rls_auto_enable() privilege advisories need review during the identity/RLS increment; no database writes were made.
+- Add pinned Nodemailer 10.0.10 and explicit read-only provider diagnostics. Twilio and email credentials are not available; neither is described as connected. No emails, test calls, webhooks or service provisioning were performed. Managed Supabase Auth SMTP remains separate from app environment variables.
+- Preserve the UI and update storage acknowledgments to say preview server instead of this computer. Form submissions still share one browser-scoped record between the member/admin preview views. They do not become real Supabase accounts.
+- See DEVELOPMENT-DEPLOYMENT.md for Coolify configuration, provider variables, validation evidence, remaining M1 gates and rollback limits. Publish on development/coolify-foundation; no automatic VPS deployment is added.
+
+
 ## 2026-09-22 — Keep onboarding inside the zooming phone
 
 - Replace the final outline-to-card transition with one solid-phone zoom containing the actual onboarding form. Preserve all earlier story effects, existing form behavior and local-only service boundaries. The clean pre-edit baseline is Git commit `87e3880`.

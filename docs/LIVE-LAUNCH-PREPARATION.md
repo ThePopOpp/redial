@@ -77,7 +77,7 @@ Official references:
 Do not create fake gateway/worker containers from the web image. They need their
 own reproducible images, health/readiness endpoints, shutdown/drain behavior and
 tests before deployment. The web health endpoints do not prove that calls work.
-`/api/ready` currently checks configuration and Auth reachability only.
+`/api/health/ready` currently checks configuration, data-volume writability and Auth reachability only.
 
 ### Staging web procedure (requires separate deployment authorization)
 
@@ -89,7 +89,7 @@ tests before deployment. The web health endpoints do not prove that calls work.
    - `202609250001_carrier_setup.sql`
 3. Configure Supabase Site URL and exact `<APP_BASE_URL>/auth/callback` redirect, verified-email signup and custom auth SMTP. Verify signup/reset/invite flows and staff MFA against the real project. The HTTP test double does not prove hosted Supabase configuration.
 4. Configure the root Dockerfile in Coolify, internal port 3000, non-root runtime, HTTPS domain, runtime variables from `.env.example`. Do not publish the container port directly to the internet. Do not copy `.env.local` into the image.
-5. Check `/api/health`, `/api/ready`, verified sign-in, each migration-backed workflow, cross-workspace isolation, revocation, draft concurrency and correct mobile URLs. Test from the physical phone over HTTPS.
+5. Check `/api/health/live`, `/api/health/ready`, verified sign-in, each migration-backed workflow, cross-workspace isolation, revocation, draft concurrency and correct mobile URLs. Test from the physical phone over HTTPS.
 6. Leave the preview notice and call controls inactive. A successful web deployment is not permission to configure forwarding.
 
 ### Voice work still required before a pilot

@@ -15,10 +15,13 @@ export function supabaseConfig() {
   return { url: parsed.origin, key };
 }
 
+// REDIAL_SITE_URL is the deployment's configured origin, shared with
+// config/runtime.mjs, the container entry point and the access gate.
+// APP_BASE_URL is accepted as a deprecated fallback for one release.
 export function appOrigin() {
-  const value = process.env.APP_BASE_URL || 'http://127.0.0.1:4317';
+  const value = process.env.REDIAL_SITE_URL || process.env.APP_BASE_URL || 'http://127.0.0.1:4317';
   const parsed = new URL(value);
-  if (parsed.pathname !== '/' || parsed.search || parsed.hash || parsed.username || parsed.password) throw new Error('APP_BASE_URL must be an origin.');
-  if (parsed.protocol !== 'https:' && !(parsed.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(parsed.hostname))) throw new Error('APP_BASE_URL requires HTTPS.');
+  if (parsed.pathname !== '/' || parsed.search || parsed.hash || parsed.username || parsed.password) throw new Error('REDIAL_SITE_URL must be an origin.');
+  if (parsed.protocol !== 'https:' && !(parsed.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(parsed.hostname))) throw new Error('REDIAL_SITE_URL requires HTTPS.');
   return parsed.origin;
 }

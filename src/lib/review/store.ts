@@ -7,8 +7,10 @@ import { NextResponse } from 'next/server';
 import { makeReviewState } from './seed';
 import { applyReviewCommand, requestSchema, ReviewError } from './commands';
 import type { ReviewState } from './model';
+import { runtime } from '@/lib/runtime';
+import { checkAccess } from '../../../config/access.mjs';
 
-const directory = path.join(process.cwd(), '.redial', 'reviews');
+const directory = () => path.join(runtime().dataDir, 'reviews');
 const cookieName = 'redial_local_review';
 const lifetime = 8 * 60 * 60 * 1000;
 const uuidPattern = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
@@ -17,16 +19,10 @@ const globalStore = globalThis as typeof globalThis & { redialReviewLocks?: Map<
 const locks = globalStore.redialReviewLocks ??= new Map();
 
 export function checkLocalRequest(request: Request, mutation = false) {
-  const url = new URL(request.url);
-  const host = request.headers.get('host') ?? '';
-  // Next may normalize request.url to its internal listening hostname. Validate
-  // the actual HTTP Host against loopback, without trusting forwarded headers.
-  if (!/^(?:127\.0\.0\.1|localhost|\[::1\]):[1-9]\d{0,4}$/.test(host)) throw new ReviewError(403, 'LOCAL_ONLY', 'This review API is available on the local server only.');
-  const origin = new URL(`${url.protocol}//${host}`).origin;
-  if (mutation && request.headers.get('origin') !== origin) throw new ReviewError(403, 'ORIGIN', 'This change must come from the local review page.');
-  if (request.headers.get('sec-fetch-site') === 'cross-site') throw new ReviewError(403, 'ORIGIN', 'Cross-site requests are unavailable.');
+  const denied = checkAccess(request, runtime(), mutation);
+  if (denied) throw new ReviewError(denied.status, denied.code, denied.message);
 }
-function location(id: string) { return path.join(directory, `${id}.json`); }
+function location(id: string) { return path.join(directory(), `${id}.json`); }
 async function read(id: string): Promise<RecordFile> {
   try {
     const record = JSON.parse(await readFile(location(id), 'utf8')) as RecordFile;
@@ -39,8 +35,8 @@ async function read(id: string): Promise<RecordFile> {
   }
 }
 async function save(id: string, record: RecordFile) {
-  await mkdir(directory, { recursive: true });
-  const temporary = path.join(directory, `${id}.${randomUUID()}.tmp`);
+  await mkdir(directory(), { recursive: true });
+  const temporary = path.join(directory(), `${id}.${randomUUID()}.tmp`);
   await writeFile(temporary, JSON.stringify(record), { encoding: 'utf8', mode: 0o600 });
   await rename(temporary, location(id));
 }
@@ -64,16 +60,16 @@ export function failure(error: unknown) {
 export async function openReview() {
   try { const id = await sessionId(); return json({ state: (await read(id)).state }); }
   catch (error) { if (!(error instanceof ReviewError) || error.status !== 401) throw error; }
-  await mkdir(directory, { recursive: true });
+  await mkdir(directory(), { recursive: true });
   // Bounded, local-only cleanup of expired fixture files; filenames never come from input.
-  for (const name of (await readdir(directory)).filter(name => uuidPattern.test(name.replace(/\.json$/, ''))).slice(0, 200)) {
-    try { const record = JSON.parse(await readFile(path.join(directory, name), 'utf8')) as RecordFile; if (record.expiresAt <= Date.now()) await unlink(path.join(directory, name)); } catch { /* Other active requests may have removed an expired file. */ }
+  for (const name of (await readdir(directory())).filter(name => uuidPattern.test(name.replace(/\.json$/, ''))).slice(0, 200)) {
+    try { const record = JSON.parse(await readFile(path.join(directory(), name), 'utf8')) as RecordFile; if (record.expiresAt <= Date.now()) await unlink(path.join(directory(), name)); } catch { /* Other active requests may have removed an expired file. */ }
   }
   const id = randomUUID();
   const record = { expiresAt: Date.now() + lifetime, state: makeReviewState(), keys: [] };
   await save(id, record);
   const response = json({ state: record.state }, 201);
-  response.cookies.set(cookieName, id, { httpOnly: true, sameSite: 'strict', secure: false, path: '/api/demo', maxAge: lifetime / 1000 });
+  response.cookies.set(cookieName, id, { httpOnly: true, sameSite: 'strict', secure: runtime().secureCookies, path: '/api/demo', maxAge: lifetime / 1000 });
   return response;
 }
 export async function getReview() { return json({ state: (await read(await sessionId())).state }); }

@@ -6,8 +6,9 @@ import { cookies } from 'next/headers';
 import { json } from '@/lib/review/store';
 import { ReviewError } from '@/lib/review/commands';
 import { onboardingRequestSchema, setupManagementSchema, validateDraft, type SavedOnboarding, type SetupAccount } from './onboarding';
+import { runtime } from '@/lib/runtime';
 
-const root = path.join(process.cwd(), '.redial', 'onboarding');
+const root = () => path.join(runtime().dataDir, 'onboarding');
 const cookie = 'redial_setup_draft';
 const pattern = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 const local = globalThis as typeof globalThis & { redialSetupLocks?: Map<string, Promise<unknown>>; redialSetupExpiry?: Map<string, ReturnType<typeof setTimeout>> };
@@ -29,25 +30,25 @@ async function serial<T>(id: string, operation: () => Promise<T>): Promise<T> {
 async function currentId() { const id = (await cookies()).get(cookie)?.value; return id && pattern.test(id) ? id : null; }
 async function read(id: string): Promise<SavedOnboarding | null> {
   try {
-    const record = JSON.parse(await readFile(path.join(root, `${id}.json`), 'utf8')) as SavedOnboarding;
-    if (record.expiresAt !== null && record.expiresAt <= Date.now()) { await unlink(path.join(root, `${id}.json`)); cancelExpiry(id); return null; }
+    const record = JSON.parse(await readFile(path.join(root(), `${id}.json`), 'utf8')) as SavedOnboarding;
+    if (record.expiresAt !== null && record.expiresAt <= Date.now()) { await unlink(path.join(root(), `${id}.json`)); cancelExpiry(id); return null; }
     return record;
   } catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null; throw error; }
 }
 async function restoreExpirations() {
-  try { for (const filename of await readdir(root)) { const id = filename.replace(/\.json$/, ''); if (!filename.endsWith('.json') || !pattern.test(id) || expirations.has(id)) continue; await serial(id, async () => { const saved = await read(id); if (saved) expireAt(id, saved.expiresAt); }); } }
+  try { for (const filename of await readdir(root())) { const id = filename.replace(/\.json$/, ''); if (!filename.endsWith('.json') || !pattern.test(id) || expirations.has(id)) continue; await serial(id, async () => { const saved = await read(id); if (saved) expireAt(id, saved.expiresAt); }); } }
   catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
 }
 async function write(saved: SavedOnboarding) {
-  await mkdir(root, { recursive: true });
-  const temporary = path.join(root, `${saved.id}.${randomUUID()}.tmp`);
-  try { await writeFile(temporary, JSON.stringify(saved), { encoding: 'utf8', mode: 0o600 }); await rename(temporary, path.join(root, `${saved.id}.json`)); }
+  await mkdir(root(), { recursive: true });
+  const temporary = path.join(root(), `${saved.id}.${randomUUID()}.tmp`);
+  try { await writeFile(temporary, JSON.stringify(saved), { encoding: 'utf8', mode: 0o600 }); await rename(temporary, path.join(root(), `${saved.id}.json`)); }
   finally { await unlink(temporary).catch(error => { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }); }
   expireAt(saved.id, saved.expiresAt);
 }
 function withCookie(saved: SavedOnboarding, status = 200) {
   const response = json({ saved }, status);
-  response.cookies.set(cookie, saved.id, { httpOnly: true, sameSite: 'strict', secure: false, path: '/api/onboarding', maxAge: saved.expiresAt === null ? 365 * 24 * 3600 : Math.max(1, Math.floor((saved.expiresAt - Date.now()) / 1000)) });
+  response.cookies.set(cookie, saved.id, { httpOnly: true, sameSite: 'strict', secure: runtime().secureCookies, path: '/api/onboarding', maxAge: saved.expiresAt === null ? 365 * 24 * 3600 : Math.max(1, Math.floor((saved.expiresAt - Date.now()) / 1000)) });
   return response;
 }
 async function body(request: Request) {
@@ -105,6 +106,6 @@ export async function manageSetup(request: Request) {
 }
 export async function deleteOnboarding() {
   const id = await currentId();
-  if (id) await serial(id, async () => { try { await unlink(path.join(root, `${id}.json`)); } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; } cancelExpiry(id); });
-  const response = json({ deleted: true }); response.cookies.set(cookie, '', { path: '/api/onboarding', maxAge: 0, httpOnly: true, sameSite: 'strict' }); return response;
+  if (id) await serial(id, async () => { try { await unlink(path.join(root(), `${id}.json`)); } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; } cancelExpiry(id); });
+  const response = json({ deleted: true }); response.cookies.set(cookie, '', { path: '/api/onboarding', maxAge: 0, httpOnly: true, sameSite: 'strict', secure: runtime().secureCookies }); return response;
 }
