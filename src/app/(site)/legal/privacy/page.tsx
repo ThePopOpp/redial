@@ -20,7 +20,7 @@ export default function Privacy() {
 
     <section>
       <p>Redial is operated by <strong>Qallus</strong> (“Qallus”, “we”, “us”). This policy explains what personal information the Redial call-screening service collects, why we collect it, who we share it with, how long we keep it, and the choices you have.</p>
-      <p>It covers the Redial website, the member application, and the telephone screening service. Questions go to <a href="mailto:privacy@redial.si">privacy@redial.si</a>.</p>
+      <p>It covers the Redial website, the member application, and the telephone screening service. Questions go to <a href="mailto:hello@redial.si">hello@redial.si</a>.</p>
     </section>
 
     <section>
@@ -144,7 +144,7 @@ export default function Privacy() {
         <li>Stop text messages by replying STOP, and stop optional email by using the unsubscribe link.</li>
         <li>Close your account and ask us to delete your information.</li>
       </ul>
-      <p>Depending on where you live, you may also have the right to a copy of your information, to object to or restrict processing, and to complain to a regulator. Write to <a href="mailto:privacy@redial.si">privacy@redial.si</a> and we will respond. We will ask you to verify your identity, but we will not ask for more documents than we need.</p>
+      <p>Depending on where you live, you may also have the right to a copy of your information, to object to or restrict processing, and to complain to a regulator. Write to <a href="mailto:hello@redial.si">hello@redial.si</a> and we will respond. We will ask you to verify your identity, but we will not ask for more documents than we need.</p>
     </section>
 
     <section>
@@ -155,7 +155,7 @@ export default function Privacy() {
 
     <section>
       <h2>11. Children</h2>
-      <p>Redial is not intended for anyone under 18, and we do not knowingly collect information from children. If you believe a child has given us information, write to <a href="mailto:privacy@redial.si">privacy@redial.si</a> and we will delete it.</p>
+      <p>Redial is not intended for anyone under 18, and we do not knowingly collect information from children. If you believe a child has given us information, write to <a href="mailto:hello@redial.si">hello@redial.si</a> and we will delete it.</p>
     </section>
 
     <section>
@@ -170,7 +170,7 @@ export default function Privacy() {
 
     <section>
       <h2>14. Contact</h2>
-      <p>Qallus — privacy enquiries: <a href="mailto:privacy@redial.si">privacy@redial.si</a><br />Customer care: <a href="mailto:support@redial.si">support@redial.si</a></p>
+      <p>Qallus<br />Privacy enquiries and customer care: <a href="mailto:hello@redial.si">hello@redial.si</a></p>
     </section>
 
     <nav className="legal-footer-nav" aria-label="Legal documents"><Link href="/legal/terms">Terms of Service</Link><Link href="/">Back to Redial</Link></nav>

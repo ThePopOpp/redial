@@ -35,7 +35,7 @@ export default function Terms() {
       <ul>
         <li>You must be at least 18 and able to enter a contract.</li>
         <li>You must give accurate account details and keep them current.</li>
-        <li>You are responsible for your password and for what happens under your account. Tell us promptly at <a href="mailto:support@redial.si">support@redial.si</a> if you think someone else has access.</li>
+        <li>You are responsible for your password and for what happens under your account. Tell us promptly at <a href="mailto:hello@redial.si">hello@redial.si</a> if you think someone else has access.</li>
         <li>You may invite other people into a workspace. The person who owns a line controls who can read that line’s call content. Paying for a workspace does not by itself grant access to other people’s calls.</li>
       </ul>
     </section>
@@ -64,7 +64,7 @@ export default function Terms() {
         <li><strong>Message frequency.</strong> Message frequency varies and depends on how you use the Service.</li>
         <li><strong>Cost.</strong> <strong>Message and data rates may apply.</strong> Redial does not charge you for these messages; your mobile carrier may.</li>
         <li><strong>Opting out.</strong> Reply <strong>STOP</strong> to any message to stop all further text messages. You will receive one confirmation. You can opt back in by turning messages on again in your settings.</li>
-        <li><strong>Help.</strong> Reply <strong>HELP</strong>, or email <a href="mailto:support@redial.si">support@redial.si</a>.</li>
+        <li><strong>Help.</strong> Reply <strong>HELP</strong>, or email <a href="mailto:hello@redial.si">hello@redial.si</a>.</li>
         <li><strong>Carriers.</strong> Carriers are not liable for delayed or undelivered messages. Delivery is not guaranteed.</li>
         <li><strong>Privacy.</strong> We do not sell or share your mobile number or your consent with third parties for their marketing. See our <Link href="/legal/privacy">Privacy Policy</Link>.</li>
       </ul>
@@ -90,7 +90,7 @@ export default function Terms() {
       <h2>7. Cancellation and refunds</h2>
       <p>You can cancel at any time from your billing settings. Cancelling stops the next renewal; you keep access until the end of the period you have paid for. We do not automatically refund a partly used period.</p>
       <p>If we withdraw a feature you are paying for, or we end your subscription for a reason that is not your fault, we will refund the unused part of what you have paid.</p>
-      <p>Statutory rights to cancel or to a refund, where they apply to you, are unaffected by this section. To ask about a refund, write to <a href="mailto:support@redial.si">support@redial.si</a>.</p>
+      <p>Statutory rights to cancel or to a refund, where they apply to you, are unaffected by this section. To ask about a refund, write to <a href="mailto:hello@redial.si">hello@redial.si</a>.</p>
       <p>When your subscription ends, remember to reverse any call forwarding at your carrier. Redial cannot change your carrier settings for you.</p>
     </section>
 
@@ -155,7 +155,7 @@ export default function Terms() {
     <section>
       <h2>17. Governing law and disputes</h2>
       <p>These terms are governed by the laws of the State of Arizona, United States, without regard to its conflict-of-laws rules. The state and federal courts located in Maricopa County, Arizona have exclusive jurisdiction, and each party consents to that jurisdiction. If you are a consumer, this does not deprive you of the protection of the mandatory law of the country where you live.</p>
-      <p>Before starting proceedings, please contact <a href="mailto:support@redial.si">support@redial.si</a> so we can try to resolve the matter.</p>
+      <p>Before starting proceedings, please contact <a href="mailto:hello@redial.si">hello@redial.si</a> so we can try to resolve the matter.</p>
     </section>
 
     <section>
@@ -165,7 +165,7 @@ export default function Terms() {
 
     <section>
       <h2>19. Contact</h2>
-      <p>Qallus — customer care: <a href="mailto:support@redial.si">support@redial.si</a><br />Privacy enquiries: <a href="mailto:privacy@redial.si">privacy@redial.si</a></p>
+      <p>Qallus<br />Customer care and privacy enquiries: <a href="mailto:hello@redial.si">hello@redial.si</a></p>
     </section>
 
     <nav className="legal-footer-nav" aria-label="Legal documents"><Link href="/legal/privacy">Privacy Policy</Link><Link href="/">Back to Redial</Link></nav>

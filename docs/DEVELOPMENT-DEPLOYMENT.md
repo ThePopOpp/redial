@@ -1,6 +1,6 @@
 # Redial development on Coolify
 
-This increment packages the existing Redial preview for a **private development site**. Suggested URL: `https://dev.redial.si`, leaving `redial.si` available for the eventual launch. The owner can use the main domain for development by changing the Coolify domain and `REDIAL_SITE_URL` together. Neither hostname has been deployed or had its DNS changed by this increment.
+This packages Redial for hosting behind a password gate. **The owner has chosen `https://redial.si` as the deployment target.** `dev.redial.si` also resolves and can be used for a second, separate Coolify application when a staging tier is wanted; both point at the VPS. Change the Coolify domain and `REDIAL_SITE_URL` together, never one alone — the access gate compares the request Host against the configured origin and will refuse every request if they disagree.
 
 The landing page, phone animation, seven-step form, shared member/admin setup views, and synthetic control dashboard are preserved. Hosted writes now require the exact configured hostname, HTTPS origin, and development password. Cookies are Secure, HttpOnly, and SameSite=Strict. The password gates the entire website, including its API; only a content-free liveness endpoint is public.
 
@@ -9,7 +9,7 @@ The landing page, phone animation, seven-step form, shared member/admin setup vi
 ## Coolify application
 
 1. Create an application from `https://github.com/ThePopOpp/redial.git`, branch **`main`**. The deployment foundation is included on `main` so the owner's existing Coolify application can keep its locked default branch. Choose **Dockerfile** as the build pack, repository root (`/`) as the base directory, `/Dockerfile` as the Dockerfile path, and port **3000** inside the container. Do not set a custom start command. Port 3000 is container-internal; leave host port mappings empty.
-2. Set the domain to **`https://dev.redial.si`**. Create a DNS `A` record named `dev` pointing to the VPS IPv4 address. Add `AAAA` only if IPv6 is actually routed. Coolify's reverse proxy must preserve Host and redirect HTTP to HTTPS. Expose only the reverse proxy's web ports publicly; do not publish the application port directly.
+2. Set the domain to **`https://redial.si`**. Its `A` record already points at the VPS. Add `AAAA` only if IPv6 is actually routed. Coolify's reverse proxy must preserve Host and redirect HTTP to HTTPS. Expose only the reverse proxy's web ports publicly; do not publish the application port directly.
 3. In **Environment Variables**, add the values from the root `.env.example` as **runtime** variables. Keep them out of build arguments. A prepared, Git-ignored `.env.coolify.local` exists on the development workstation with the Supabase project URL, publishable key and a generated preview password. Transfer it through Coolify's private environment editor; do not paste it into GitHub, logs, or chat.
 4. Add persistent storage mounted at **`/app/.redial`**. Use a dedicated volume for this development application. The container runs as UID/GID **1000:1000**; a bind mount must be writable by that user. Do not mount the project source, an existing application volume, or a production backup.
 5. Run **one application instance**. The current preview store uses process-local locking and JSON files; it is unsuitable for replicas or overlapping writers. Disable rolling/overlapping deployments for this application and stop the old instance before the replacement starts against the same volume.
@@ -22,7 +22,7 @@ The image uses pinned Node 24.15.0, pinned npm 11.12.1, locked dependencies, a m
 | Variable | Development value / purpose |
 | --- | --- |
 | `REDIAL_DEPLOYMENT` | `development`; other hosted modes fail startup |
-| `REDIAL_SITE_URL` | `https://dev.redial.si` (exact origin, no path) |
+| `REDIAL_SITE_URL` | `https://redial.si` (exact origin, no path; must equal the Coolify domain) |
 | `REDIAL_DEV_USERNAME` | Preview login, e.g. `redial-review` |
 | `REDIAL_DEV_PASSWORD` | Unique secret, at least 24 characters; prepared file contains a generated 43-character value |
 | `REDIAL_DATA_DIR` | `/app/.redial`; mount persistent storage here |
@@ -32,7 +32,7 @@ The image uses pinned Node 24.15.0, pinned npm 11.12.1, locked dependencies, a m
 | `TWILIO_AUTH_TOKEN` | Matching account/subaccount token; keep server-side |
 | `REDIAL_EMAIL_PROVIDER` | `resend` for the owner's selected development setup; `disabled` and standalone `smtp` are also supported |
 | `REDIAL_EMAIL_FALLBACK_PROVIDER` | `smtp` for Hostinger fallback; `disabled` to omit fallback. SMTP fallback requires Resend primary. |
-| `EMAIL_FROM` | Your verified sender address, e.g. `hello@redial.si` if you own that mailbox/domain |
+| `EMAIL_FROM` | `hello@redial.si`. The Resend domain is verified: `resend._domainkey.redial.si` is published, and `send.redial.si` carries Resend SPF and the Return-Path MX. |
 | `RESEND_API_KEY` | Set for Resend; prefer sending-only access for eventual delivery |
 | `SMTP_HOST` | `smtp.hostinger.com` for Hostinger Email |
 | `SMTP_PORT` / `SMTP_SECURE` | Owner-selected Hostinger settings: `465` / `true` (implicit TLS) |
