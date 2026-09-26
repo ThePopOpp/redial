@@ -10,10 +10,14 @@ export function readRuntime(env = process.env) {
   // Local development and the browser-test Supabase double both run over
   // loopback HTTP. Hosted deployments stay HTTPS-only.
   const loopback = url => ['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname) || url.hostname === '::1';
-  if (!['local', 'development'].includes(deployment)) errors.push('REDIAL_DEPLOYMENT must be local or development');
+  // local: loopback only, no gate. development: password-gated preview.
+  // public: the real site, where Supabase auth protects /app and /ops and the
+  // shared preview password no longer applies.
+  if (!['local', 'development', 'public'].includes(deployment)) errors.push('REDIAL_DEPLOYMENT must be local, development or public');
+  const hosted = deployment !== 'local';
   if (value('REDIAL_DATA_DIR') && !path.isAbsolute(value('REDIAL_DATA_DIR'))) errors.push('REDIAL_DATA_DIR must be an absolute path');
   let siteUrl = null;
-  if (deployment === 'development' || value('REDIAL_SITE_URL')) {
+  if (hosted || value('REDIAL_SITE_URL')) {
     try {
       siteUrl = new URL(requireValue('REDIAL_SITE_URL'));
       const permitted = siteUrl.protocol === 'https:' || (deployment === 'local' && siteUrl.protocol === 'http:' && loopback(siteUrl));
@@ -26,6 +30,9 @@ export function readRuntime(env = process.env) {
     if (!/^[a-zA-Z0-9._-]{3,64}$/.test(username)) errors.push('REDIAL_DEV_USERNAME must contain 3–64 letters, digits, dots, underscores, or hyphens');
     if (password.length < 24 || /^(change|replace|example)/i.test(password)) errors.push('REDIAL_DEV_PASSWORD must be a unique secret of at least 24 characters');
   }
+  // A leftover preview password on the public site would be a silent no-op, so
+  // it is rejected rather than ignored.
+  if (deployment === 'public' && (username || password)) errors.push('REDIAL_DEV_USERNAME and REDIAL_DEV_PASSWORD must be unset when REDIAL_DEPLOYMENT=public');
   const supabase = { url: value('SUPABASE_URL'), publishableKey: value('SUPABASE_PUBLISHABLE_KEY') };
   if (supabase.url || supabase.publishableKey) {
     requireValue('SUPABASE_URL'); requireValue('SUPABASE_PUBLISHABLE_KEY');
@@ -63,7 +70,7 @@ export function readRuntime(env = process.env) {
     }
   }
   if (errors.length) throw new Error(`Invalid environment: ${[...new Set(errors)].join('; ')}`);
-  return { deployment, siteUrl: siteUrl?.origin ?? null, username, password, secureCookies: deployment === 'development',
+  return { deployment, siteUrl: siteUrl?.origin ?? null, username, password, secureCookies: hosted,
     dataDir: value('REDIAL_DATA_DIR') || path.join(process.cwd(), '.redial'), supabase, twilio, email };
 }
 

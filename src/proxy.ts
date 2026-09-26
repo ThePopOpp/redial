@@ -8,6 +8,7 @@ import { supabaseConfig } from '@/lib/supabase/config';
 // the access gate below runs everywhere, but refreshing a session costs a
 // network round trip, so the marketing site and static assets skip it.
 const publicPaths = /^\/legal(?:\/|$)/;
+const localOnlyPaths = /^\/local(?:\/|$)/;
 const sessionPaths = /^\/(?:app|ops|auth|account|api\/v1)(?:\/|$)|^\/(?:sign-in|staff-sign-in)$/;
 
 export async function proxy(request: NextRequest) {
@@ -32,6 +33,10 @@ export async function proxy(request: NextRequest) {
   // Local development keeps the loopback-only behavior of the preview APIs,
   // which check access themselves.
   if (runtime.deployment !== 'local') {
+    // The /local preview pages read this browser's own onboarding submission
+    // and have no authentication. One of them is named "admin". They exist for
+    // loopback review and must not be reachable on a hosted site.
+    if (localOnlyPaths.test(pathname)) return new NextResponse(null, { status: 404, headers: { 'Cache-Control': 'no-store' } });
     const denied = checkAccess(request, runtime, !['GET', 'HEAD', 'OPTIONS'].includes(request.method));
     if (denied) return NextResponse.json({ error: denied.message, code: denied.code }, { status: denied.status,
       headers: { 'Cache-Control': 'no-store', ...(denied.status === 401 ? { 'WWW-Authenticate': 'Basic realm="Redial development", charset="UTF-8"' } : {}) } });

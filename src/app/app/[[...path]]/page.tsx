@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Card, Heading, Empty, Badge, Stat } from '@/components/review/ui';
 
+export const metadata={title:'Your workspace',robots:{index:false,follow:false}};
 export const dynamic='force-dynamic';
 const kindFor: Record<string,RecordKind>={contacts:'contact',directory:'directory',callbacks:'callback',screening:'policy',agent:'agent',settings:'preferences',help:'ticket'};
 const descriptions: Record<string,string>={contacts:'Save familiar voices and their call preferences.',directory:'Save destinations for review. A saved destination is not yet approved for dialing.',callbacks:'Keep a list of follow-ups. These are reminders, not scheduled calls.',screening:'Save the policy you want your line to use. Activation requires a verified connection.',agent:'Prepare an opening greeting and clear instructions for your assistant.',settings:'Save your preferences. Retention and delivery require the corresponding worker integration.',help:'Create a support request in the Redial operations inbox.'};

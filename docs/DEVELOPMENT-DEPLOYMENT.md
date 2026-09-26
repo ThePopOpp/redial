@@ -44,6 +44,33 @@ The owner selected **Resend primary, Hostinger SMTP fallback**. Both `.env.examp
 
 This records and validates the fallback configuration; it does **not** implement automatic message failover. The later delivery worker needs durable message state and provider reconciliation before retrying through another provider, so an ambiguous Resend timeout does not send a duplicate through SMTP. Managed Supabase Auth's SMTP configuration is separate and does not inherit these application fallback settings.
 
+## Supabase Auth configuration
+
+Set these in the Supabase dashboard under Authentication → URL Configuration. They are **not** application environment variables.
+
+| Setting | Value |
+| --- | --- |
+| Site URL | `https://redial.si` |
+| Redirect URLs | `https://redial.si/auth/callback**` and `http://127.0.0.1:4317/auth/callback**` |
+
+The trailing `**` matters. The application sends people to `/auth/callback` for confirmation and to `/auth/callback?recovery=1` for password reset, and Supabase matches the whole URL including its query string. A bare origin such as `https://redial.si` does **not** match either, and an entry pointing at a path the application does not serve, such as `/login`, matches nothing at all. When no redirect matches, Supabase silently falls back to the Site URL, the confirmation code is never exchanged, and registration and password reset both fail without an error the person can act on.
+
+`http://127.0.0.1:4317` is the loopback origin `npm run review` serves and the default `appOrigin()` returns. Use `http://127.0.0.1:3000/auth/callback**` instead if you work against `npm run dev`. Supabase matches the host literally, so `localhost` and `127.0.0.1` are different entries. Remove the loopback entry before launch.
+
+Set custom SMTP in the same Authentication section, separately from the application's `REDIAL_EMAIL_*` variables, which Supabase does not read. Use Resend SMTP with `hello@redial.si` as the sender: the domain is verified, `resend._domainkey.redial.si` is published, and `send.redial.si` carries Resend SPF and the Return-Path MX, so DKIM aligns. Supabase's built-in mailer is limited to a handful of messages an hour and cannot carry invitations.
+
+## Deployment modes
+
+`REDIAL_DEPLOYMENT` selects the access boundary:
+
+| Mode | Behaviour |
+| --- | --- |
+| `local` | Loopback only. No gate. The `/local/*` preview pages are reachable. |
+| `development` | Exact Host match plus HTTP Basic authentication over the whole site. `/local/*` returns 404. |
+| `public` | Exact Host match, no shared password. Supabase authentication protects `/app` and `/ops`. `/local/*` returns 404. `REDIAL_DEV_USERNAME` and `REDIAL_DEV_PASSWORD` must be unset, and configuration fails if they are present, so a leftover password cannot look like protection it is not providing. |
+
+In every hosted mode the access gate compares the request `Host` against `REDIAL_SITE_URL`. Change the Coolify domain and that variable together or every request is refused with 403.
+
 ## Supabase, Twilio, and email checks
 
 From Coolify's application terminal:

@@ -1,5 +1,5 @@
 export type Runtime = {
-  deployment: 'local' | 'development'; siteUrl: string | null; username: string; password: string;
+  deployment: 'local' | 'development' | 'public'; siteUrl: string | null; username: string; password: string;
   secureCookies: boolean; dataDir: string;
   supabase: { url: string; publishableKey: string };
   twilio: { accountSid: string; authToken: string };
