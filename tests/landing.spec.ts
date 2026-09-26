@@ -66,6 +66,10 @@ test('seven-step setup saves real form input, resumes, and deletes independently
   await form.getByRole('combobox', { name: 'Who’s your carrier?' }).click();
   await expect(page.getByRole('option', { name: 'Boost Mobile', exact: true })).toBeAttached();
   await page.getByRole('option', { name: 'Mint Mobile', exact: true }).click();
+  // Wait for the selection to commit before advancing. Without this the step
+  // can be submitted with an empty carrier on a slow machine, which fails
+  // validation and leaves the form on step 1.
+  await expect(form.getByRole('combobox', { name: 'Who’s your carrier?' })).toContainText('Mint Mobile');
   await form.getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(form).toHaveAttribute('data-step', '2');
   await page.reload();
