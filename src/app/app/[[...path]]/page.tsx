@@ -32,7 +32,25 @@ export default async function Dashboard({params,searchParams}:{params:Promise<{p
   const {db,user}=account;
   if(path.length>1 || !views.includes(view as typeof views[number])) notFound();
   const [workspaceResult,membershipResult]=await Promise.all([db.from('workspaces').select('id,name,type').order('created_at'),db.from('memberships').select('workspace_id,user_id,role,status').eq('user_id',user.id)]);
-  if(workspaceResult.error || membershipResult.error) return <main id="main" className="access-content"><h1>Workspace data is unavailable</h1><p>Your account is signed in, but Redial could not load workspace permissions. Check the database migration and connection.</p><Link href="/app">Retry</Link></main>;
+  if(workspaceResult.error || membershipResult.error) {
+    const failure=workspaceResult.error || membershipResult.error;
+    // The code is shown because "check the migration" alone gives the operator
+    // nothing to act on: PGRST205 means the schema cache has not picked the
+    // tables up, PGRST301/42501 means grants or policies are missing, and
+    // 42P01 means the migration never ran. The message body is logged rather
+    // than rendered, since it can name columns.
+    console.error('workspace load failed', failure?.code, failure?.message);
+    return <main id="main" className="access-content"><h1>Workspace data is unavailable</h1>
+      <p>Your account is signed in, but Redial could not load your workspace permissions.</p>
+      <p>Database error <strong>{failure?.code || 'unknown'}</strong>. {failure?.code==='PGRST205'
+        ? 'The API has not picked up the tables yet. Run: notify pgrst, ‘reload schema’;'
+        : failure?.code==='42P01'
+        ? 'A table is missing, so the migrations have not all been applied.'
+        : failure?.code==='42501' || failure?.code==='PGRST301'
+        ? 'Permission was refused, so the grants or row-level-security policies are incomplete.'
+        : 'Check that every migration in supabase/migrations has been applied, in filename order.'}</p>
+      <Link href="/app">Retry</Link></main>;
+  }
   const workspaces=workspaceResult.data as Workspace[], memberships=membershipResult.data;
   const workspace=workspaces.find(w=>w.id===query.workspace) || (!query.workspace?workspaces[0]:undefined);
   const member=memberships.find(m=>m.workspace_id===workspace?.id && m.status==='active');
