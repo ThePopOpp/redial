@@ -132,3 +132,29 @@ test('local APIs retain loopback restriction and exact origin checks', () => {
   assert.equal(checkAccess(request({ host: 'dev.redial.si' }), local)?.code, 'LOCAL_ONLY');
   assert.equal(checkAccess(request({ host: 'localhost:4317', origin: 'https://elsewhere.test' }, 'POST'), local, true)?.code, 'ORIGIN');
 });
+
+// The container entrypoint and the runtime validator must agree on which
+// deployment modes exist. They drifted once: `public` was added to the
+// validator while the entrypoint still demanded `development`, so the
+// container refused to start and the hosted site silently kept the old build.
+test('the container entrypoint accepts every hosted mode and refuses the loopback one', async () => {
+  const { spawnSync } = await import('node:child_process');
+  const { tmpdir } = await import('node:os');
+  const base = { ...process.env, REDIAL_SITE_URL: 'https://redial.example.org', REDIAL_DATA_DIR: tmpdir() };
+  delete base.REDIAL_DEV_USERNAME; delete base.REDIAL_DEV_PASSWORD;
+  const run = env => spawnSync(process.execPath, ['scripts/start-container.mjs'], { env: { ...base, ...env }, encoding: 'utf8' });
+
+  const local = run({ REDIAL_DEPLOYMENT: 'local' });
+  assert.match(local.stderr, /requires REDIAL_DEPLOYMENT/, 'loopback mode must be refused in a container');
+
+  const preview = run({ REDIAL_DEPLOYMENT: 'development', REDIAL_DEV_USERNAME: 'redial-review', REDIAL_DEV_PASSWORD: 'a-unique-preview-password-value' });
+  assert.doesNotMatch(preview.stderr, /requires REDIAL_DEPLOYMENT/, 'the password-gated preview must start');
+
+  const site = run({ REDIAL_DEPLOYMENT: 'public' });
+  assert.doesNotMatch(site.stderr, /requires REDIAL_DEPLOYMENT/, 'the public site must start');
+
+  // A leftover preview password in public mode is a configuration error, not
+  // something to ignore, because it would look like protection it is not giving.
+  const stale = run({ REDIAL_DEPLOYMENT: 'public', REDIAL_DEV_USERNAME: 'redial-review', REDIAL_DEV_PASSWORD: 'a-unique-preview-password-value' });
+  assert.match(stale.stderr, /must be unset when REDIAL_DEPLOYMENT=public/, 'a stale preview password must fail startup');
+});
