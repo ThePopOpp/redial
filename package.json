@@ -21,6 +21,7 @@
     "test:deployment": "node --test tests-node/deployment.test.mjs",
     "test:container": "node scripts/container-smoke.mjs",
     "build:worker": "docker build --file services/worker/Dockerfile --tag redial-worker:development .",
+    "build:voice": "docker build --file services/voice-gateway/Dockerfile --tag redial-voice:development .",
     "test:launch": "node --test tests-node/*.test.mjs",
     "check:launch": "node scripts/check-launch-config.mjs",
     "check:environment": "node scripts/check-environment.mjs",

@@ -1,5 +1,21 @@
 # Working decision log
 
+## 2026-09-26 - Voice gateway, and xAI over SIP rather than a media bridge
+
+- The owner's two production applications were reviewed as references and the findings recorded in `reuse-manifest.json`. The decisive one: their working xAI voice integration is `<Dial><Sip>` to `sip.voice.x.ai`, not a WebSocket media-stream bridge. Twilio and the assistant negotiate media directly, so no audio passes through Redial, and the packet mapping, resampling and barge-in work that kit doc 06 warns is unproven does not arise. Assistant screening became a configuration value instead of a subsystem.
+- Two behaviours in those references are deliberately not carried over. Neither voice webhook validates a Twilio signature, and both default to `record-from-answer-dual`. Redial validates every webhook before reading a parameter, and recording is off unless a line enables it.
+- The signed URL comes from `REDIAL_GATEWAY_ORIGIN`, never from `X-Forwarded-Host`. Behind Coolify a caller controls that header, so deriving the URL per request would let them choose the string being verified. The signature algorithm is implemented directly rather than taken from the Twilio SDK, so the gateway carries no provider dependency and the comparison is constant time.
+- The gateway is a third deployment unit rather than routes in the web application. A provider webhook can reach it, which is a different exposure profile from a tier behind Supabase auth, and voice work must not be restarted by a web deployment.
+- Two switches gate bridging and both default off. `REDIAL_GATEWAY_ENVIRONMENT=test` never connects a call to a real handset, and `REDIAL_GATEWAY_BRIDGE_CALLS` is separate again. With either off the gateway still answers, screens and takes a message; it simply never rings a phone. That is a deployable, useful state, and it is the one a fresh deployment lands in.
+- The member must press a key to accept. Falling through on no keypress is what lets the destination's voicemail answer on their behalf and report the call as connected, which would silently defeat the entire product.
+- Loop prevention is enforced twice: a trigger on `endpoints` at configuration time and again in the gateway at call time, because a route can change after setup and a provider callback confirming delivery is not evidence. A destination equal to the forwarding source, the line's own Redial number, or the caller is refused. A destination is never rung before `verified_at` is set.
+- A dialled number resolving to zero rows, or to more than one, refuses the call. Routing by whichever row came back first would route by luck.
+- `mode = 'ai'` without a SIP assistant takes a message rather than connecting the caller to nothing, and the database refuses to store that combination at all.
+- Caller speech reaches a `<Say>` in the member's whisper, so it is stripped of control characters and angle brackets and bounded before it is ever interpolated. Without that a caller could inject TwiML by saying it.
+- A caller who says nothing is still offered on. Silence is not evidence of a junk call, and treating it as one drops legitimate callers who hesitate. A low-confidence transcript is passed to the member as-is rather than acted on: the gateway does not classify.
+- Routing decisions live in `services/voice-gateway/routing.mjs` as pure functions taking their inputs explicitly, so the loop guards, the accept rule and the outcome mapping are provable without a phone, a provider or a clock. A live call is the worst place to discover a routing bug.
+- Evidence: 30 gateway tests including an end-to-end call driven through a real HTTP server with genuine Twilio signatures, and 103 database assertions.
+
 ## 2026-09-26 - Recovery link wording, rate limits and branded auth email
 
 - A reported "password reset is broken" was not a fault. The auth log shows `/recover` 200 at 19:10:54, a second request refused at 19:11:08 with `over_email_send_rate_limit`, a successful `/verify` 303 plus a PKCE `/token` 200 at 19:12:33 that logged the account in, and then a second click on the same message at 19:23:11 returning `One-time token not found`. The link worked; the error came from reusing it. Two things made that hard to see, and both are fixed.

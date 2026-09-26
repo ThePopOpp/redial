@@ -378,4 +378,105 @@ select public.test_assert((select count(*)=1 from public.job_runs),'the worker r
 select public.test_assert((select count(*)=2 from public.billing_operations),'the worker role reads the billing operation ledger');
 select public.test_assert((select count(*)=1 from public.billing_operations where kind='refund'),'only the approved refund queued a provider operation');
 
+-- Voice routing (202609260003)
+-- The gateway's service role writes provider facts and call state. No member
+-- path may forge a number, a destination or a screening outcome.
+reset role;
+insert into public.phone_numbers(workspace_id,line_id,e164,provider,environment,provider_sid,ownership,status)
+  values(:'workspace_a',:'line_a','+16025550100','twilio','test','PN0123456789abcdef0123456789abcdef','redial_allocated','active') returning id as number_a \gset
+insert into public.endpoints(workspace_id,line_id,kind,e164,label,is_forwarding_source,verified_at)
+  values(:'workspace_a',:'line_a','pstn','+16025550122','My mobile',true,now());
+insert into public.endpoints(workspace_id,line_id,kind,e164,label,ring_order,verified_at)
+  values(:'workspace_a',:'line_a','pstn','+16025550133','Desk phone',2,now()) returning id as endpoint_a \gset
+insert into public.line_routing(line_id,workspace_id,mode,greeting) values(:'line_a',:'workspace_a','simple','Who is calling?');
+insert into public.call_screenings(workspace_id,line_id,provider_call_sid,from_e164,to_e164,mode,caller_said)
+  values(:'workspace_a',:'line_a','CA0123456789abcdef0123456789abcdef','+16025550111','+16025550100','simple','Jane about the roof');
+select set_config('test.line',:'line_a',true);
+
+-- Loop prevention lives in the database, not only in the gateway.
+do $$ begin
+  begin insert into public.endpoints(workspace_id,line_id,kind,e164,label,verified_at)
+    values(current_setting('test.import_workspace')::uuid,current_setting('test.line')::uuid,'pstn','+16025550122','Loop back',now());
+    raise exception 'Forwarding source accepted as a destination';
+  exception when raise_exception then if sqlerrm<>'Destination is the forwarding source' then raise; end if; end;
+  begin insert into public.endpoints(workspace_id,line_id,kind,e164,label,verified_at)
+    values(current_setting('test.import_workspace')::uuid,current_setting('test.line')::uuid,'pstn','+16025550100','Our own number',now());
+    raise exception 'Redial number accepted as a destination';
+  exception when raise_exception then if sqlerrm<>'Destination is the Redial number for this line' then raise; end if; end;
+  -- Two lines answering one number would route by luck.
+  begin insert into public.phone_numbers(workspace_id,line_id,e164,provider,environment,ownership,status)
+    values(current_setting('test.other_workspace')::uuid,current_setting('test.other_line')::uuid,'+16025550100','twilio','test','redial_allocated','active');
+    raise exception 'Duplicate active number accepted';
+  exception when unique_violation then null; end;
+  -- An assistant mode with no assistant would connect a caller to nothing.
+  begin insert into public.line_routing(line_id,workspace_id,mode)
+    values(current_setting('test.other_line')::uuid,current_setting('test.other_workspace')::uuid,'ai');
+    raise exception 'AI mode without a SIP assistant accepted';
+  exception when check_violation then null; end;
+  begin insert into public.endpoints(workspace_id,line_id,kind,e164,label,verified_at)
+    values(current_setting('test.import_workspace')::uuid,current_setting('test.line')::uuid,'pstn','6025550144','Not E164',now());
+    raise exception 'Non-E.164 destination accepted';
+  exception when check_violation then null; end;
+end $$;
+
+-- The line owner manages routing through the same grant that governs the rules.
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select set_config('request.jwt.claims','{"aal":"aal1"}',true);
+select public.test_assert((select count(*)=1 from public.phone_numbers),'line owner reads the number for their line');
+select public.test_assert((select count(*)=2 from public.endpoints),'line owner reads their destinations');
+select public.test_assert((select count(*)=1 from public.line_routing),'line owner reads how the line answers');
+select public.test_assert((select count(*)=1 from public.call_screenings),'line owner reads screened calls');
+do $$ begin
+  begin insert into public.phone_numbers(workspace_id,line_id,e164,provider,environment,ownership)
+    values(current_setting('test.import_workspace')::uuid,current_setting('test.line')::uuid,'+16025550155','twilio','test','redial_allocated');
+    raise exception 'Member claimed a number'; exception when insufficient_privilege then null; end;
+  begin insert into public.endpoints(workspace_id,line_id,kind,e164,label,verified_at)
+    values(current_setting('test.import_workspace')::uuid,current_setting('test.line')::uuid,'pstn','+16025550166','Forged',now());
+    raise exception 'Member added a destination directly'; exception when insufficient_privilege then null; end;
+  -- Self-verifying a destination would turn screening into a dialer for
+  -- someone else's traffic.
+  begin update public.endpoints set verified_at=now(); raise exception 'Member verified a destination';
+    exception when insufficient_privilege then null; end;
+  begin update public.line_routing set mode='ai'; raise exception 'Member changed the answering mode';
+    exception when insufficient_privilege then null; end;
+  begin update public.call_screenings set outcome='connected'; raise exception 'Member rewrote a call outcome';
+    exception when insufficient_privilege then null; end;
+end $$;
+
+-- A member of the same workspace without the line grant sees none of it.
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000002',true);
+select public.test_assert((select count(*)=0 from public.phone_numbers),'member without the line grant cannot read the number');
+select public.test_assert((select count(*)=0 from public.endpoints),'member without the line grant cannot read destinations');
+select public.test_assert((select count(*)=0 from public.line_routing),'member without the line grant cannot read routing');
+select public.test_assert((select count(*)=0 from public.call_screenings),'member without the line grant cannot read screened calls');
+
+-- Another tenant sees none of it either.
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000003',true);
+select public.test_assert((select count(*)=0 from public.phone_numbers),'other tenant cannot read the number');
+select public.test_assert((select count(*)=0 from public.endpoints),'other tenant cannot read destinations');
+select public.test_assert((select count(*)=0 from public.call_screenings),'other tenant cannot read screened calls');
+
+-- A summary grant exposes the screened call but not the rules behind it.
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select public.set_line_grant(:'workspace_a',:'line_a','00000000-0000-4000-8000-000000000002','read_summary',true);
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000002',true);
+select public.test_assert((select count(*)=1 from public.call_screenings),'a summary grant exposes screened calls');
+select public.test_assert((select count(*)=0 from public.line_routing),'a summary grant does not expose routing');
+select public.test_assert((select count(*)=0 from public.endpoints),'a summary grant does not expose destinations');
+
+-- Anonymous reaches none of it.
+set role anon;
+do $$ begin
+  begin perform 1 from public.phone_numbers; raise exception 'Anonymous read numbers'; exception when insufficient_privilege then null; end;
+  begin perform 1 from public.endpoints; raise exception 'Anonymous read destinations'; exception when insufficient_privilege then null; end;
+  begin perform 1 from public.line_routing; raise exception 'Anonymous read routing'; exception when insufficient_privilege then null; end;
+  begin perform 1 from public.call_screenings; raise exception 'Anonymous read screened calls'; exception when insufficient_privilege then null; end;
+end $$;
+
+-- The gateway's own role is the only path that writes call state.
+reset role;
+select public.test_assert((select count(*)=1 from public.call_screenings where outcome='screening'),'the gateway role reads and writes call state');
+select public.test_assert((select count(*)=1 from public.phone_numbers where status='active'),'the gateway role resolves the dialled number');
+
 rollback;

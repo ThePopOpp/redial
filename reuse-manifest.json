@@ -1,5 +1,5 @@
 {
-  "reviewed_at": "2026-09-19",
+  "reviewed_at": "2026-09-26",
   "status": "read_only_review_no_source_company_code_copied",
   "candidates": [
     {
@@ -157,6 +157,54 @@
       "requirements": "Add non-root runtime; remove agent and .data coupling; no deployment now.",
       "copied": false,
       "license": "No license found; confirm ownership/reuse rights before importing."
+    },
+    {
+      "repository": "Qallus/Channel-Cast-OS",
+      "commit": "HEAD@2026-09-26",
+      "path": "app/api/webhooks/twilio/ai-voice/route.ts",
+      "source": "https://github.com/Qallus/Channel-Cast-OS/blob/main/app/api/webhooks/twilio/ai-voice/route.ts",
+      "classification": "reference_only",
+      "target": "services/voice-gateway/twiml.mjs connectAssistant",
+      "dependencies": "twilio SDK",
+      "requirements": "Confirms the working xAI integration is SIP (Dial><Sip to sip.voice.x.ai), not a media-stream bridge; that approach is adopted, the code is not. Source validates no Twilio signature and defaults to record-from-answer-dual: both rejected. Redial validates X-Twilio-Signature on every webhook and keeps recording off unless the line enables it. SIP URI moves from process env to line_routing.ai_sip_uri so two lines can use different assistants.",
+      "copied": false,
+      "license": "Owner-confirmed same-owner repository; no license file. Behaviour adopted, no source copied."
+    },
+    {
+      "repository": "Qallus/Channel-Cast-OS",
+      "commit": "HEAD@2026-09-26",
+      "path": "app/api/webhooks/twilio/voice/route.ts",
+      "source": "https://github.com/Qallus/Channel-Cast-OS/blob/main/app/api/webhooks/twilio/voice/route.ts",
+      "classification": "reject",
+      "target": "services/voice-gateway",
+      "dependencies": "twilio SDK",
+      "requirements": "Unsigned webhook, recording on by default, and a caller-supplied To dialled without an allowlist. None carried over.",
+      "copied": false,
+      "license": "Owner-confirmed same-owner repository; no license file."
+    },
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "commit": "HEAD@2026-09-26",
+      "path": "app/api/webhooks/twilio/voice/route.ts",
+      "source": "https://github.com/ThePopOpp/ctrl-p/blob/main/app/api/webhooks/twilio/voice/route.ts",
+      "classification": "reference_only",
+      "target": "services/voice-gateway/twiml.mjs",
+      "dependencies": "None; hand-built TwiML strings",
+      "requirements": "Hand-built TwiML with an escapeXml helper and an owned-number allowlist for caller ID are both sound and independently reimplemented. Source validates no signature on this route and records by default; neither carried over.",
+      "copied": false,
+      "license": "Owner-confirmed same-owner repository; no license file."
+    },
+    {
+      "repository": "ThePopOpp/ctrl-p",
+      "commit": "HEAD@2026-09-26",
+      "path": "app/api/webhooks/twilio/sms/route.ts",
+      "source": "https://github.com/ThePopOpp/ctrl-p/blob/main/app/api/webhooks/twilio/sms/route.ts",
+      "classification": "reference_only",
+      "target": "services/voice-gateway/twilio-signature.mjs",
+      "dependencies": "twilio SDK validateRequest",
+      "requirements": "The only route in either repository that validates a Twilio signature. Redial implements the algorithm directly rather than depending on the SDK, verifies against a configured origin instead of a proxy-derived URL, and compares in constant time.",
+      "copied": false,
+      "license": "Owner-confirmed same-owner repository; no license file."
     }
   ]
 }

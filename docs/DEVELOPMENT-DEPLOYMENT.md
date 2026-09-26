@@ -82,6 +82,51 @@ Two switches gate live commerce and both default to off. `SQUARE_ENVIRONMENT=pro
 
 **What it does not do:** create subscriptions, send refunds to Square, or grant entitlements. Those are gated rather than stubbed. A received event is recorded and verified, then retried and finally dead-lettered with a reason, rather than being marked processed as though it had an effect. No live charge, refund or subscription is possible from this increment.
 
+## Voice gateway application
+
+`services/voice-gateway` is a third Coolify application, separate from the web container and the billing worker, built from its own Dockerfile against the same pinned lockfile:
+
+```sh
+docker build --file services/voice-gateway/Dockerfile --tag redial-voice:development .   # npm run build:voice
+```
+
+Coolify: build pack **Dockerfile**, path `/services/voice-gateway/Dockerfile`, base directory `/`, container port **3002**, domain **https://voice.redial.si**, no persistent storage. It holds no data of its own.
+
+It is a separate unit because a provider webhook can reach it. That is a different exposure profile from the web application, which sits behind Supabase auth, and from the worker, which is reachable only by Square. None of the three shares a container.
+
+### Signature validation
+
+Every webhook is checked before a single parameter is read, using `TWILIO_AUTH_TOKEN` as the signing key. Twilio signs the full request URL with the POST parameters appended, keys sorted. The URL is taken from `REDIAL_GATEWAY_ORIGIN` and never rebuilt from `X-Forwarded-Host`: behind a reverse proxy a caller controls that header and could choose the string being verified. A request that fails the check gets a 403 and no TwiML.
+
+### Two switches, both off by default
+
+| Variable | Default | Effect |
+| --- | --- | --- |
+| `REDIAL_GATEWAY_ENVIRONMENT` | `test` | `test` never bridges a call to a real handset, so the webhooks can be exercised before anyone's phone is in the path. |
+| `REDIAL_GATEWAY_BRIDGE_CALLS` | `disabled` | Connecting a screened caller to a real destination. Requires `live` as well. |
+
+With either switch off the gateway still answers, still screens, and still takes a message. It simply never rings a handset. That is the posture to deploy in first.
+
+### How a line answers
+
+Routing is per line in `line_routing`, not per deployment.
+
+- `simple` asks who is calling and why, then offers the call to a verified destination with a whisper. The member must press 1; no keypress is a decline, so the destination's voicemail cannot answer on their behalf and report the call as connected.
+- `ai` connects the caller to the assistant at `line_routing.ai_sip_uri` over SIP. Twilio and the assistant negotiate media directly and no audio passes through this process. `ai` with no URI configured takes a message rather than connecting a caller to nothing.
+- `voicemail` takes a message without screening.
+
+Recording is off unless a line sets `recording_enabled`. That is a legal decision in two-party-consent states, not a preference.
+
+### Loop prevention
+
+A destination is refused if it equals the number the carrier forwards from, the Redial number for that line, or the caller. It is enforced twice: a database trigger on `endpoints` at configuration time, and again in the gateway at call time, because a route can change after it was set up. A destination is also never rung until `verified_at` is set; ringing an unverified number on a caller's behalf turns screening into a dialer for someone else's traffic.
+
+### Twilio configuration
+
+On the number, set the Voice webhook to `https://voice.redial.si/twilio/voice` as **HTTP POST**. Leave the fallback URL empty until there is a tested fallback; a fallback that is not tested is a second untested path, not a safety net.
+
+The number must exist in `phone_numbers` with `status = 'active'`, and the member's own mobile must exist in `endpoints` with `is_forwarding_source = true`. A dialled number resolving to zero rows, or to more than one, is refused rather than routed by whichever row came back first.
+
 ## Supabase Auth configuration
 
 Set these in the Supabase dashboard under Authentication → URL Configuration. They are **not** application environment variables.

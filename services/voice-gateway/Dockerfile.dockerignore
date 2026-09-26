@@ -1,0 +1,9 @@
+# Context allowlist for the voice gateway image only. BuildKit prefers
+# <dockerfile>.dockerignore over the root .dockerignore, so the web image's
+# context stays exactly as narrow as it already was.
+**
+!package.json
+!package-lock.json
+!services/voice-gateway/**
+services/voice-gateway/Dockerfile
+services/voice-gateway/Dockerfile.dockerignore
