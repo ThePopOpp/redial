@@ -10,3 +10,4 @@ playwright-report/
 .references/
 *.log
 .redial/
+schema-to-apply.sql

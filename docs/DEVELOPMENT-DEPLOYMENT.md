@@ -44,6 +44,18 @@ The owner selected **Resend primary, Hostinger SMTP fallback**. Both `.env.examp
 
 This records and validates the fallback configuration; it does **not** implement automatic message failover. The later delivery worker needs durable message state and provider reconciliation before retrying through another provider, so an ambiguous Resend timeout does not send a duplicate through SMTP. Managed Supabase Auth's SMTP configuration is separate and does not inherit these application fallback settings.
 
+## Applying the schema
+
+Generate one file containing every migration in order, then paste it into the Supabase SQL editor and run it once:
+
+```sh
+node scripts/print-migrations.mjs > schema-to-apply.sql
+```
+
+Redirect the script directly. `npm run print:migrations > file` writes npm's banner lines into the file ahead of the SQL, and Postgres fails with `syntax error at or near ">"`; use `npm run --silent` if you prefer going through npm. Each migration is its own transaction, so a failure rolls back rather than leaving the schema half-applied. `npm run test:database` applies this same sequence to a throwaway container and runs the row-level-security suite against it.
+
+Then create the first platform owner with `supabase/bootstrap-owner.sql`, replacing the placeholder address. The account must have confirmed its email, and signing in at `/staff-sign-in` will require enrolling an authenticator before anything is visible.
+
 ## Supabase Auth configuration
 
 Set these in the Supabase dashboard under Authentication → URL Configuration. They are **not** application environment variables.

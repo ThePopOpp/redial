@@ -17,7 +17,7 @@
     "test:e2e": "playwright test",
     "test:dashboard": "playwright test --config playwright.dashboard.config.ts",
     "test:database": "node scripts/test-database.mjs",
-    "print:migrations": "node scripts/print-migrations.mjs",
+    "print:migrations": "node --no-warnings scripts/print-migrations.mjs",
     "test:deployment": "node --test tests-node/deployment.test.mjs",
     "test:container": "node scripts/container-smoke.mjs",
     "test:launch": "node --test tests-node/*.test.mjs",

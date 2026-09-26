@@ -4,6 +4,12 @@ import path from 'node:path';
 // Prints every migration in filename order, for pasting into the Supabase SQL
 // editor or piping to psql. Deliberately generated rather than kept as a second
 // copy in the repository, so it can never drift from supabase/migrations.
+//
+// Redirect this script directly:
+//     node scripts/print-migrations.mjs > schema.sql
+// `npm run print:migrations > schema.sql` writes npm's own banner lines into
+// the file ahead of the SQL, and Postgres then fails on `syntax error at or
+// near ">"`. Use `npm run --silent` if you would rather go through npm.
 const dir = path.join(import.meta.dirname, '..', 'supabase', 'migrations');
 const files = (await readdir(dir)).filter(name => name.endsWith('.sql')).sort();
 const only = process.argv[2];
