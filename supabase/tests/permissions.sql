@@ -121,4 +121,84 @@ do $$ begin
   begin perform public.save_line_setup(current_setting('test.import_workspace')::uuid,current_setting('test.import_line')::uuid,3,current_setting('test.setup')::jsonb); raise exception 'Revoked member setup succeeded';
   exception when raise_exception then if sqlerrm<>'Line permission required' then raise; end if; end;
 end $$;
+-- Staff capability model (202609260001)
+reset role;
+insert into auth.users values('00000000-0000-4000-8000-000000000005','superadmin@example.test',now());
+-- The first owner is created by a privileged session, as documented. Everyone
+-- after that goes through promote_staff.
+insert into public.platform_staff(user_id,role,active) values('00000000-0000-4000-8000-000000000005','owner',true);
+set role authenticated;
+
+-- support staff: has support and customer capabilities, not staff administration
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000004',true);
+select set_config('request.jwt.claims','{"aal":"aal2"}',true);
+select public.test_assert((select count(*)=1 from public.staff_capabilities_for_me() where capability='support_read'),'support role carries support_read');
+select public.test_assert((select count(*)=0 from public.staff_capabilities_for_me() where capability='staff_admin'),'support role does not carry staff administration');
+select public.test_assert((select count(*)>0 from public.staff_customer_search('',50,0)),'support staff can search customers');
+select public.test_assert((select count(*)=0 from public.staff_directory()),'support staff cannot list staff');
+do $$ begin
+  begin perform public.promote_staff('00000000-0000-4000-8000-000000000003','admin',true,null); raise exception 'Support promoted staff';
+  exception when raise_exception then if sqlerrm<>'Not permitted' then raise; end if; end;
+end $$;
+
+-- the customer projection must never carry call content
+select public.test_assert(public.staff_customer_overview(:'workspace_a')::text not like '%Private transcript%','staff customer overview returns no transcript text');
+select public.test_assert(public.staff_customer_overview(:'workspace_a')::text not like '%Private summary%','staff customer overview returns no call summary text');
+select public.test_assert((select count(*)>0 from public.audit_events where action='staff.customer_viewed'),'staff customer overview writes an audit row');
+
+-- multi-factor authentication is required for every staff projection
+select set_config('request.jwt.claims','{"aal":"aal1"}',true);
+select public.test_assert((select count(*)=0 from public.staff_capabilities_for_me()),'staff without MFA carries no capabilities');
+select public.test_assert((select count(*)=0 from public.staff_customer_search('',50,0)),'staff without MFA cannot search customers');
+do $$ begin
+  begin perform public.staff_customer_overview(current_setting('test.import_workspace')::uuid); raise exception 'Unverified staff read succeeded';
+  exception when raise_exception then if sqlerrm<>'Not permitted' then raise; end if; end;
+end $$;
+
+-- a signed-in member is not staff
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select set_config('request.jwt.claims','{"aal":"aal2"}',true);
+select public.test_assert((select count(*)=0 from public.staff_customer_search('',50,0)),'a member cannot search customers');
+select public.test_assert((select count(*)=0 from public.staff_audit_log(100)),'a member cannot read the platform audit log');
+do $$ begin
+  begin perform public.staff_customer_overview(current_setting('test.import_workspace')::uuid); raise exception 'Member staff read succeeded';
+  exception when raise_exception then if sqlerrm<>'Not permitted' then raise; end if; end;
+end $$;
+
+-- owner: the only tier that may administer staff, and never on itself
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000005',true);
+select public.test_assert((select count(*)>0 from public.staff_directory()),'owner can list staff');
+select public.test_assert((select count(*)>0 from public.staff_audit_log(100)),'owner can read the platform audit log');
+do $$ begin
+  begin perform public.promote_staff('00000000-0000-4000-8000-000000000005','analyst',true,null); raise exception 'Owner demoted itself';
+  exception when raise_exception then if sqlerrm<>'Staff cannot change their own role' then raise; end if; end;
+  begin perform public.promote_staff('00000000-0000-4000-8000-000000000003','wizard',true,null); raise exception 'Unknown role accepted';
+  exception when raise_exception then if sqlerrm<>'Unknown role' then raise; end if; end;
+end $$;
+select public.promote_staff('00000000-0000-4000-8000-000000000003','finance',true,'Finance operator');
+select public.test_assert((select count(*)=1 from public.staff_directory() where user_id='00000000-0000-4000-8000-000000000003' and role='finance' and active),'owner promotes a verified account');
+
+-- finance sees billing and customers but not ticket content
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000003',true);
+select public.test_assert((select count(*)=1 from public.staff_capabilities_for_me() where capability='billing_read'),'finance role carries billing_read');
+select public.test_assert((select count(*)=0 from public.staff_capabilities_for_me() where capability='support_read'),'finance role does not carry support_read');
+select public.test_assert((select count(*)=0 from public.workspace_records where kind='ticket'),'finance staff cannot read ticket content');
+
+-- the last active owner cannot be removed
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000005',true);
+do $$ begin
+  begin perform public.promote_staff('00000000-0000-4000-8000-000000000004','owner',false,null);
+    perform public.promote_staff('00000000-0000-4000-8000-000000000005','owner',false,null);
+    raise exception 'Last owner removed';
+  exception when raise_exception then
+    if sqlerrm not in ('At least one active owner must remain','Staff cannot change their own role') then raise; end if; end;
+end $$;
+select public.test_assert((select count(*)>0 from public.staff_directory() where role='owner' and active),'at least one active owner remains');
+
+-- capability matrix and staff table stay closed to direct access
+do $$ begin
+  begin perform 1 from public.staff_capabilities; raise exception 'Capability matrix readable'; exception when insufficient_privilege then null; end;
+  begin update public.platform_staff set role='owner'; raise exception 'Direct staff mutation succeeded'; exception when insufficient_privilege then null; end;
+end $$;
+
 rollback;

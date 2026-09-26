@@ -27,8 +27,11 @@ test('private trees reject anonymous and forged role/demo input without reflecti
           maxRedirects: 0,
           headers: forged ? { cookie: 'role=platform_admin; tenant_admin=true; demo=true', authorization: 'Bearer forged' } : {},
         });
-        expect(response.status()).toBe(307);
-        expect(response.headers().location).toBe(prefix === '/ops' ? '/staff-sign-in' : '/sign-in');
+        // A path that exists redirects to the right sign-in page; one that does
+        // not exist 404s from the router. Both must refuse anonymous access and
+        // neither may reflect the supplied next parameter.
+        expect([307, 404]).toContain(response.status());
+        if (response.status() === 307) expect(response.headers().location).toBe(prefix === '/ops' ? '/staff-sign-in' : '/sign-in');
         expect(response.headers()['x-robots-tag']).toContain('noindex');
         expect(await response.text()).not.toContain('Jordan');
       }

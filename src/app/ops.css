@@ -1,0 +1,49 @@
+/* Operations console. Sections come from lib/ops/sections.ts; the shell is the
+   same design system the member dashboard uses, so the two stay consistent. */
+
+.ops-shell { max-width: 1400px; margin: auto; padding: 0 clamp(1rem, 3vw, 2.5rem); }
+.ops-header { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; padding: 1.2rem 0; border-bottom: 1px solid var(--border); }
+.ops-header .eyebrow { color: var(--muted-foreground); }
+.ops-header-actions { margin-left: auto; display: flex; align-items: center; gap: 1rem; }
+.ops-header-link { font-size: .85rem; min-height: 44px; display: inline-flex; align-items: center; }
+.ops-main { padding-bottom: 4rem; }
+
+.ops-nav { width: 100%; order: 3; }
+.ops-nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; padding: 0; }
+.ops-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .9rem; border-radius: .5rem; font-size: .88rem; color: var(--muted-foreground); }
+.ops-nav a:hover { background: var(--card); color: var(--foreground); }
+.ops-nav a[aria-current='page'] { background: var(--accent); color: var(--foreground); }
+.ops-nav-toggle { display: none; align-items: center; gap: .5rem; min-height: 44px; padding: 0 .9rem; border: 1px solid var(--border); border-radius: .5rem; background: transparent; color: var(--foreground); cursor: pointer; font-size: .88rem; }
+
+.ops-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 1rem; margin: 2rem 0 1rem; }
+.ops-freshness { font-size: .8rem; color: var(--muted-foreground); margin-bottom: 2rem; }
+
+.ops-search { margin: 1.5rem 0; }
+.ops-search label { display: block; font-size: .85rem; margin-bottom: .5rem; }
+.ops-search-row { display: flex; gap: .7rem; max-width: 34rem; }
+.ops-search-row > *:first-child { flex: 1; }
+
+.ops-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: .8rem; margin-bottom: 1.5rem; }
+.ops-table { width: 100%; border-collapse: collapse; font-size: .9rem; min-width: 44rem; }
+.ops-table th, .ops-table td { text-align: left; padding: .8rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+.ops-table th { font-family: var(--font-metadata); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-foreground); white-space: nowrap; }
+.ops-table tr:last-child td { border-bottom: 0; }
+.ops-table a { text-decoration: underline; text-underline-offset: .2em; }
+.ops-mono { font-family: var(--font-metadata); font-size: .82rem; }
+.ops-cell-note { display: block; font-size: .78rem; color: var(--muted-foreground); margin-top: .2rem; }
+
+.ops-pagination { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; font-size: .88rem; }
+.ops-pagination a { text-decoration: underline; text-underline-offset: .2em; min-height: 44px; display: inline-flex; align-items: center; }
+
+.ops-inline-form { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+.ops-check { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; white-space: nowrap; }
+.ops-check input { width: 1rem; height: 1rem; accent-color: var(--violet); }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 860px) {
+  .ops-nav-toggle { display: inline-flex; }
+  .ops-nav ul { display: none; flex-direction: column; gap: .2rem; margin-top: .7rem; }
+  .ops-nav ul[data-open='true'] { display: flex; }
+  .ops-header-actions { margin-left: 0; width: 100%; order: 4; }
+}

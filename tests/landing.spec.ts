@@ -55,7 +55,14 @@ test('Three.js journey renders, scrubs both ways and hands off to a real form', 
   expect(errors).toEqual([]);
 });
 test('seven-step setup saves real form input, resumes, and deletes independently of the demo', async ({ page }) => {
+  // This test is about the form: saving, resuming and deleting a setup draft.
+  // The 3D journey that projects the form onto the phone is covered separately
+  // by the Three.js test above, and its reduced-motion and WebGL-loss paths by
+  // the two tests below. Running the form itself under reduced motion keeps it
+  // independent of scene timing, which varies with the renderer.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/#onboarding');
+  await expect(page.locator('.landing-experience')).toHaveAttribute('data-motion', 'reduced');
   await expect(page.locator('.landing-onboarding')).not.toHaveAttribute('inert');
   const form = page.locator('.onboard-card');
   await form.getByRole('button', { name: 'Continue', exact: true }).click();
