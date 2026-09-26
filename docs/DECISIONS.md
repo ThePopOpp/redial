@@ -1,5 +1,15 @@
 # Working decision log
 
+## 2026-09-26 - Public legal documents aligned with A2P 10DLC
+
+- Owner decisions recorded: the legal entity is **Qallus**; the SMS programme carries account/security notices, call notifications and billing reminders, and **no marketing messages**; the owner chose to publish without external legal review, which is noted here rather than hedged in the documents themselves.
+- Add `/legal/privacy` and `/legal/terms` as ordinary `(site)` pages. Content is written to match what the service actually does: AI answers and discloses itself, recording off by default, transcripts 90 days on paid and 7 days free, line-level access so a household payer cannot read another member`s calls, and Square holding card data rather than Redial.
+- A2P 10DLC vetting fetches the policy URLs directly, so both pages are exempted from the development password gate in `src/proxy.ts` via `publicPaths`, exempted from `X-Robots-Tag: noindex` in `next.config.ts`, and allowed in `robots.ts`. Everything else stays gated and unindexed. The pages contain no customer data, so the exemption adds no exposure.
+- The clauses 10DLC specifically checks are present and deliberate: an explicit statement that mobile numbers, opt-in information and consent records are never sold or shared for third-party marketing; the message categories; message frequency varies; message and data rates may apply; STOP and HELP; a customer care address; and carrier non-liability for undelivered messages.
+- Two Redial-specific statements are carried as callouts rather than buried: the mobile opt-in non-sharing clause, and that Redial is not a telephone service and cannot reach emergency numbers.
+- Governing law is set to Arizona. Contact addresses `support@redial.si` and `privacy@redial.si` are referenced by both documents and by the messaging programme; those mailboxes must exist before A2P registration. No postal address is asserted, because none was supplied.
+- Verification: lint, typecheck and the optimised build pass; both pages prerender statically. With `REDIAL_DEPLOYMENT=development`, `/legal/privacy` and `/legal/terms` return 200 without credentials while `/`, `/pricing` and `/app` return 401, and authenticated access is unchanged. `/legal/*` carries no `X-Robots-Tag` while `/pricing` still carries `noindex, nofollow`. 15 node tests and all 81 browser tests pass. No provider was contacted, no campaign was registered and no message was sent.
+
 ## 2026-09-25 - Reconcile the Supabase dashboard and Coolify deployment tracks
 
 - Two computers diverged from `fb31575`. This workstation held an uncommitted Supabase identity/dashboard track (auth, `/app`, `/ops`, four migrations, the RLS suite, carrier setup, contact import, phone simulator); `origin/main` held a committed Coolify deployment track (`config/runtime.mjs`, access gate, Resend/Hostinger diagnostics, CI, container tests, teaser email). The local work was committed first as `36093c6`: `src/proxy.ts`, `Dockerfile`, `.dockerignore` and `.env.example` existed untracked locally and tracked on the remote, so a merge or forced checkout would have destroyed files held in no commit.

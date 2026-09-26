@@ -11,6 +11,7 @@ import './forms.css';
 import './contact-import.css';
 import './phone-wizard.css';
 import './carrier-setup.css';
+import './legal.css';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {

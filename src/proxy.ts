@@ -7,12 +7,17 @@ import { supabaseConfig } from '@/lib/supabase/config';
 // Paths that carry an authenticated Supabase session. Kept narrow on purpose:
 // the access gate below runs everywhere, but refreshing a session costs a
 // network round trip, so the marketing site and static assets skip it.
+const publicPaths = /^\/legal(?:\/|$)/;
 const sessionPaths = /^\/(?:app|ops|auth|account|api\/v1)(?:\/|$)|^\/(?:sign-in|staff-sign-in)$/;
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   // Public liveness is deliberately content-free, including when config fails.
   if (pathname === '/api/health/live') return NextResponse.next();
+  // Legal documents stay reachable without the development password: A2P 10DLC
+  // campaign vetting fetches the Privacy Policy and Terms URLs directly, and a
+  // 401 there fails the campaign. They contain no customer data.
+  if (publicPaths.test(pathname)) return NextResponse.next();
 
   let runtime;
   try {
