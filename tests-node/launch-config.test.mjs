@@ -21,3 +21,15 @@ test('rejects local, credentialed, insecure and path-based app origins for stagi
     assert.equal(checkLaunchConfig({ ...valid, REDIAL_SITE_URL }).find(r => r.key === 'REDIAL_SITE_URL').status, 'blocked');
   }
 });
+test('every secret the worker owns is refused in the web environment', () => {
+  // These names are the contract between services/worker and the web tier. If
+  // one is ever dropped from check-launch-config, a Coolify copy-paste puts a
+  // provider secret in a browser-facing container and nothing complains.
+  const secret = 'worker-owned-value-must-never-reach-the-web-tier';
+  for (const name of ['SQUARE_ACCESS_TOKEN', 'SQUARE_WEBHOOK_SIGNATURE_KEY', 'SQUARE_REFRESH_TOKEN',
+    'SUPABASE_SERVICE_ROLE_KEY', 'SUPABASE_SECRET_KEY', 'XAI_API_KEY', 'RESEND_API_KEY']) {
+    const results = checkLaunchConfig({ ...valid, [name]: secret });
+    assert.equal(results.find(r => r.key === 'WEB_SECRET_ISOLATION').status, 'blocked', `${name} must be refused in the web tier`);
+    assert.ok(!JSON.stringify(results).includes(secret), `${name} must not be echoed`);
+  }
+});

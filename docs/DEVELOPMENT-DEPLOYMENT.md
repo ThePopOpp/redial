@@ -46,15 +46,41 @@ This records and validates the fallback configuration; it does **not** implement
 
 ## Applying the schema
 
-Generate one file containing every migration in order, then paste it into the Supabase SQL editor and run it once:
+Apply migrations **one file at a time**, in filename order, each as its own statement batch. The supported routes are `psql -1 -f <file>` per file, or one `apply_migration` call per file through the project-scoped Supabase MCP.
+
+**Do not paste a concatenated buffer into the Supabase SQL editor.** The editor runs a pasted buffer statement by statement and commits each one, so the `begin;`/`commit;` wrapper inside each migration does not protect it: a failure half way through leaves the schema partly applied, with no transaction to roll back. The wrapper only works where the whole file is submitted as a single batch.
+
+For the same reason, when sending a migration through `apply_migration`, strip the leading `begin;` and trailing `commit;` in transit and leave the file unchanged on disk. That API supplies its own transaction, and an inner `commit;` ends it early.
+
+To read the whole schema in order - for review, or to pipe to `psql` - generate it rather than keeping a second copy:
 
 ```sh
 node scripts/print-migrations.mjs > schema-to-apply.sql
 ```
 
-Redirect the script directly. `npm run print:migrations > file` writes npm's banner lines into the file ahead of the SQL, and Postgres fails with `syntax error at or near ">"`; use `npm run --silent` if you prefer going through npm. Each migration is its own transaction, so a failure rolls back rather than leaving the schema half-applied. `npm run test:database` applies this same sequence to a throwaway container and runs the row-level-security suite against it.
+Redirect the script directly. `npm run print:migrations > file` writes npm's banner lines into the file ahead of the SQL, and Postgres fails with `syntax error at or near ">"`; use `npm run --silent` if you prefer going through npm. The generated file is git-ignored.
 
-Then create the first platform owner with `supabase/bootstrap-owner.sql`, replacing the placeholder address. The account must have confirmed its email, and signing in at `/staff-sign-in` will require enrolling an authenticator before anything is visible.
+`npm run test:database` applies the same sequence to a throwaway container, one file at a time, and runs the row-level-security suite against the result. That is the check that proves a migration set is coherent before it reaches a real project.
+
+Then create the first platform owner with `supabase/bootstrap-owner.sql`, substituting the address at run time rather than editing the placeholder into the file. The account must have confirmed its email, and signing in at `/staff-sign-in` will require enrolling an authenticator before anything is visible.
+
+## Worker application
+
+`services/worker` is a second Coolify application, separate from the web container and built from its own Dockerfile against the same pinned lockfile:
+
+```sh
+docker build --file services/worker/Dockerfile --tag redial-worker:development .   # npm run build:worker
+```
+
+It is the only deployment unit permitted to hold `SQUARE_ACCESS_TOKEN`, `SQUARE_WEBHOOK_SIGNATURE_KEY` and `SUPABASE_SERVICE_ROLE_KEY`. `npm run check:launch` fails the **web** environment if any of those names appear there, and `tests-node/launch-config.test.mjs` asserts each one is refused, so the boundary cannot be dropped without a test failing. Do not copy the worker's variables into `redial-web`.
+
+Square webhooks point at the worker, never at the web application. Verifying a Square signature needs the signature key, the web tier may not hold it, and so the web tier cannot accept a Square notification at all. Set `SQUARE_WEBHOOK_URL` to the exact HTTPS notification URL configured in Square: the signature is computed over that string concatenated with the raw body, and the worker will not derive it from forwarded headers, because behind a reverse proxy a caller controls those.
+
+Two switches gate live commerce and both default to off. `SQUARE_ENVIRONMENT=production` refuses to start unless `REDIAL_SQUARE_PRODUCTION_AUTHORIZED=yes` is also set, so a copied environment file cannot start charging real cards. `REDIAL_WORKER_PROVIDER_CALLS` separately gates outbound provider calls.
+
+**What the worker does today:** accepts and verifies Square notifications, records them durably with deduplication, expires usage reservations, stale checkout quotes and abandoned leases, and reads approved billing operations.
+
+**What it does not do:** create subscriptions, send refunds to Square, or grant entitlements. Those are gated rather than stubbed. A received event is recorded and verified, then retried and finally dead-lettered with a reason, rather than being marked processed as though it had an effect. No live charge, refund or subscription is possible from this increment.
 
 ## Supabase Auth configuration
 

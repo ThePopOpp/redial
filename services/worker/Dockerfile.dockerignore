@@ -1,0 +1,13 @@
+# Context allowlist for the worker image only. BuildKit prefers
+# <dockerfile>.dockerignore over the root .dockerignore, so the web image's
+# context stays exactly as narrow as it already was.
+#
+# The worker needs the lockfile (it shares the single pinned dependency set) and
+# its own source. It must never receive the Next application, the public assets
+# or any environment file.
+**
+!package.json
+!package-lock.json
+!services/worker/**
+services/worker/Dockerfile
+services/worker/Dockerfile.dockerignore
