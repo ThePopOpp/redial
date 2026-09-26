@@ -1,5 +1,14 @@
 # Working decision log
 
+## 2026-09-26 - Recovery link wording, rate limits and branded auth email
+
+- A reported "password reset is broken" was not a fault. The auth log shows `/recover` 200 at 19:10:54, a second request refused at 19:11:08 with `over_email_send_rate_limit`, a successful `/verify` 303 plus a PKCE `/token` 200 at 19:12:33 that logged the account in, and then a second click on the same message at 19:23:11 returning `One-time token not found`. The link worked; the error came from reusing it. Two things made that hard to see, and both are fixed.
+- `resetPasswordForEmail` discarded its error, so a refused request still redirected to `notice=email`, which says to check the inbox. A rate limit now gets its own notice. The wording describes the request rather than the account, so it still does not reveal whether an address is registered.
+- A failed recovery exchange redirected to `/sign-in?notice=expired`, which tells someone to sign in with the password they came to replace. A recovery failure now lands on `/forgot-password` with a notice saying the link is single use and offering a new one. The non-recovery path is unchanged.
+- Supabase Auth email templates are branded and kept in `docs/EMAIL-TEMPLATES.md`. They are table-based with literal hex colours and inline styles, because Outlook renders with Word's engine and no client supports custom properties. `DM Serif Display` is replaced by Georgia rather than loaded as a web font. The light palette is used unconditionally, since most clients force a light background and the dark theme inverts into something unreadable. Every template states that the link works once, which is the confusion above, met before it happens.
+- Leaked password protection was recorded as an open item on the assumption it was a toggle. It is a Pro Plan feature, so it is not available on this project's current plan. Recorded as a plan decision rather than a configuration task.
+- The Supabase phone provider was enabled during setup with Twilio credentials. No code path in this application uses phone sign-in, so enabling it published an unauthenticated SMS-sending endpoint on the Auth API with no product behind it. That is the standard SMS-pumping target and the charges land on the connected Twilio account. Recommended off until a phone flow is actually built and authorized.
+
 ## 2026-09-26 - Authenticator enrollment shows a QR code
 
 - The enrollment screen printed only the base32 setup key, so every operator had to type it into their authenticator by hand. Supabase already returns `data.totp.qr_code` from `mfa.enroll`, so the QR is rendered from that. It is an inline SVG data URI: nothing is fetched, and the secret never appears in a request URL. `next/image` is deliberately not used for the same reason, and because it cannot optimize a data URI anyway.

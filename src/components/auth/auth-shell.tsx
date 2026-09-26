@@ -8,6 +8,8 @@ const notices: Record<string, string> = {
   email: 'If your address is eligible, check your inbox for the next step.',
   origin: 'Open this form from the configured Redial domain.',
   expired: 'This link has expired or is invalid. Request a new one.',
+  used: 'That reset link has already been used, or it has expired. Each link works once — request a new one below.',
+  slow: 'You asked for this very recently. Wait a minute, then try again.',
   terms: 'Accept the Terms of Service and Privacy Policy to create an account.',
   password: 'Your password has been updated.',
 };

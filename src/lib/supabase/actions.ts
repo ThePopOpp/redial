@@ -28,8 +28,12 @@ export async function authAction(form: FormData) {
   const { action, email, password, name } = input.data;
   if (action === 'signout') { await db.auth.signOut(); redirect('/sign-in'); }
   if (action === 'reset' && email) {
-    await db.auth.resetPasswordForEmail(email, { redirectTo: `${appOrigin()}/auth/callback?recovery=1` });
-    redirect('/forgot-password?notice=email');
+    const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: `${appOrigin()}/auth/callback?recovery=1` });
+    // Supabase refuses a second recovery request within its send window. Saying
+    // "check your inbox" then is worse than saying nothing: the person waits for
+    // a message that was never sent. The wording describes the request, not the
+    // account, so it still does not confirm whether an address is registered.
+    redirect(error?.code === 'over_email_send_rate_limit' ? '/forgot-password?notice=slow' : '/forgot-password?notice=email');
   }
   if (action === 'password' && password) {
     const { data, error: identityError } = await db.auth.getUser();
