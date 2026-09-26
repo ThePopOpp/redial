@@ -3,7 +3,7 @@ import { useId, type CSSProperties } from 'react';
 import { AudioLines, Check, CheckCheck, Gavel, Headphones, LockKeyhole, MessageSquare, Network, Pause, Play, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatSampleTime, guidanceChoices, overlayMotion, sampleCall, sampleTurnAt, type GuidanceId } from '@/lib/landing/story-demo';
-import { clamp } from '@/lib/landing/timeline';
+import { clamp, screeningChoreography } from '@/lib/landing/timeline';
 import type { SampleAudio } from './use-sample-audio';
 
 const cards = [
@@ -58,7 +58,7 @@ export function StoryCallout({ chapter, position, audio, choice, onChoose, stati
   if (!card) return null;
   const motion = overlayMotion(position, chapter), rich = chapter >= 1 && chapter <= 4;
   const details = stationary ? 1 : motion.details;
-  const style = { '--callout-rise': stationary ? 0 : motion.rise, '--callout-scale': stationary ? 1 : motion.scale, '--callout-glow': stationary ? 0 : motion.glow, opacity: stationary ? 1 : motion.opacity, visibility: !stationary && motion.opacity < .02 ? 'hidden' : 'visible' } as CSSProperties;
+  const style = { '--screening-shift': screeningChoreography(position).shift, '--callout-rise': stationary ? 0 : motion.rise, '--callout-scale': stationary ? 1 : motion.scale, '--callout-glow': stationary ? 0 : motion.glow, opacity: stationary ? 1 : motion.opacity, visibility: !stationary && motion.opacity < .02 ? 'hidden' : 'visible' } as CSSProperties;
   return <aside className={`story-callout callout-${chapter} ${rich ? 'callout-rich' : ''} ${stationary ? 'callout-stationary' : 'callout-staged'}`} style={style} aria-labelledby={id} inert={!stationary && motion.opacity < .1} data-chapter={chapter} data-rise={motion.rise.toFixed(3)}>
     <div className="callout-header"><span className="callout-symbol"><card.icon size={23} strokeWidth={1.6} /></span><div><span className="callout-eyebrow">{card.label}</span><h3 id={id}>{card.title}</h3><p>{card.body}</p></div></div>
     {rich && <div className="callout-reveal-details" style={{ gridTemplateRows: `${details}fr`, opacity: details, visibility: details < .01 ? 'hidden' : 'visible' }} inert={details < .95}><div>

@@ -1,5 +1,5 @@
 import sample from './sample-call.json';
-import { clamp, smooth, stagedReveal } from './timeline';
+import { clamp, smooth, stagedReveal, screeningChoreography } from './timeline';
 
 export const sampleCall = sample;
 export const guidanceChoices = [
@@ -25,7 +25,7 @@ export function overlayMotion(position: number, chapter: number) {
 }
 export function screeningWordMotion(position: number) {
   const phase = clamp(position - 1);
-  const bloom = smooth((phase - .18) / .22), soften = smooth((phase - .42) / .37);
-  return { x: -soften * 12, y: -soften * 65, scale: 1 + soften * .60, glow: .5 + bloom * .5, blur: soften * 22, opacity: .88 * smooth((position - .90) / .15) * (1 - smooth((phase - .51) / .33)) };
+  const bloom = smooth((phase - .12) / .16), { soften } = screeningChoreography(position);
+  return { x: -soften * 12, y: -soften * 65, scale: 1 + soften * .60, glow: .5 + bloom * .5, blur: soften * 22, opacity: .88 * smooth((position - .90) / .15) * (1 - soften) };
 }
 export function formatSampleTime(time: number) { return `0:${String(Math.floor(time)).padStart(2, '0')}`; }

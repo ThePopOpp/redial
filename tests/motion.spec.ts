@@ -1,4 +1,4 @@
-﻿import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { timeline } from '../src/lib/landing/timeline';
 
 async function scrub(page: Page, position: number) {
@@ -21,6 +21,44 @@ test('material tracing returns to solid, descends between chapters, and rewinds 
   expect(timeline(.81 / 9).pose[1]).toBeLessThan(-.5);
   expect(timeline(3.4 / 9).tone).not.toEqual(timeline(5.4 / 9).tone);
   expect(timeline(1).formReveal).toBe(1);
+});
+
+test('turn direction follows phone side, with varied arcs and no backside', () => {
+  for (const chapter of [2, 3, 5, 7]) expect(timeline(chapter / 9).pose[4]).toBeGreaterThan(1);
+  for (const chapter of [4, 6]) expect(timeline(chapter / 9).pose[4]).toBeLessThan(-1);
+  expect(timeline(1.55 / 9).pose[4]).toBeLessThan(0);
+  expect(new Set([2,3,4,5,6,7].map(chapter=>Math.abs(timeline(chapter/9).pose[4]))).size).toBeGreaterThan(3);
+  for (let sample=0;sample<=900;sample++) {
+    const pose=timeline(sample/900).pose;
+    expect(Math.abs(pose[4])).toBeLessThanOrEqual(1.25);
+    expect(Math.cos(pose[4])*Math.cos(pose[3])).toBeGreaterThan(0);
+  }
+});
+
+test('transcript perimeter blooms while the phone turns toward its side without showing its back', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 }); await page.goto('/');
+  const scene = page.locator('.story-scene'), glow = page.locator('.transcript-edge-glow');
+  await expect(scene).toHaveAttribute('data-rendered', 'true');
+  await scrub(page, 1.68); await expect(glow).toHaveCSS('opacity', '0');
+  await scrub(page, 2.02);
+  const sideRotation = await scene.getAttribute('data-rotation');
+  expect(Math.abs(Number(sideRotation!.split(',')[1]))).toBeGreaterThan(1);
+  expect(Math.abs(Number(sideRotation!.split(',')[1]))).toBeLessThanOrEqual(1.3);
+  await expect(page.locator('.story-css-renderer')).toHaveCSS('opacity', '1');
+  await page.screenshot({ path: 'test-results/transcript-side-turn.png' });
+  await scrub(page, 2.10);
+  await page.screenshot({ path: 'test-results/transcript-edge-turn.png' });
+  await scrub(page, 2.30);
+  await expect(glow).toHaveCSS('opacity', '1');
+  await expect(glow).toHaveCSS('pointer-events', 'none');
+  await expect(page.locator('.story-css-renderer')).toHaveCSS('opacity', '1');
+  await page.screenshot({ path: 'test-results/transcript-glow-desktop.png' });
+  await scrub(page, 2.02); await expect(scene).toHaveAttribute('data-rotation', sideRotation!);
+  await scrub(page, 3.30); await expect(glow).toHaveCSS('opacity', '0');
+  await page.setViewportSize({ width: 390, height: 844 }); await scrub(page, 2.30);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: 'test-results/transcript-glow-mobile.png' });
+  await page.emulateMedia({ reducedMotion: 'reduce' }); await expect(glow).toHaveCount(0);
 });
 
 test('rendered phone traces and reforms with pointer depth, preserving the native cursor', async ({ page }) => {

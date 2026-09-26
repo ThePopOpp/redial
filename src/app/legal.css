@@ -1,0 +1,38 @@
+/* Public legal documents. These pages are deliberately reachable without the
+   development password and are indexable, because A2P 10DLC campaign vetting
+   fetches the Privacy Policy and Terms URLs directly. */
+
+.legal { max-width: 46rem; padding-bottom: 4rem; }
+.legal .page-heading { padding-bottom: 1.5rem; }
+.legal-meta { font-family: var(--font-metadata); font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted-foreground); }
+
+.legal section { padding-top: 2.4rem; }
+.legal section + section { border-top: 1px solid var(--border); }
+.legal h2 { font-size: 1.45rem; line-height: 1.3; margin-bottom: 1rem; }
+.legal h3 { font-size: 1.05rem; margin: 1.6rem 0 .7rem; color: var(--foreground); }
+.legal p { margin-bottom: 1.1rem; max-width: 42rem; }
+.legal p:last-child { margin-bottom: 0; }
+
+.legal ul { margin: 0 0 1.1rem; padding-left: 1.3rem; max-width: 42rem; }
+.legal li { margin-bottom: .7rem; padding-left: .2rem; }
+.legal li::marker { color: var(--muted-foreground); }
+
+.legal a { text-decoration: underline; text-underline-offset: .2em; }
+
+/* Used for the two statements a reader must not miss: the mobile opt-in
+   non-sharing clause, and the emergency-services limitation. */
+.legal-callout { border-left: 3px solid var(--violet); background: var(--card); padding: 1.1rem 1.3rem; border-radius: 0 .6rem .6rem 0; }
+
+.legal-table { width: 100%; border-collapse: collapse; margin: 0 0 1.1rem; font-size: .93rem; }
+.legal-table th, .legal-table td { text-align: left; vertical-align: top; padding: .7rem .9rem; border-bottom: 1px solid var(--border); }
+.legal-table th { font-family: var(--font-metadata); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-foreground); }
+.legal-table tr:last-child td { border-bottom: 0; }
+
+.legal-footer-nav { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+.legal-footer-nav a { min-height: 44px; display: inline-flex; align-items: center; font-size: .9rem; }
+
+@media (max-width: 700px) {
+  .legal section { padding-top: 2rem; }
+  .legal h2 { font-size: 1.3rem; }
+  .legal-table { display: block; overflow-x: auto; }
+}

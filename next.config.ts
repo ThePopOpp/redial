@@ -8,8 +8,19 @@ const config: NextConfig = {
   poweredByHeader: false,
   turbopack: { root: process.cwd() },
   async headers() {
+    const security = [
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'Referrer-Policy', value: 'no-referrer' },
+      { key: 'X-Frame-Options', value: 'DENY' },
+      { key: 'Permissions-Policy', value: 'microphone=(), camera=(), geolocation=()' },
+    ];
     return [{
-      source: '/:path*',
+      // Legal documents must be indexable so A2P 10DLC vetting and search can
+      // reach them. Everything else stays hidden until public launch.
+      source: '/legal/:path*',
+      headers: security,
+    }, {
+      source: '/:path((?!legal).*)',
       headers: [
         { key: 'X-Content-Type-Options', value: 'nosniff' },
         { key: 'Referrer-Policy', value: 'no-referrer' },

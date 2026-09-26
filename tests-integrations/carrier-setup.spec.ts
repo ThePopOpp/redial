@@ -1,0 +1,31 @@
+import { test, expect } from '@playwright/test';
+
+test('account setup draft survives reload without activating the line', async ({ page, request }) => {
+  await request.post('http://127.0.0.1:3213/__test/reset');
+  await page.goto('/sign-in');
+  await page.getByLabel('Email', { exact: true }).fill('review@example.test');
+  await page.getByLabel('Password', { exact: true }).fill('A-long-test-password!');
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+  await page.getByLabel('Workspace name').fill('Call setup example');
+  await page.getByRole('button', { name: 'Create workspace', exact: true }).click();
+  await page.getByRole('link', { name: 'Numbers & setup', exact: true }).click();
+  await page.getByRole('button', { name: 'Set up incoming calls' }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByLabel('Phone model').fill('Pixel example');
+  await dialog.getByLabel('Software version').fill('Example OS');
+  await dialog.getByLabel('Plan name or type').fill('Prepaid');
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await dialog.getByLabel('Number you plan to forward').fill('+16025550149');
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await dialog.getByLabel('I own this line').check();
+  await dialog.getByLabel('I understand this saves').check();
+  await dialog.getByRole('button', { name: 'Continue', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Save setup draft' }).click();
+  await expect(dialog.getByRole('status')).toHaveText('Saved. No calls connected.');
+  await page.reload();
+  await expect(page.getByText('unconfigured', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Review call setup' }).click();
+  await expect(dialog.getByLabel('Phone model')).toHaveValue('Pixel example');
+  await expect(dialog.getByLabel('Mobile provider')).toHaveValue('mint');
+});

@@ -1,4 +1,4 @@
-﻿import * as THREE from 'three';
+import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { CSS3DObject, CSS3DRenderer } from 'three/addons/renderers/CSS3DRenderer.js';
 import { clamp, formPreviewStart, formZoomEnd, mix, smooth, timeline } from '@/lib/landing/timeline';
@@ -52,6 +52,18 @@ export function createPhoneScene(mount: HTMLElement, readProgress: () => number,
   const body = new THREE.Mesh(new THREE.ExtrudeGeometry(roundedShape(2.5, 5.08, .36), { depth: .24, bevelEnabled: true, bevelSegments: 8, steps: 1, bevelSize: .065, bevelThickness: .075, curveSegments: 24 }), metal);
   body.position.z = -.10; phone.add(body);
   const back = new THREE.Mesh(new THREE.ShapeGeometry(roundedShape(2.43, 5, .33)), darkMetal); back.rotation.y = Math.PI; back.position.z = -.18; phone.add(back);
+  // Rear hardware gives the scroll turn a dimensional silhouette. Keep the
+  // existing DOM screen and local materials; the supplied HTML is reference only.
+  const cameraGlass = new THREE.MeshPhysicalMaterial({ color: 0x101827, metalness: .45, roughness: .1, clearcoat: 1, transparent: true });
+  hardwareMaterials.push(cameraGlass);
+  const cameraPlate = new THREE.Mesh(new THREE.ExtrudeGeometry(roundedShape(.85, 1.1, .2), { depth: .08, bevelEnabled: true, bevelSize: .035, bevelThickness: .025, bevelSegments: 3, curveSegments: 16 }), darkMetal);
+  cameraPlate.rotation.y = Math.PI; cameraPlate.position.set(-.62, 1.65, -.19); phone.add(cameraPlate);
+  for (const y of [1.4, 1.9]) {
+    const ring = new THREE.Mesh(new THREE.CylinderGeometry(.19, .19, .08, 32), metal);
+    ring.rotation.x = Math.PI / 2; ring.position.set(-.62, y, -.31); phone.add(ring);
+    const lens = new THREE.Mesh(new THREE.CircleGeometry(.145, 32), cameraGlass);
+    lens.rotation.y = Math.PI; lens.position.set(-.62, y, -.355); phone.add(lens);
+  }
   const face = new THREE.Mesh(new THREE.ShapeGeometry(roundedShape(2.43, 4.99, .32)), glass); face.position.z = .222; phone.add(face);
   const bezel = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(roundedShape(2.45, 5.01, .33).getPoints(100)), new THREE.LineBasicMaterial({ color: 0xd8d4ed, transparent: true, opacity: .55 })); bezel.position.z = .224; phone.add(bezel);
   for (const [x, y, height] of [[-1.325, .9, .30], [-1.325, .34, .53], [1.325, .55, .72]]) {
@@ -147,7 +159,7 @@ export function createPhoneScene(mount: HTMLElement, readProgress: () => number,
     const [x, y, z, rx, ry, rz, scale] = state.pose;
     const horizontal = mobile ? 0 : x * clamp(camera.aspect / 1.65, .6, 1.2), parallax = (1 - smooth((state.position - 7.8) / .2)) * (mobile ? .25 : 1);
     phone.position.set(horizontal + pointerX * .085 * parallax, y - pointerY * .07 * parallax, z);
-    phone.rotation.set(rx + pointerY * .065 * parallax, ry + pointerX * .11 * parallax, rz - pointerX * .025 * parallax); phone.scale.setScalar(scale);
+    phone.rotation.set(rx + pointerY * .065 * parallax, clamp(ry + pointerX * .11 * parallax, -1.3, 1.3), rz - pointerX * .025 * parallax); phone.scale.setScalar(scale);
     domPhone.position.copy(phone.position); domPhone.rotation.copy(phone.rotation); domPhone.scale.copy(phone.scale); camera.position.z = state.cameraZ;
     tint.setRGB(state.tone[0] / 255, state.tone[1] / 255, state.tone[2] / 255, THREE.SRGBColorSpace);
     rim.color.copy(tint); rim.position.set(4 + pointerX * 3, 3 - pointerY * 2 - state.travel, 4);
@@ -163,7 +175,8 @@ export function createPhoneScene(mount: HTMLElement, readProgress: () => number,
     rings.forEach((ring, index) => { ring.rotation.z = progress * (index + 1) * .75; ring.rotation.x = .4 + index * .35 + state.position * .04; ring.material.color.copy(tint); ring.material.opacity = (.10 + state.outline * .15) * (1 - state.formReveal); });
     route.material.color.copy(tint); route.material.opacity = (state.chapter === 1 || state.chapter === 6 ? .45 : .06) * (1 - state.formReveal);
     pulse.position.copy(path.getPoint(clamp((state.position % 1) * 1.3))); pulse.visible = state.chapter === 1 || state.chapter === 6;
-    css.domElement.style.opacity = String((state.position >= formPreviewStart ? 0 : state.screenOpacity) * (1 - smooth((state.outline - .12) / .82)) * state.phoneOpacity);
+    const screenFacing = smooth((Math.cos(phone.rotation.y) * Math.cos(phone.rotation.x) - .02) / .18);
+    css.domElement.style.opacity = String((state.position >= formPreviewStart ? 0 : state.screenOpacity) * (1 - smooth((state.outline - .12) / .82)) * state.phoneOpacity * screenFacing);
     screenElement.style.filter = `blur(${state.outline * 5}px)`; renderer.domElement.style.opacity = String(state.sceneOpacity);
     if (state.sceneOpacity > .001) renderer.render(scene, camera);
     css.render(domScene, camera);
@@ -179,6 +192,7 @@ export function createPhoneScene(mount: HTMLElement, readProgress: () => number,
       }
     }
     mount.dataset.progress = progress.toFixed(4); mount.dataset.rendered = 'true'; mount.dataset.outline = state.outline.toFixed(3); mount.dataset.trace = state.traceDraw.toFixed(3); mount.dataset.phoneOpacity = state.phoneOpacity.toFixed(3); mount.dataset.pointer = `${pointerX.toFixed(3)},${pointerY.toFixed(3)}`;
+    mount.dataset.rotation = `${phone.rotation.x.toFixed(3)},${phone.rotation.y.toFixed(3)},${phone.rotation.z.toFixed(3)}`;
   }
   draw();
   return { screenElement, dispose() {

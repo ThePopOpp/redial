@@ -7,13 +7,17 @@ export function readRuntime(env = process.env) {
   const value = name => (env[name] ?? '').trim();
   const requireValue = name => { const result = value(name); if (!result) errors.push(`${name} is required`); return result; };
   const deployment = value('REDIAL_DEPLOYMENT') || 'local';
+  // Local development and the browser-test Supabase double both run over
+  // loopback HTTP. Hosted deployments stay HTTPS-only.
+  const loopback = url => ['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname) || url.hostname === '::1';
   if (!['local', 'development'].includes(deployment)) errors.push('REDIAL_DEPLOYMENT must be local or development');
   if (value('REDIAL_DATA_DIR') && !path.isAbsolute(value('REDIAL_DATA_DIR'))) errors.push('REDIAL_DATA_DIR must be an absolute path');
   let siteUrl = null;
   if (deployment === 'development' || value('REDIAL_SITE_URL')) {
     try {
       siteUrl = new URL(requireValue('REDIAL_SITE_URL'));
-      if (siteUrl.protocol !== 'https:' || siteUrl.username || siteUrl.password || siteUrl.pathname !== '/' || siteUrl.search || siteUrl.hash) throw new Error();
+      const permitted = siteUrl.protocol === 'https:' || (deployment === 'local' && siteUrl.protocol === 'http:' && loopback(siteUrl));
+      if (!permitted || siteUrl.username || siteUrl.password || siteUrl.pathname !== '/' || siteUrl.search || siteUrl.hash) throw new Error();
     } catch { errors.push('REDIAL_SITE_URL must be an HTTPS origin without a path, query, or credentials'); }
   }
   const username = value('REDIAL_DEV_USERNAME');
@@ -27,7 +31,9 @@ export function readRuntime(env = process.env) {
     requireValue('SUPABASE_URL'); requireValue('SUPABASE_PUBLISHABLE_KEY');
     try {
       const url = new URL(supabase.url);
-      if (url.protocol !== 'https:' || !/^[a-z0-9]+\.supabase\.co$/.test(url.hostname) || url.port || url.username || url.password || url.pathname !== '/' || url.search || url.hash) throw new Error();
+      const hosted = url.protocol === 'https:' && /^[a-z0-9]+\.supabase\.co$/.test(url.hostname) && !url.port;
+      const double = deployment === 'local' && url.protocol === 'http:' && loopback(url);
+      if ((!hosted && !double) || url.username || url.password || url.pathname !== '/' || url.search || url.hash) throw new Error();
     } catch { errors.push('SUPABASE_URL must be a hosted Supabase HTTPS project origin'); }
     if (!supabase.publishableKey.startsWith('sb_publishable_')) errors.push('SUPABASE_PUBLISHABLE_KEY must be a publishable key, not a server secret');
   }
