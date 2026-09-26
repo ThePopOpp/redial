@@ -87,6 +87,7 @@ html:has(.review-shell) { scroll-padding-top: 92px; }
 .review-content textarea, .review-dialog textarea { resize: vertical; }
 .review-form, .review-dialog form { display: flex; flex-direction: column; gap: 21px; }
 .review-form > button { align-self: flex-start; }
+.mfa-qr { align-self: flex-start; width: 200px; height: 200px; padding: 12px; background: #fff; border-radius: 12px; box-sizing: content-box; }
 .field { display: flex; flex-direction: column; gap: 8px; }
 .field label { font-size: .8rem; color: var(--foreground); }
 .field-hint { font-size: .71rem; color: var(--muted-foreground); }

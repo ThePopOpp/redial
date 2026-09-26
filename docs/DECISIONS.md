@@ -1,5 +1,13 @@
 # Working decision log
 
+## 2026-09-26 - Authenticator enrollment shows a QR code
+
+- The enrollment screen printed only the base32 setup key, so every operator had to type it into their authenticator by hand. Supabase already returns `data.totp.qr_code` from `mfa.enroll`, so the QR is rendered from that. It is an inline SVG data URI: nothing is fetched, and the secret never appears in a request URL. `next/image` is deliberately not used for the same reason, and because it cannot optimize a data URI anyway.
+- The setup key stays on screen beneath the QR rather than being replaced by it. A desktop authenticator cannot scan the screen it is displayed on, and that is the case where manual entry is the only route.
+- `.mfa-qr` forces a light panel in both themes. A QR inheriting the dark background would render dark modules on dark and simply not scan.
+- Enrollment now clears the operator's own unverified factors first. Reloading the page before verifying left one behind, and they accumulated until Supabase refused another. Only unverified factors are removed, so a working authenticator is never revoked by this path. That also makes a stable `friendlyName` safe, so the authenticator entry reads `Redial operations` instead of an ISO timestamp.
+- The screen now says plainly that losing the authenticator without the setup key needs an administrator to clear the factor. There is no backup factor and no self-service recovery: every staff surface requires `aal2`, so a lost factor locks the account out of `/ops` entirely and the only fix is deleting the row from `auth.mfa_factors` with a privileged session. A second factor and a recovery path remain open work.
+
 ## 2026-09-26 - Billing schema and the worker deployment unit
 
 - Square, not Stripe. No Stripe product ID, webhook type or customer portal appears in the schema, because Square's objects and limits are different and a Stripe-shaped design would encode assumptions Square does not honour.

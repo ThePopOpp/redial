@@ -6,13 +6,26 @@ import { z } from 'zod';
 import { appOrigin } from '@/lib/supabase/config';
 import { staffAccount } from '@/lib/supabase/staff';
 
-export async function mfaAction(_previous:{message:string;secret?:string;factor?:string},form:FormData): Promise<{message:string;secret?:string;factor?:string}> {
+type MfaState={message:string;secret?:string;qr?:string;factor?:string};
+
+export async function mfaAction(_previous:MfaState,form:FormData): Promise<MfaState> {
   if((await headers()).get('origin')!==appOrigin()) return {message:'Use the configured Redial domain.'};
   const account=await staffAccount(); if(!account) return {message:'Staff access is unavailable.'};
   if(form.get('action')==='enroll') {
-    const {data,error}=await account.db.auth.mfa.enroll({factorType:'totp',friendlyName:`Redial ${new Date().toISOString()}`});
+    // Clear abandoned attempts first. Reloading the page before verifying leaves
+    // an unverified factor behind, and without this they accumulate until
+    // Supabase refuses another. Only unverified factors are removed, so a
+    // working authenticator is never revoked here.
+    const {data:existing}=await account.db.auth.mfa.listFactors();
+    for(const stale of (existing?.all??[]).filter(f=>f.status==='unverified')) {
+      await account.db.auth.mfa.unenroll({factorId:stale.id});
+    }
+    // A stable name, so the authenticator entry reads "Redial operations" rather
+    // than a timestamp. Clearing stale factors above is what keeps it unique.
+    const {data,error}=await account.db.auth.mfa.enroll({factorType:'totp',friendlyName:'Redial operations'});
     if(error) return {message:'Authenticator enrollment could not be started. Try again or contact your administrator.'};
-    return {message:'Add this secret to your authenticator, then enter its six-digit code.',secret:data.totp.secret,factor:data.id};
+    return {message:'Scan this with your authenticator, or add the setup key by hand, then enter the six-digit code it shows.',
+      secret:data.totp.secret,qr:data.totp.qr_code,factor:data.id};
   }
   const input=z.object({factorId:z.uuid(),code:z.string().regex(/^\d{6}$/)}).safeParse({factorId:form.get('factor'),code:form.get('code')});
   if(!input.success) return {message:'Enter a six-digit code.'};
