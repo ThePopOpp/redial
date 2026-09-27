@@ -158,3 +158,22 @@ test('the container entrypoint accepts every hosted mode and refuses the loopbac
   const stale = run({ REDIAL_DEPLOYMENT: 'public', REDIAL_DEV_USERNAME: 'redial-review', REDIAL_DEV_PASSWORD: 'a-unique-preview-password-value' });
   assert.match(stale.stderr, /must be unset when REDIAL_DEPLOYMENT=public/, 'a stale preview password must fail startup');
 });
+
+test('the web application refuses secrets that belong to another unit', async () => {
+  const { readRuntime } = await import('../config/runtime.mjs');
+  const web = { REDIAL_DEPLOYMENT: 'public', REDIAL_SITE_URL: 'https://redial.si' };
+  assert.doesNotThrow(() => readRuntime({ ...web }));
+  // Pasting the worker's or gateway's variables into the web application put a
+  // row-level-security bypass in a browser-facing container, and the container
+  // started. It must not start.
+  for (const name of ['SUPABASE_SERVICE_ROLE_KEY', 'SUPABASE_SECRET_KEY', 'XAI_API_KEY',
+    'SQUARE_ACCESS_TOKEN', 'SQUARE_WEBHOOK_SIGNATURE_KEY', 'SQUARE_REFRESH_TOKEN']) {
+    assert.throws(() => readRuntime({ ...web, [name]: 'value-that-must-not-be-here' }),
+      new RegExp(name), `${name} must be refused on the web application`);
+  }
+  assert.throws(() => readRuntime({ ...web, REDIAL_GATEWAY_ORIGIN: 'https://voice.redial.si' }), /REDIAL_GATEWAY_/);
+  // The error names fields, never values.
+  try { readRuntime({ ...web, XAI_API_KEY: 'secret-value-abc' }); } catch (error) {
+    assert.ok(!error.message.includes('secret-value-abc'));
+  }
+});

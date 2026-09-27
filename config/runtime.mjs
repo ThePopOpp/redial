@@ -69,6 +69,25 @@ export function readRuntime(env = process.env) {
       if (email.smtp.secure !== (email.smtp.port === 465)) errors.push('SMTP_SECURE must be true for port 465 and false for STARTTLS on port 587');
     }
   }
+  // Secrets that belong to another deployment unit. `npm run check:launch`
+  // reports these, but a check nobody runs is not a boundary: pasting the
+  // worker's or the gateway's variables into the web application's Coolify
+  // settings put a row-level-security bypass in a browser-facing container and
+  // the container started happily. Refusing at startup is what makes the
+  // separation real. Twilio and Resend values are absent from this list on
+  // purpose: .env.example documents them here for the read-only operator checks.
+  const foreign = ['SUPABASE_SERVICE_ROLE_KEY', 'SUPABASE_SECRET_KEY', 'XAI_API_KEY',
+    'SQUARE_ACCESS_TOKEN', 'SQUARE_WEBHOOK_SIGNATURE_KEY', 'SQUARE_REFRESH_TOKEN']
+    .filter(name => value(name));
+  if (foreign.length) {
+    errors.push(`${foreign.join(', ')} belong to the worker or voice gateway and must not be set on the web application`);
+  }
+  // A strong signal the wrong block was pasted. Named separately so the message
+  // says which unit the variables came from rather than only that a port clashed.
+  if (value('REDIAL_GATEWAY_ORIGIN') || value('REDIAL_GATEWAY_ENVIRONMENT') || value('REDIAL_GATEWAY_BRIDGE_CALLS')) {
+    errors.push('REDIAL_GATEWAY_* configure the voice gateway, which is a separate Coolify application');
+  }
+
   if (errors.length) throw new Error(`Invalid environment: ${[...new Set(errors)].join('; ')}`);
   return { deployment, siteUrl: siteUrl?.origin ?? null, username, password, secureCookies: hosted,
     dataDir: value('REDIAL_DATA_DIR') || path.join(process.cwd(), '.redial'), supabase, twilio, email };
