@@ -479,4 +479,36 @@ reset role;
 select public.test_assert((select count(*)=1 from public.call_screenings where outcome='screening'),'the gateway role reads and writes call state');
 select public.test_assert((select count(*)=1 from public.phone_numbers where status='active'),'the gateway role resolves the dialled number');
 
+-- The backend role the worker and the voice gateway connect as (202610010001).
+-- Dropping and recreating the public schema deleted the default privileges that
+-- normally grant it, so every table created afterwards was unreachable by the
+-- backend while still looking correct to a member. The gateway answered a real
+-- call with "something went wrong" and Postgres logged "permission denied for
+-- table phone_numbers". These assertions are what should have caught it.
+set role service_role;
+select public.test_assert((select count(*)=1 from public.phone_numbers),'the backend role resolves a dialled number');
+select public.test_assert((select count(*)>0 from public.endpoints),'the backend role reads destinations');
+select public.test_assert((select count(*)=1 from public.line_routing),'the backend role reads how a line answers');
+select public.test_assert((select count(*)=1 from public.call_screenings),'the backend role reads call state');
+select public.test_assert((select count(*)=1 from public.webhook_inbox),'the backend role reads the webhook inbox');
+select public.test_assert((select count(*)=1 from public.billing_customers),'the backend role reads provider customer identity');
+select public.test_assert((select count(*)=1 from public.usage_events),'the backend role reads per-call usage');
+-- It writes as well as reads: the gateway records a call before the caller
+-- hears anything.
+insert into public.call_screenings(workspace_id,line_id,provider_call_sid,from_e164,to_e164,mode)
+  values(current_setting('test.import_workspace')::uuid,current_setting('test.line')::uuid,
+         'CAffffffffffffffffffffffffffffffff','+16025550199','+16025550100','simple');
+select public.test_assert((select count(*)=2 from public.call_screenings),'the backend role records a call in flight');
+-- Every table in public must be reachable by it, so a future migration that
+-- forgets cannot reintroduce this.
+select coalesce(string_agg(c.relname, ' ' order by c.relname), '') as unreadable_by_backend
+from pg_class c join pg_namespace n on n.oid = c.relnamespace
+where n.nspname = 'public' and c.relkind = 'r'
+  and not has_table_privilege('service_role', c.oid, 'SELECT') \gset
+-- Passing the oid avoids resolving a table name through the search path, and
+-- names every offender rather than only counting them.
+select public.test_assert(:'unreadable_by_backend' = '',
+  'every public table is readable by the backend role');
+reset role;
+
 rollback;
