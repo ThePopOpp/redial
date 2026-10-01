@@ -58,6 +58,10 @@ export async function authAction(form: FormData) {
   }
   const { error } = await db.auth.signInWithPassword({ email, password });
   const next = contactReturnPath(form.get('next'));
-  if (error) redirect(`/sign-in?notice=failed&next=${encodeURIComponent(next)}`);
+  // Its own notice, because the generic one reads as "something broke" and sends
+  // someone looking for a fault when the password is simply wrong. Supabase
+  // returns the same error for an unknown address and a bad password, so saying
+  // the combination was not recognised reveals nothing about who has an account.
+  if (error) redirect(`/sign-in?notice=credentials&next=${encodeURIComponent(next)}`);
   redirect(form.get('staff') === '1' ? '/ops' : next);
 }

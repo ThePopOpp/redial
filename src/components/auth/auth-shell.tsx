@@ -5,6 +5,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 const notices: Record<string, string> = {
   invalid: 'Check the details you entered and try again.',
   failed: 'That request could not be completed. Check your details and try again.',
+  credentials: 'That email and password were not recognised. Check both, or reset your password below.',
   email: 'If your address is eligible, check your inbox for the next step.',
   origin: 'Open this form from the configured Redial domain.',
   expired: 'This link has expired or is invalid. Request a new one.',
