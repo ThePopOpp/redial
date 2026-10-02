@@ -18,4 +18,11 @@ export type Workspace = { id: string; name: string; type: 'personal' | 'business
 export type Line = { id: string; name: string; owner_id: string; status: string };
 export const views = ['overview','calls','live','screening','agent','directory','contacts','callbacks','numbers','connections','people','billing','settings','help','audit'] as const;
 export const labels = ['Overview','Call inbox','Live Call Controls','Screening','Your assistant','Directory','Contacts','Callbacks','Numbers & setup','Connections','People & access','Membership','Settings','Help & support','Activity'];
-export const capabilities = ['read_summary','read_transcript','manage_rules','monitor_live','takeover_live','direct_agent','transfer_call'] as const;
+// read_recording is listed separately from read_transcript on purpose. A
+// written record of a call and a recording of the voices on it are different
+// disclosures, so clearing someone for one never clears them for the other.
+export const capabilities = ['read_summary','read_transcript','read_recording','manage_rules','monitor_live','takeover_live','direct_agent','transfer_call'] as const;
+export type Recording = { id: string; call_id: string; duration_seconds: number; channels: number; retention_deadline: string; created_at: string };
+export type ConsentEvent = { id: string; purpose: 'call_recording' | 'call_transcription'; granted: boolean; disclosure_version: string; collection_context: string; created_at: string };
+export type LineCapture = { recording_enabled: boolean; transcription_enabled: boolean };
+export const capturePurposes = ['call_recording','call_transcription'] as const;

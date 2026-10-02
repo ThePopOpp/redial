@@ -5,8 +5,36 @@ import { checkLaunchConfig } from '../scripts/check-launch-config.mjs';
 const valid = { REDIAL_SITE_URL: 'https://redial.example.org', SUPABASE_URL: 'https://project.supabase.co', SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_example_long_test_key' };
 test('configuration cannot claim production readiness from credentials', () => {
   const results = checkLaunchConfig(valid);
-  assert.equal(results.filter(r => r.status === 'pass').length, 4);
+  // Asserted by name rather than by counting passes. The gates are the point:
+  // a complete, valid environment must still report the things configuration
+  // alone cannot establish, and a later check being added should not look like
+  // this test passing for a new reason.
   assert.equal(results.find(r => r.key === 'LIVE_CALL_IMPLEMENTATION').status, 'blocked');
+  assert.equal(results.find(r => r.key === 'RECORDING_CONSENT_AND_DELETION').status, 'blocked',
+    'recording needs a per-line consent record, which no environment variable can provide');
+  // Everything a valid environment genuinely does settle.
+  for (const key of ['REDIAL_SITE_URL', 'SUPABASE_URL', 'SUPABASE_PUBLISHABLE_KEY', 'WEB_SECRET_ISOLATION']) {
+    assert.equal(results.find(r => r.key === key).status, 'pass', key);
+  }
+  assert.ok(results.some(r => r.status === 'blocked'), 'readiness is never claimed from configuration');
+});
+
+test('recording playback is configured in full or not at all', () => {
+  // A half-configured pair would render a play control that fails on click.
+  const key = 'RECORDING_PLAYBACK';
+  assert.equal(checkLaunchConfig(valid).find(r => r.key === key).status, 'pass', 'absent is a valid posture');
+  const secret = 'x'.repeat(32);
+  assert.equal(checkLaunchConfig({ ...valid, REDIAL_MEDIA_ACCESS_SECRET: secret }).find(r => r.key === key).status, 'blocked', 'secret without a gateway');
+  assert.equal(checkLaunchConfig({ ...valid, REDIAL_VOICE_GATEWAY_URL: 'https://voice.redial.si' }).find(r => r.key === key).status, 'blocked', 'gateway without a secret');
+  assert.equal(checkLaunchConfig({ ...valid, REDIAL_VOICE_GATEWAY_URL: 'https://voice.redial.si', REDIAL_MEDIA_ACCESS_SECRET: 'short' }).find(r => r.key === key).status, 'blocked', 'a weak secret is refused');
+  assert.equal(checkLaunchConfig({ ...valid, REDIAL_VOICE_GATEWAY_URL: 'http://voice.redial.si', REDIAL_MEDIA_ACCESS_SECRET: secret }).find(r => r.key === key).status, 'blocked', 'plaintext transport for call audio is refused');
+  assert.equal(checkLaunchConfig({ ...valid, REDIAL_VOICE_GATEWAY_URL: 'https://voice.redial.si', REDIAL_MEDIA_ACCESS_SECRET: secret }).find(r => r.key === key).status, 'pass');
+});
+
+test('the media access secret is never echoed back', () => {
+  const secret = 'media-secret-must-not-be-printed-0123';
+  const results = checkLaunchConfig({ ...valid, REDIAL_MEDIA_ACCESS_SECRET: secret, REDIAL_VOICE_GATEWAY_URL: 'https://voice.redial.si' });
+  assert.ok(!JSON.stringify(results).includes(secret));
 });
 test('provider and privileged keys are rejected without echoing values', () => {
   const secret = 'private-secret-must-not-be-printed';

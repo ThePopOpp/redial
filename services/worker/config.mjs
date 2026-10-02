@@ -72,6 +72,23 @@ export function readWorkerConfig(env = process.env) {
   const providerCalls = value('REDIAL_WORKER_PROVIDER_CALLS') || 'disabled';
   if (!['disabled', 'enabled'].includes(providerCalls)) errors.push('REDIAL_WORKER_PROVIDER_CALLS must be disabled or enabled');
 
+  // Deleting a recording at Twilio is a provider mutation and it is
+  // irreversible, so it gets its own switch rather than riding on the Square
+  // one. With it disabled the sweep still marks expired audio, and the policy
+  // still refuses to serve it, so the member-facing promise holds while the
+  // provider copy waits for an authorized run. Both credentials or neither:
+  // half-configured would fail on the first deletion rather than at startup.
+  const twilio = { accountSid: value('TWILIO_ACCOUNT_SID'), authToken: value('TWILIO_AUTH_TOKEN') };
+  const mediaDeletion = value('REDIAL_WORKER_MEDIA_DELETION') || 'disabled';
+  if (!['disabled', 'enabled'].includes(mediaDeletion)) errors.push('REDIAL_WORKER_MEDIA_DELETION must be disabled or enabled');
+  if (twilio.accountSid || twilio.authToken) {
+    if (!/^AC[0-9a-f]{32}$/i.test(twilio.accountSid || '')) errors.push('TWILIO_ACCOUNT_SID must be an account SID');
+    if (!/^[0-9a-f]{32}$/i.test(twilio.authToken || '')) errors.push('TWILIO_AUTH_TOKEN must be a 32-character account token');
+  }
+  if (mediaDeletion === 'enabled' && !(twilio.accountSid && twilio.authToken)) {
+    errors.push('REDIAL_WORKER_MEDIA_DELETION=enabled requires TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN');
+  }
+
   const workerId = value('REDIAL_WORKER_ID') || `worker-${process.pid}`;
   if (!/^[a-zA-Z0-9._-]{1,80}$/.test(workerId)) errors.push('REDIAL_WORKER_ID must be 1-80 letters, digits, dots, underscores or hyphens');
 
@@ -86,6 +103,7 @@ export function readWorkerConfig(env = process.env) {
   return {
     supabase: { url: supabaseUrl, serviceRoleKey },
     square: { environment, accessToken, signatureKey, webhookUrl, productionAuthorized },
+    twilio, mediaDeletion,
     providerCalls, workerId, port, leaseSeconds, pollSeconds,
   };
 }
@@ -100,6 +118,8 @@ export function workerSummary(config) {
     webhookSignatureKey: config.square.signatureKey ? 'configured' : 'not configured',
     providerCalls: config.providerCalls,
     productionAuthorized: config.square.productionAuthorized,
+    mediaDeletion: config.mediaDeletion,
+    twilioCredentials: config.twilio.authToken ? 'configured' : 'not configured',
     subscriptionCreation: 'not implemented',
     entitlementGrant: 'not implemented',
   };

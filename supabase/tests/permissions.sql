@@ -511,4 +511,167 @@ select public.test_assert(:'unreadable_by_backend' = '',
   'every public table is readable by the backend role');
 reset role;
 
+
+-- =====================================================================
+-- Call logs, recordings and transcription (202610020001)
+-- =====================================================================
+-- The point of these is the consent guard. twiml.mjs already emits
+-- record="record-from-answer-dual" whenever a line sets recording_enabled, so
+-- before this migration a single UPDATE started two-party capture at the
+-- provider with nothing on this side holding a reference, a consent record or a
+-- deletion deadline. Several assertions below exist to prove the backend role
+-- cannot do it either.
+reset role;
+insert into auth.users values('00000000-0000-4000-8000-000000000006','listener@example.test',now());
+select set_config('test.cw',:'workspace_a',true);
+select set_config('test.cl',:'line_a',true);
+select set_config('test.ccall',:'call_a',true);
+
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select public.invite_member(:'workspace_a','listener@example.test','member');
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000006',true);
+select public.accept_membership(:'workspace_a');
+
+-- Capture is refused until consent exists, by the owner's own RPC ...
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+do $$ begin
+  begin
+    perform public.set_capture_enabled(current_setting('test.cw')::uuid,
+      current_setting('test.cl')::uuid,'call_recording',true);
+  exception when others then raise notice 'PASS: recording cannot be enabled before consent'; return; end;
+  raise exception 'FAIL: recording was enabled with no consent record';
+end $$;
+
+-- ... and by the trigger, for the backend role. service_role carries bypassrls,
+-- which skips policies and not triggers, so this is the assertion that proves
+-- the gateway and the worker are held to it as well.
+reset role;
+set role service_role;
+do $$ begin
+  begin
+    update public.line_routing set recording_enabled=true
+      where line_id=current_setting('test.cl')::uuid;
+  exception when check_violation then raise notice 'PASS: the backend role cannot enable recording without consent'; return; end;
+  raise exception 'FAIL: the backend role enabled recording with no consent record';
+end $$;
+reset role;
+
+-- Only the line owner. Not a workspace administrator and not the billing owner:
+-- the access matrix gives neither call content by default, and enabling
+-- recording is a legal decision about that line's calls.
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000006',true);
+do $$ begin
+  begin
+    perform public.record_capture_consent(current_setting('test.cw')::uuid,
+      current_setting('test.cl')::uuid,'call_recording',true,'v1','Attempted by a plain member');
+  exception when others then raise notice 'PASS: only the line owner records consent'; return; end;
+  raise exception 'FAIL: a plain member recorded capture consent';
+end $$;
+
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select public.record_capture_consent(:'workspace_a',:'line_a','call_recording',true,'v1','Owner confirmed the announcement is played') as consent_a \gset
+select public.set_capture_enabled(:'workspace_a',:'line_a','call_recording',true);
+select public.test_assert((select recording_enabled from public.line_routing where line_id=:'line_a'),
+  'recording turns on once consent is recorded');
+
+-- Withdrawal stops the capture rather than merely recording a preference.
+select public.record_capture_consent(:'workspace_a',:'line_a','call_recording',false,'v1','Owner withdrew consent');
+select public.test_assert((select not recording_enabled from public.line_routing where line_id=:'line_a'),
+  'withdrawing consent stops recording immediately');
+
+-- Transcription is its own decision; a recording consent must not carry it.
+do $$ begin
+  begin
+    perform public.set_capture_enabled(current_setting('test.cw')::uuid,
+      current_setting('test.cl')::uuid,'call_transcription',true);
+  exception when others then raise notice 'PASS: recording consent does not imply transcription'; return; end;
+  raise exception 'FAIL: transcription was enabled under a recording consent';
+end $$;
+
+select public.record_capture_consent(:'workspace_a',:'line_a','call_recording',true,'v1','Owner reinstated consent') as consent_b \gset
+
+-- A recording row cannot exist without the consent it was captured under.
+reset role;
+do $$ begin
+  begin
+    insert into public.recordings(workspace_id,line_id,call_id,provider_recording_sid,
+      duration_seconds,consent_event_id,retention_deadline)
+      values(current_setting('test.cw')::uuid,current_setting('test.cl')::uuid,
+        current_setting('test.ccall')::uuid,'RE'||repeat('b',32),10,null,now()+interval '30 days');
+  exception when others then raise notice 'PASS: a recording cannot be stored without consent'; return; end;
+  raise exception 'FAIL: a recording was stored with no consent reference';
+end $$;
+insert into public.recordings(workspace_id,line_id,call_id,provider_recording_sid,
+  duration_seconds,consent_event_id,retention_deadline)
+  values(:'workspace_a',:'line_a',:'call_a','RE'||repeat('a',32),42,:'consent_b',now()+interval '30 days')
+  returning id as recording_a \gset
+select set_config('test.crecording',:'recording_a',true);
+
+-- Audio needs its own grant. read_transcript must never reach it: a written
+-- record and a voice recording are different disclosures.
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select public.set_line_grant(:'workspace_a',:'line_a','00000000-0000-4000-8000-000000000006','read_summary',true);
+select public.set_line_grant(:'workspace_a',:'line_a','00000000-0000-4000-8000-000000000006','read_transcript',true);
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000006',true);
+select public.test_assert((select count(*)=1 from public.calls),'the call log follows read_summary');
+select public.test_assert((select count(*)=0 from public.recordings),
+  'a transcript grant does not expose the recording');
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select public.set_line_grant(:'workspace_a',:'line_a','00000000-0000-4000-8000-000000000006','read_recording',true);
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000006',true);
+select public.test_assert((select count(*)=1 from public.recordings),'an explicit recording grant works');
+
+-- Whether a line is recorded is a rules question, so consent history follows
+-- manage_rules. Knowing a call happened is not knowing whether it was recorded.
+select public.test_assert((select count(*)=0 from public.consent_events),
+  'reading recordings does not expose the consent history');
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select public.set_line_grant(:'workspace_a',:'line_a','00000000-0000-4000-8000-000000000006','manage_rules',true);
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000006',true);
+select public.test_assert((select count(*)>0 from public.consent_events),'the rules grant reads consent history');
+
+-- Retention is enforced at read time as well as by the purge, so a recording
+-- past its deadline is unreadable whether or not the sweep has run.
+reset role;
+update public.recordings set retention_deadline=now()-interval '1 second' where id=:'recording_a';
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000006',true);
+select public.test_assert((select count(*)=0 from public.recordings),
+  'a recording past its retention deadline is unreadable');
+reset role;
+update public.recordings set retention_deadline=now()+interval '30 days',
+  deletion_state='deleted', deleted_at=now() where id=:'recording_a';
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000006',true);
+select public.test_assert((select count(*)=0 from public.recordings),
+  'a deleted recording stays unreadable inside its retention window');
+reset role;
+update public.recordings set deletion_state='retained', deleted_at=null where id=:'recording_a';
+
+-- deleted_at and the deletion state cannot disagree.
+do $$ begin
+  begin
+    update public.recordings set deletion_state='deleted', deleted_at=null
+      where id=current_setting('test.crecording')::uuid;
+  exception when check_violation then raise notice 'PASS: a deletion cannot be claimed without its timestamp'; return; end;
+  raise exception 'FAIL: a recording was marked deleted with no deletion time';
+end $$;
+
+-- Another tenant sees none of it.
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000003',true);
+select public.test_assert((select count(*)=0 from public.recordings),'another tenant cannot read recordings');
+select public.test_assert((select count(*)=0 from public.consent_events),'another tenant cannot read consent history');
+select public.test_assert((select count(*)=0 from public.recording_access_events),'another tenant cannot read recording access');
+
+-- Revoking membership takes the audio with it.
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select public.revoke_membership(:'workspace_a','00000000-0000-4000-8000-000000000006');
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000006',true);
+select public.test_assert((select count(*)=0 from public.recordings),'revoking membership removes recording access');
+reset role;
+
 rollback;

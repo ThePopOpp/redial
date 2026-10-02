@@ -18,7 +18,21 @@ export function checkLaunchConfig(env) {
   check('SUPABASE_PUBLISHABLE_KEY', Boolean(publicKey), 'Publishable/anon key only; this check does not verify the key with Supabase.');
   const forbidden = Object.keys(env).filter(key => /^(NEXT_PUBLIC_.*(SECRET|SERVICE_ROLE|AUTH_TOKEN|API_KEY)|SUPABASE_(SERVICE_ROLE_KEY|SECRET_KEY)|TWILIO_(AUTH_TOKEN|API_SECRET)|XAI_API_KEY|RESEND_API_KEY|SQUARE_(ACCESS_TOKEN|WEBHOOK_SIGNATURE_KEY|REFRESH_TOKEN)|OPENROUTER_API_KEY)$/.test(key) && env[key]);
   check('WEB_SECRET_ISOLATION', forbidden.length === 0, 'Keep provider and privileged database secrets out of the web environment; use isolated gateway/worker environments when implemented.');
+  // The secret the web tier uses to ask the voice gateway for recording audio.
+  // It is not a provider credential and it belongs here by design, so it is not
+  // in the forbidden list above; what matters is that it is strong and that it
+  // never reaches the browser through a NEXT_PUBLIC_ name.
+  const mediaSecret = env.REDIAL_MEDIA_ACCESS_SECRET || '';
+  const mediaGateway = env.REDIAL_VOICE_GATEWAY_URL || '';
+  check('RECORDING_PLAYBACK',
+    (!mediaSecret && !mediaGateway) || (mediaSecret.length >= 32 && mediaGateway.startsWith('https://')),
+    'Recording playback needs REDIAL_VOICE_GATEWAY_URL (HTTPS) and a REDIAL_MEDIA_ACCESS_SECRET of at least 32 characters, or neither.');
   check('LIVE_CALL_IMPLEMENTATION', false, 'Voice gateway, durable jobs, consent, quotas and verified provider fallback remain implementation gates.');
+  // Recording is refused by the database unless a current consent record exists
+  // for the line, and provider-side deletion of expired audio is a separate
+  // authorization again. Reported so an operator reading this never concludes
+  // that setting a flag is all that recording requires.
+  check('RECORDING_CONSENT_AND_DELETION', false, 'Recording and transcription require a per-line consent record; deleting expired audio at the provider requires REDIAL_WORKER_MEDIA_DELETION=enabled on the worker.');
   return results;
 }
 

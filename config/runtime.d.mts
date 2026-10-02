@@ -3,6 +3,7 @@ export type Runtime = {
   secureCookies: boolean; dataDir: string;
   supabase: { url: string; publishableKey: string };
   twilio: { accountSid: string; authToken: string };
+  voice: { gatewayUrl: string; mediaAccessSecret: string };
   email: { provider: 'disabled' | 'resend' | 'smtp'; fallbackProvider: 'disabled' | 'smtp'; from: string; resendKey: string;
     smtp: { host: string; port: number; secure: boolean; user: string; password: string } };
 };

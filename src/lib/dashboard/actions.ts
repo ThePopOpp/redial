@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { verifiedAccount } from '@/lib/supabase/server';
 import { appOrigin } from '@/lib/supabase/config';
-import { recordSchemas, uuid, views, capabilities, type RecordKind } from './model';
+import { recordSchemas, uuid, views, capabilities, capturePurposes, type RecordKind } from './model';
 import { z } from 'zod';
 
 export async function dashboardAction(form: FormData) {
@@ -35,6 +35,28 @@ export async function dashboardAction(form: FormData) {
         notice = 'invited';
       } else if (action === 'revoke') {
         const { error } = await db.rpc('revoke_membership',{w,u:uuid.parse(form.get('user'))}); if (error) throw error;
+      } else if (action === 'consent' || action === 'capture') {
+        // Both refuse anyone but the line owner, in SQL. Enabling recording is
+        // a legal decision about that line's calls, and the access matrix gives
+        // a workspace administrator no call content by default, so neither a
+        // role check here nor the layout above it is the boundary.
+        const purpose = z.enum(capturePurposes).parse(form.get('purpose'));
+        uuid.parse(l);
+        if (action === 'consent') {
+          const granted = form.get('granted') === 'true';
+          // The disclosure version is recorded so a later change to the
+          // announcement stays distinguishable from what this consent covered.
+          const { error } = await db.rpc('record_capture_consent', {
+            w, l, p: purpose, granted,
+            disclosure: z.string().trim().min(1).max(40).parse(form.get('disclosure') || 'v1'),
+            context: z.string().trim().min(1).max(200).parse(form.get('context')),
+          });
+          if (error) throw error;
+          notice = granted ? 'consented' : 'withdrawn';
+        } else {
+          const { error } = await db.rpc('set_capture_enabled', { w, l, p: purpose, enabled: form.get('enabled') === 'true' });
+          if (error) throw error;
+        }
       } else if (action === 'grant') {
         const { error } = await db.rpc('set_line_grant',{w,l:uuid.parse(l),u:uuid.parse(form.get('user')),c:z.enum(capabilities).parse(form.get('capability')),enabled:form.get('enabled')==='true'}); if (error) throw error;
       } else if (action === 'save' || action === 'delete') {

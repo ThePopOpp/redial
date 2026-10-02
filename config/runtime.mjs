@@ -88,13 +88,37 @@ export function readRuntime(env = process.env) {
     errors.push('REDIAL_GATEWAY_* configure the voice gateway, which is a separate Coolify application');
   }
 
+  // Recording playback. The audio lives at Twilio and reaching it needs the
+  // account credentials, which belong to the voice gateway and not to a
+  // browser-facing container; so this application proves the member's right to
+  // the row through row-level security and then asks the gateway to stream it.
+  //
+  // Named REDIAL_VOICE_GATEWAY_URL rather than REDIAL_GATEWAY_ORIGIN, which is
+  // refused above: that one configures the gateway's own identity and its
+  // presence here means the wrong block was pasted. This is the opposite
+  // direction — an outbound dependency of the web application.
+  //
+  // Both values or neither. Half-configured would present a play control that
+  // fails on click, so playback is simply absent until both are set.
+  const voice = { gatewayUrl: value('REDIAL_VOICE_GATEWAY_URL'), mediaAccessSecret: env.REDIAL_MEDIA_ACCESS_SECRET ?? '' };
+  if (voice.gatewayUrl || voice.mediaAccessSecret) {
+    try {
+      const url = new URL(requireValue('REDIAL_VOICE_GATEWAY_URL'));
+      const permitted = url.protocol === 'https:' || (deployment === 'local' && url.protocol === 'http:' && loopback(url));
+      if (!permitted || url.username || url.password || url.pathname !== '/' || url.search || url.hash) throw new Error();
+      voice.gatewayUrl = url.origin;
+    } catch { errors.push('REDIAL_VOICE_GATEWAY_URL must be an HTTPS origin without a path, query, or credentials'); }
+    if (voice.mediaAccessSecret.length < 32) errors.push('REDIAL_MEDIA_ACCESS_SECRET must be at least 32 characters');
+  }
+
   if (errors.length) throw new Error(`Invalid environment: ${[...new Set(errors)].join('; ')}`);
   return { deployment, siteUrl: siteUrl?.origin ?? null, username, password, secureCookies: hosted,
-    dataDir: value('REDIAL_DATA_DIR') || path.join(process.cwd(), '.redial'), supabase, twilio, email };
+    dataDir: value('REDIAL_DATA_DIR') || path.join(process.cwd(), '.redial'), supabase, twilio, voice, email };
 }
 
 export function configurationSummary(config) {
   return { deployment: config.deployment, supabase: config.supabase.publishableKey ? 'configured' : 'not configured',
-    twilio: config.twilio.authToken ? 'configured' : 'not configured', email: config.email.provider, emailFallback: config.email.fallbackProvider,
+    twilio: config.twilio.authToken ? 'configured' : 'not configured', email: config.email.provider,
+    recordingPlayback: config.voice.gatewayUrl && config.voice.mediaAccessSecret ? 'configured' : 'not configured', emailFallback: config.email.fallbackProvider,
     liveAuthentication: 'not implemented', liveCalling: 'not implemented', emailDelivery: 'not implemented' };
 }

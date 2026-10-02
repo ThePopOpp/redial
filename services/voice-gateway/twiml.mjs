@@ -42,12 +42,26 @@ export function screen({ actionUrl, greeting, seconds }) {
   );
 }
 
+// Recording and being told about the recording are one decision, not two.
+// Asking the provider to record without a status callback is how audio ends up
+// held at Twilio with nothing on this side carrying a reference, a consent
+// record or a deletion deadline. So a missing callback URL turns recording off
+// rather than proceeding blind: capturing audio we cannot account for is worse
+// than not capturing it.
+export function recordingAttributes(recording, recordingStatusUrl) {
+  if (!recording || !recordingStatusUrl) return '';
+  return ' record="record-from-answer-dual"' +
+    ` recordingStatusCallback="${escapeXml(recordingStatusUrl)}"` +
+    ' recordingStatusCallbackMethod="POST"' +
+    ' recordingStatusCallbackEvent="completed"';
+}
+
 // Offer the call to the member. The whisper plays only to the member, so the
 // caller does not hear their own words read back, and the call connects only on
 // a keypress: without it an answering machine at the destination would swallow
 // the call and report it as connected.
-export function offer({ to, callerId, whisperUrl, actionUrl, ringSeconds, recording }) {
-  const record = recording ? ' record="record-from-answer-dual"' : '';
+export function offer({ to, callerId, whisperUrl, actionUrl, ringSeconds, recording, recordingStatusUrl }) {
+  const record = recordingAttributes(recording, recordingStatusUrl);
   return document(
     `<Dial timeout="${Number(ringSeconds) || 20}" callerId="${escapeXml(callerId)}" answerOnBridge="true"` +
     ` action="${escapeXml(actionUrl)}" method="POST"${record}>` +
@@ -81,8 +95,8 @@ export function takeMessage({ actionUrl, maxSeconds = 120, prompt }) {
 
 // Hand the caller to the configured assistant over SIP. The provider negotiates
 // media directly with the assistant, so no audio passes through this process.
-export function connectAssistant({ sipUri, actionUrl, recording }) {
-  const record = recording ? ' record="record-from-answer-dual"' : '';
+export function connectAssistant({ sipUri, actionUrl, recording, recordingStatusUrl }) {
+  const record = recordingAttributes(recording, recordingStatusUrl);
   return document(
     `<Dial answerOnBridge="true" action="${escapeXml(actionUrl)}" method="POST"${record}>` +
     `<Sip>${escapeXml(sipUri)}</Sip>` +
@@ -92,4 +106,10 @@ export function connectAssistant({ sipUri, actionUrl, recording }) {
 
 export function goodbye(message = 'Thank you. Goodbye.') {
   return document(`<Say voice="${VOICE}">${escapeXml(message)}</Say><Hangup/>`);
+}
+
+// For a status callback rather than a call in progress. Nobody is listening, so
+// there is nothing to say; the provider only needs a 200 with valid TwiML.
+export function empty() {
+  return document('');
 }

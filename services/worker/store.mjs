@@ -113,6 +113,78 @@ export function createStore(config) {
       if (error) throw new Error(`Could not record a job run: ${error.message}`);
     },
 
+    // Screenings the gateway has finished but the member-facing log has not
+    // seen. The marker lives on the row rather than being derived from a
+    // missing join, so a replay is cheap to find and cannot be double-applied.
+    async unprojectedScreenings(limit) {
+      const { data, error } = await client.from('call_screenings')
+        .select('id, workspace_id, line_id, provider_call_sid, from_e164, outcome, caller_said, speech_confidence, started_at, ended_at')
+        .is('projected_at', null)
+        .not('ended_at', 'is', null)
+        .order('ended_at', { ascending: true })
+        .limit(limit);
+      if (error) throw new Error(`Could not read finished screenings: ${error.message}`);
+      return data ?? [];
+    },
+
+    // Best effort, and deliberately not fatal. A call log entry that says
+    // "Unknown caller" is worth more than no entry at all, so a failure to
+    // resolve the name must not hold up the projection.
+    async contactNameFor({ workspaceId, lineId, phone }) {
+      const { data, error } = await client.from('workspace_records')
+        .select('body')
+        .eq('workspace_id', workspaceId).eq('line_id', lineId).eq('kind', 'contact')
+        .eq('body->>phone', phone)
+        .limit(1).maybeSingle();
+      if (error) return null;
+      const name = data?.body?.name;
+      return typeof name === 'string' && name.trim() ? name.trim().slice(0, 100) : null;
+    },
+
+    // The unique index on (workspace_id, provider_call_sid) is what makes this
+    // idempotent, so a crash between the insert and the marker replays safely
+    // instead of logging the same call twice.
+    async projectCall(row) {
+      const { error } = await client.from('calls')
+        .upsert(row, { onConflict: 'workspace_id,provider_call_sid', ignoreDuplicates: true });
+      if (error) throw new Error(`Could not project a call: ${error.message}`);
+      const { error: markError } = await client.from('call_screenings')
+        .update({ projected_at: new Date().toISOString() })
+        .eq('workspace_id', row.workspace_id)
+        .eq('provider_call_sid', row.provider_call_sid);
+      if (markError) throw new Error(`Could not mark a screening projected: ${markError.message}`);
+    },
+
+    // Rows, not just visibility. The policy already hides an expired transcript,
+    // but leaving the text in the table indefinitely would make the retention
+    // promise cosmetic.
+    async purgeExpiredTranscripts(now) {
+      const { data, error } = await client.from('transcript_segments')
+        .delete().lte('expires_at', now.toISOString()).select('id');
+      if (error) throw new Error(`Could not purge expired transcripts: ${error.message}`);
+      return data?.length ?? 0;
+    },
+
+    async recordingsDue(now, limit) {
+      const { data, error } = await client.from('recordings')
+        .select('id, provider, provider_recording_sid, retention_deadline, deletion_state')
+        .lte('retention_deadline', now.toISOString())
+        .in('deletion_state', ['retained', 'deleting', 'failed'])
+        .order('retention_deadline', { ascending: true })
+        .limit(limit);
+      if (error) throw new Error(`Could not read recordings due for deletion: ${error.message}`);
+      return data ?? [];
+    },
+
+    async markRecording(id, { state, failure }) {
+      const { error } = await client.from('recordings').update({
+        deletion_state: state,
+        deleted_at: state === 'deleted' ? new Date().toISOString() : null,
+        deletion_failure: failure ? failure.slice(0, 300) : null,
+      }).eq('id', id);
+      if (error) throw new Error(`Could not record a recording's deletion state: ${error.message}`);
+    },
+
     // Approved refunds and plan changes wait here. The worker only reads them in
     // this increment; executing one needs REDIAL_WORKER_PROVIDER_CALLS=enabled
     // and a Square client that does not exist yet.

@@ -19,6 +19,7 @@ ENV NODE_ENV=production PORT=3001
 # output, the public assets and the application source are deliberately absent:
 # this container serves no pages and has no reason to be able to.
 COPY --from=dependencies --chown=node:node /app/node_modules ./node_modules
+COPY --chown=node:node services/shared ./services/shared
 COPY --chown=node:node services/worker ./services/worker
 COPY --chown=node:node package.json ./package.json
 USER node

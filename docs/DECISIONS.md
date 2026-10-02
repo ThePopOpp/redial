@@ -294,3 +294,129 @@ open gap.
 
 No provider, deployment, migration or live-service action was performed. The M1
 identity gates remain open.
+
+
+## 2026-10-02 — Call logs, recordings and transcription
+
+The dashboard already had a call inbox and a transcript panel, both gated
+correctly, and nothing had ever written a row to either. The only inserts into
+`calls` and `transcript_segments` in the whole repository were in
+`supabase/tests/permissions.sql`. The gateway records `call_screenings` while a
+call is in flight; the member-facing log is `calls`; the two were never bridged,
+so a real call would always have shown an empty inbox.
+
+A worker job now projects finished screenings into `calls`. It runs in the
+worker and not on the webhook path, because a projection failure must never be
+able to affect a live call. Only terminal screenings are projected: publishing a
+call still in progress would show a duration of zero and an outcome about to
+change. Provider outcomes that do not map are left unmarked for a later version
+rather than guessed. Clock skew is clamped, so a provider timestamp cannot
+produce a negative or absurd duration. The contact name is resolved once at
+projection time and stored, so a contact renamed later does not rewrite history;
+that matches how a phone's own call log behaves.
+
+### The hole this closed
+
+`twiml.mjs` already emitted `record="record-from-answer-dual"` whenever a line
+set `recording_enabled`, with no status callback. A single UPDATE to that flag
+would have started two-party capture at Twilio while this side held no
+reference, no consent record and no deletion deadline — audio we could neither
+show, delete, nor justify. The flag defaulted to false, so nothing had been
+captured, but it was one statement away.
+
+Four changes make that unreachable rather than merely unlikely:
+
+- `consent_events` is append-only, per line and per purpose. Recording and
+  transcription are separate purposes, because a member may accept a written
+  record of a call and refuse the audio, and the law treats them differently.
+  Withdrawal is a new row, never an edit; a consent record that can be edited
+  afterwards is not evidence.
+- A trigger on `line_routing` refuses `recording_enabled` or
+  `transcription_enabled` without a current consent record for that purpose.
+  This is a trigger and not a policy deliberately: `service_role` carries
+  `bypassrls`, which skips policies and not triggers, so the gateway and the
+  worker are held to it too. There is an RLS assertion for exactly that.
+- A second trigger turns the capture off when consent is withdrawn, so a
+  withdrawal stops the capture rather than recording a preference about it.
+- `recordings.consent_event_id` is NOT NULL, so a recording with no consent is a
+  state the database cannot represent.
+
+### Recordings
+
+Audio stays at Twilio. Redial stores a reference, the consent, a duration, a
+retention deadline and a deletion state — not a second copy. The kit prefers
+identifiers and access logs over fanning sensitive media across services, and
+every copy is another thing a deletion run has to reach.
+
+`read_recording` is a new line capability and `read_transcript` never implies
+it. Thirty days by default, per the kit; a member's shorter retention preference
+is honoured and a longer one is not, because quietly extending the life of a
+recording is the one direction that breaks the promise they were shown.
+
+Expiry is enforced in the policy as well as by the sweep, so a recording past
+its deadline is unreadable whether or not the purge has run. Provider-side
+deletion is irreversible and a provider mutation, so it waits for
+`REDIAL_WORKER_MEDIA_DELETION=enabled`; while that is off the worker still marks
+expired audio and the policy still refuses it. A failed deletion is recorded as
+failed rather than retried silently, because audio we believe is gone but is not
+is the one state nobody should mistake for success.
+
+Playback goes through the gateway, which holds the Twilio credentials; those
+must not sit in a browser-facing container. The web application proves the
+member's own right to the row through row-level security — a row coming back
+*is* the authorization, so the route never re-implements the capability check —
+and the gateway then asks the database again before a byte moves, because a
+grant revoked after the page rendered still has to stop the transfer. Every
+download, served or refused, is logged. `may_read_recording` takes a user id and
+is therefore granted to `service_role` only; reachable by a member it would be
+an oracle for other people's access.
+
+### Transcription
+
+`transcript_segments` is populated from the gateway's transcription webhook.
+Twilio posts one body per recording, so these are length-bounded chunks and the
+speaker is recorded as `Call`: attributing turns the payload cannot distinguish
+would be invention. Nothing in this repository runs speech-to-text.
+
+The call summary is a speech-to-text result, not a verified statement, so
+`calls.summary_confidence` travels with it and the inbox says when a line was
+heard poorly instead of presenting a bad transcription as what the caller said.
+
+### Deliberately not done
+
+- **Transcripts are stored as plain text.** `docs/09-data-and-access.md` calls
+  for encrypted bodies. Doing that properly is a key-management decision —
+  pgsodium is deprecated and application-level encryption would make the
+  existing retention policy unreadable to the database — so it is named here
+  rather than half-built. This is an open gap, not a finished requirement.
+- **Voicemail audio is still unreferenced.** `takeMessage` points its
+  `recordingStatusCallback` at `/twilio/message`, which only settles the call,
+  so a voicemail recording also sits at Twilio with no row. It is not stored in
+  `recordings` because that table requires a consent event and voicemail has a
+  different legal footing: the caller is prompted and chooses to leave a
+  message. The right model needs legal input rather than a guess. Open gap.
+- **`call_summaries` as its own table.** The kit specifies one; `calls.summary`
+  is still a column. Not worth a migration until summaries have a model and
+  prompt version to record.
+- **No provider enablement.** No recording was switched on, no transcription was
+  requested from Twilio, no deletion was sent, and no call was placed. The
+  gateway's own `test`/`disabled` defaults are untouched.
+
+### Evidence
+
+131 row-level-security assertions pass in the isolated Postgres harness
+(`npm run test:database`), up from 112. The 19 new ones cover the consent guard
+for both a member and the backend role, owner-only consent, withdrawal turning
+capture off, recording consent not implying transcription, a recording being
+impossible without consent, `read_transcript` not reaching audio, retention and
+deletion hiding a row, cross-tenant isolation, and revocation removing access.
+
+105 node tests pass, up from 66. Typecheck, lint and build are clean. 81 browser
+tests and 75 reference tests pass. `verify:kit` confirms all 92 kit originals
+still match the M0 baseline.
+
+Not run: nothing exercises the gateway's new webhooks against a real Twilio
+callback, and no recording has been captured, served or deleted end to end. The
+projection, the deletion planner and the webhook acceptance rules are unit
+tested; the wiring between them and a live provider is not. M1 identity gates
+remain open.

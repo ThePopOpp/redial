@@ -67,5 +67,82 @@ export function createStore(config) {
       if (error) throw new Error(`Could not read the call: ${error.message}`);
       return data ?? null;
     },
+
+    // The consent the capture is happening under, read at the moment the
+    // artefact arrives rather than assumed from the line's switch. The switch
+    // cannot be on without consent, but it can have been turned on and the
+    // consent withdrawn while this call was in progress.
+    async activeConsent({ workspaceId, lineId, purpose }) {
+      const { data, error } = await client.from('consent_events')
+        .select('id, granted')
+        .eq('workspace_id', workspaceId).eq('line_id', lineId).eq('purpose', purpose)
+        .order('created_at', { ascending: false }).order('id', { ascending: false })
+        .limit(1).maybeSingle();
+      if (error) throw new Error(`Could not read capture consent: ${error.message}`);
+      return data?.granted ? data.id : null;
+    },
+
+    // The member's own retention choice, which shortens the default but never
+    // extends it. Absent means they have saved no preference, not that they
+    // want the maximum.
+    async retentionDays({ workspaceId, lineId }) {
+      const { data, error } = await client.from('workspace_records')
+        .select('body')
+        .eq('workspace_id', workspaceId).eq('line_id', lineId).eq('kind', 'preferences')
+        .limit(1).maybeSingle();
+      if (error) return null;
+      const days = Number(data?.body?.retentionDays);
+      return Number.isFinite(days) ? days : null;
+    },
+
+    // The call this provider call id belongs to in the member-facing log. The
+    // worker projects it after the call ends, so during a call it may not exist
+    // yet; the caller of this decides what to do about that.
+    async projectedCallId({ workspaceId, callSid }) {
+      const { data, error } = await client.from('calls')
+        .select('id').eq('workspace_id', workspaceId).eq('provider_call_sid', callSid).maybeSingle();
+      if (error) throw new Error(`Could not resolve the logged call: ${error.message}`);
+      return data?.id ?? null;
+    },
+
+    // Idempotent on (workspace, provider, recording sid), so a Twilio retry of
+    // the status callback does not store the same audio twice.
+    async saveRecording(row) {
+      const { error } = await client.from('recordings')
+        .upsert(row, { onConflict: 'workspace_id,provider,provider_recording_sid', ignoreDuplicates: true });
+      if (error) throw new Error(`Could not record the recording reference: ${error.message}`);
+    },
+
+    async saveTranscriptSegments(rows) {
+      if (!rows.length) return 0;
+      // The unique (call_id, sequence) makes a redelivered segment a no-op.
+      const { error } = await client.from('transcript_segments')
+        .upsert(rows, { onConflict: 'call_id,sequence', ignoreDuplicates: true });
+      if (error) throw new Error(`Could not store transcript segments: ${error.message}`);
+      return rows.length;
+    },
+
+    // Asked again at download, never inferred from the request. A grant revoked
+    // after the page rendered has to stop the transfer, and the predicate lives
+    // in SQL so it cannot drift from the policy that governs the row.
+    async mayReadRecording({ userId, recordingId }) {
+      const { data, error } = await client.rpc('may_read_recording', { u: userId, r: recordingId });
+      if (error) throw new Error(`Could not check recording access: ${error.message}`);
+      return data === true;
+    },
+
+    async recordingReference(recordingId) {
+      const { data, error } = await client.from('recordings')
+        .select('provider, provider_recording_sid').eq('id', recordingId).maybeSingle();
+      if (error) throw new Error(`Could not read the recording reference: ${error.message}`);
+      return data ?? null;
+    },
+
+    // Logged whether or not the audio was served. A refusal is the entry an
+    // audit most wants to see.
+    async logRecordingAccess({ userId, recordingId, outcome }) {
+      const { error } = await client.rpc('log_recording_access', { u: userId, r: recordingId, result: outcome });
+      if (error) throw new Error(`Could not log recording access: ${error.message}`);
+    },
   };
 }

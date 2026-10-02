@@ -18,6 +18,7 @@ ENV NODE_ENV=production PORT=3002
 # application source are deliberately absent. This container answers webhooks and
 # serves no pages.
 COPY --from=dependencies --chown=node:node /app/node_modules ./node_modules
+COPY --chown=node:node services/shared ./services/shared
 COPY --chown=node:node services/voice-gateway ./services/voice-gateway
 COPY --chown=node:node package.json ./package.json
 USER node

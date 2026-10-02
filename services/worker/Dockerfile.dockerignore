@@ -9,5 +9,6 @@
 !package.json
 !package-lock.json
 !services/worker/**
+!services/shared/**
 services/worker/Dockerfile
 services/worker/Dockerfile.dockerignore

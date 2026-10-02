@@ -66,6 +66,17 @@ export function readGatewayConfig(env = process.env) {
     // a valid, useful state. Recorded so the startup summary can say so.
   }
 
+  // Shared with the web application, and only with it. The web application
+  // proves a member's own right to a recording row through row-level security;
+  // this secret is what lets it then ask the gateway, which holds the Twilio
+  // credentials, to stream the audio. Absent means recording playback is simply
+  // unavailable, which is the correct posture for a gateway nobody has
+  // configured it on: a short secret would be worse than none.
+  const mediaAccessSecret = value('REDIAL_MEDIA_ACCESS_SECRET') || null;
+  if (mediaAccessSecret && mediaAccessSecret.length < 32) {
+    errors.push('REDIAL_MEDIA_ACCESS_SECRET must be at least 32 characters');
+  }
+
   const port = Number(value('PORT') || '3002');
   if (!Number.isInteger(port) || port < 1 || port > 65535) errors.push('PORT must be a TCP port number');
 
@@ -73,6 +84,7 @@ export function readGatewayConfig(env = process.env) {
   return {
     supabase: { url: supabaseUrl, serviceRoleKey },
     twilio: { accountSid, authToken },
+    mediaAccessSecret,
     publicOrigin, environment, bridging, port,
   };
 }
@@ -87,6 +99,8 @@ export function gatewaySummary(config) {
     signatureValidation: 'required',
     bridgeCalls: config.bridging,
     recordingDefault: 'off',
+    recordingConsent: 'required by the database, not by this process',
+    recordingPlayback: config.mediaAccessSecret ? 'available' : 'not configured',
     aiScreening: 'per line, when a SIP assistant is configured',
   };
 }

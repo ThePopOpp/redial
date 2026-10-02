@@ -5,7 +5,7 @@ import { once } from 'node:events';
 import { readGatewayConfig, gatewaySummary } from '../services/voice-gateway/config.mjs';
 import { twilioSignatureIsValid, signedUrl, formParams } from '../services/voice-gateway/twilio-signature.mjs';
 import { chooseDestination, planInbound, planAfterScreen, memberAccepted, outcomeFromDial, normalizeSpeech, isE164 } from '../services/voice-gateway/routing.mjs';
-import { escapeXml, whisper, offer, screen } from '../services/voice-gateway/twiml.mjs';
+import { escapeXml, whisper, offer, screen, connectAssistant } from '../services/voice-gateway/twiml.mjs';
 import { createGateway } from '../services/voice-gateway/index.mjs';
 
 const AUTH_TOKEN = '0123456789abcdef0123456789abcdef';
@@ -203,7 +203,32 @@ test('the offer presents the Redial number as caller id, never the caller', () =
 });
 
 test('recording appears only when the line enables it', () => {
-  assert.match(offer({ to: MOBILE, callerId: REDIAL_NUMBER, whisperUrl: 'u', actionUrl: 'a', recording: true }), /record="record-from-answer-dual"/);
+  const document = offer({ to: MOBILE, callerId: REDIAL_NUMBER, whisperUrl: 'u', actionUrl: 'a',
+    recording: true, recordingStatusUrl: `${ORIGIN}/twilio/recording-status` });
+  assert.match(document, /record="record-from-answer-dual"/);
+  assert.match(document, /recordingStatusCallback="/, 'and reports the recording back');
+});
+
+// This is the hole that 202610020001 closed. Asking the provider to record
+// without a status callback left audio at Twilio with nothing on this side
+// carrying a reference, the consent it was captured under, or a deadline to
+// delete it by. Capturing audio we cannot account for is worse than not
+// capturing it, so the absence of a callback URL turns recording off.
+test('recording is refused when there is nowhere to report it', () => {
+  for (const url of [undefined, null, '']) {
+    const document = offer({ to: MOBILE, callerId: REDIAL_NUMBER, whisperUrl: 'u', actionUrl: 'a',
+      recording: true, recordingStatusUrl: url });
+    assert.ok(!/record=/.test(document), 'no recording without a status callback');
+  }
+  const assistant = connectAssistant({ sipUri: 'sip:assistant@example.invalid', actionUrl: 'a', recording: true });
+  assert.ok(!/record=/.test(assistant), 'the assistant path is held to the same rule');
+});
+
+test('the assistant leg reports its recording too', () => {
+  const document = connectAssistant({ sipUri: 'sip:assistant@example.invalid', actionUrl: 'a',
+    recording: true, recordingStatusUrl: `${ORIGIN}/twilio/recording-status` });
+  assert.match(document, /record="record-from-answer-dual"/);
+  assert.match(document, /recordingStatusCallbackEvent="completed"/);
 });
 
 test('a silent caller is redirected rather than dropped', () => {
