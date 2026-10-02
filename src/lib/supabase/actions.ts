@@ -9,8 +9,8 @@ import { legalVersion } from '@/lib/legal';
 import { contactReturnPath } from '@/lib/dashboard/contact-import';
 
 export async function authAction(form: FormData) {
-  const origin = (await headers()).get('origin');
-  if (origin !== appOrigin()) redirect('/sign-in?notice=origin');
+  const request = await headers();
+  if (request.get('origin') !== appOrigin()) redirect('/sign-in?notice=origin');
   const input = z.object({
     action: z.enum(['signin', 'signup', 'reset', 'password', 'signout']),
     email: z.email().optional(),
@@ -37,7 +37,7 @@ export async function authAction(form: FormData) {
     signin: '/sign-in', signup: '/register', reset: '/forgot-password',
     password: '/account/password',
   };
-  if (!allowAuthRequest(email ?? (await headers()).get('cookie') ?? 'guest')) redirect(`${throttleReturn[action]}?notice=slow`);
+  if (!allowAuthRequest(email ?? request.get('cookie') ?? 'guest')) redirect(`${throttleReturn[action]}?notice=slow`);
   if (action === 'reset' && email) {
     const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: `${appOrigin()}/auth/callback?recovery=1` });
     // Supabase refuses a second recovery request within its send window. Saying
