@@ -247,3 +247,50 @@ Added a seven-step Android/iPhone walkthrough modal to demo and authenticated Co
 Added a separate incoming-call wizard for Mint, T-Mobile, Verizon, AT&T and Other providers. Provider documentation is distinguished from actual Redial compatibility; no universal carrier code or inherited MVNO support is assumed. A member can save only a line-scoped draft, not verification or activation evidence. Dedicated-number, conditional and all-call paths remain pending an assigned, tested destination. Country/device/OS/plan are captured to support later compatibility review.
 
 The current web app is not a voice engine. Added an explicit Connections implementation checklist, redacted offline config checker and a deployment/pilot/rollback runbook in `docs/LIVE-LAUNCH-PREPARATION.md`. Separate gateway and worker implementation remains required; no placeholder service is presented as ready. Provider and privileged database keys remain outside the web environment. Tests and open release gates are recorded in `docs/release-evidence/2026-09-25-carrier-setup.md`. Existing work and all kit originals were preserved.
+
+
+## 2026-10-02 — Reconciling two computers, and an auth request ceiling
+
+This workspace was 23 commits behind `origin/main` and carried uncommitted work
+from 2026-09-25 15:30–15:38 that had been superseded. The other computer solved
+the same ground differently and better, so `main` is the surviving line. The
+uncommitted work is preserved verbatim on `local/account-access-wip` (4ddc94f)
+rather than discarded, because it was never reviewed and may still hold ideas
+worth taking. It is reference only; it does not build against current `main`.
+
+Four of its paths could not have coexisted with `main`: `auth/callback/page.tsx`
+against `route.ts`, a catch-all `ops/[[...path]]` shadowing the explicit ops
+routes, `docs/3d-phone` against `docs/3D-Phone` on a case-insensitive
+filesystem, and a second migration-numbering scheme. This is why the branch is
+kept whole instead of partially merged.
+
+One piece of it was genuinely additive and has been taken: an application-level
+ceiling on authentication requests. `main` relied entirely on Supabase's own
+Auth limits, which are persistent and per-project but leave each deployment free
+to spend attempts against them without restraint. `src/lib/auth/rate-limit.ts`
+adds fixed one-minute windows — 120 per process, 8 per identity — keyed on a
+SHA-256 hash of the address so no address sits in process memory in the clear,
+and bounded at 2000 entries so a flood of unique identities cannot grow the map.
+
+Deliberate limits: it is per-process, not distributed. The web unit runs a single
+instance today, so a shared store would buy nothing; if that unit ever scales
+past one replica, each process would grant the full allowance independently and
+this has to move to Postgres or Redis. Recorded here because the ceiling will
+look stricter than it is once replicas exist.
+
+Signing out is never throttled — being unable to end a session is worse than any
+abuse the limit would stop. `/account/password` previously showed "could not be
+updated" for every notice, which would have misdescribed a throttled attempt as
+a failed one, so it now distinguishes the two.
+
+Evidence: typecheck, lint and build pass. 141 existing tests pass (75 reference,
+66 node). `verify:kit` confirms all 92 kit originals still match the M0 baseline.
+The limiter's behaviour was verified in isolation against the compiled module —
+per-identity cutoff, case-insensitivity, independence between identities, the
+global ceiling, window expiry and hashed keys. That verification is not a
+committed regression test: this repository has no unit harness for `src/`
+TypeScript, and adding one was out of scope for this increment. It remains an
+open gap.
+
+No provider, deployment, migration or live-service action was performed. The M1
+identity gates remain open.
