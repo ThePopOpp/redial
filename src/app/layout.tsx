@@ -11,6 +11,7 @@ import './forms.css';
 import './contact-import.css';
 import './phone-wizard.css';
 import './carrier-setup.css';
+import './pricing.css';
 import './auth.css';
 import './ops.css';
 import './legal.css';
