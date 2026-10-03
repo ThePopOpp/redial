@@ -35,7 +35,7 @@ export async function dashboardAction(form: FormData) {
         notice = 'invited';
       } else if (action === 'revoke') {
         const { error } = await db.rpc('revoke_membership',{w,u:uuid.parse(form.get('user'))}); if (error) throw error;
-      } else if (action === 'consent' || action === 'capture') {
+      } else if (action === 'consent' || action === 'capture' || action === 'basis') {
         // Both refuse anyone but the line owner, in SQL. Enabling recording is
         // a legal decision about that line's calls, and the access matrix gives
         // a workspace administrator no call content by default, so neither a
@@ -53,6 +53,17 @@ export async function dashboardAction(form: FormData) {
           });
           if (error) throw error;
           notice = granted ? 'consented' : 'withdrawn';
+        } else if (action === 'basis') {
+          // A different assertion from consent, so a different function. The
+          // member is a party to the call and relying on a one-party
+          // jurisdiction; no disclosure is claimed.
+          const { error } = await db.rpc('record_one_party_basis', {
+            w, l, p: purpose,
+            place: z.string().trim().regex(/^[A-Z]{2}(-[A-Z0-9]{1,3})?$/).parse(form.get('place')),
+            context: z.string().trim().min(1).max(200).parse(form.get('context')),
+          });
+          if (error) throw error;
+          notice = 'consented';
         } else {
           const { error } = await db.rpc('set_capture_enabled', { w, l, p: purpose, enabled: form.get('enabled') === 'true' });
           if (error) throw error;

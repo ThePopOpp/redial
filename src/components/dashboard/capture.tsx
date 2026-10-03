@@ -72,14 +72,15 @@ export function CaptureControls({ workspace, line, view, capture, consent, isLin
         <h3>{item.title}</h3>
         <div className="actions">
           <Badge tone={enabled ? '' : 'muted'}>{enabled ? 'On' : 'Off'}</Badge>
-          <Badge tone={consented ? '' : 'muted'}>{consented ? `Consent recorded ${date(current!.created_at)}` : 'No consent recorded'}</Badge>
+          <Badge tone={consented ? '' : 'muted'}>{!consented ? 'No basis recorded' : current!.legal_basis === 'one_party_recording' ? `One-party basis (${current!.jurisdiction}) ${date(current!.created_at)}` : `Consent recorded ${date(current!.created_at)}`}</Badge>
         </div>
         <p>{item.what}</p>
         <p><strong>{item.legal}</strong></p>
 
         {isLineOwner && <>
           {!consented
-            ? <form action={dashboardAction} className="review-form">
+            ? <>
+              <form action={dashboardAction} className="review-form">
                 <Scope workspace={workspace} line={line} view={view} />
                 <input type="hidden" name="purpose" value={item.purpose} />
                 <input type="hidden" name="granted" value="true" />
@@ -93,6 +94,31 @@ export function CaptureControls({ workspace, line, view, capture, consent, isLin
                 </div>
                 <Button name="action" value="consent">Record consent</Button>
               </form>
+              <form action={dashboardAction} className="review-form">
+                <Scope workspace={workspace} line={line} view={view} />
+                <input type="hidden" name="purpose" value={item.purpose} />
+                {/* The other route: not the other party's agreement, but a
+                    jurisdiction whose law lets a party to the call record it.
+                    A separate form and a separate database function, because
+                    they are different assertions and the weaker one should
+                    never be the default. */}
+                <p><strong>Or rely on a one-party jurisdiction.</strong> If you are a party to
+                  these calls and your jurisdiction allows a party to record without the
+                  other person agreeing, record that instead. No disclosure is claimed, and
+                  the jurisdiction is stored with it.</p>
+                <div className="field">
+                  <label htmlFor={`${item.purpose}-place`}>Jurisdiction</label>
+                  <Input id={`${item.purpose}-place`} name="place" required maxLength={6}
+                    pattern="[A-Z]{2}(-[A-Z0-9]{1,3})?" placeholder="US-AZ" defaultValue="US-AZ" />
+                </div>
+                <div className="field">
+                  <label htmlFor={`${item.purpose}-basis-context`}>Why this applies to this line</label>
+                  <Input id={`${item.purpose}-basis-context`} name="context" required maxLength={200}
+                    placeholder="I am a party to every call on this line and I am in Arizona" />
+                </div>
+                <Button name="action" value="basis" variant="outline">Record one-party basis</Button>
+              </form>
+              </>
             : <div className="actions">
                 {!enabled
                   ? <form action={dashboardAction}>
@@ -115,7 +141,7 @@ export function CaptureControls({ workspace, line, view, capture, consent, isLin
                   {/* Withdrawing stops the capture as well as recording the
                       decision; a database trigger clears the switch, so this is
                       not relying on the page to do it. */}
-                  <Button name="action" value="consent" variant="outline">Withdraw consent</Button>
+                  <Button name="action" value="consent" variant="outline">Withdraw and stop capture</Button>
                 </form>
               </div>}
         </>}

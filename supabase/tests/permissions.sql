@@ -793,4 +793,50 @@ select public.test_assert((select count(*)=0 from public.credit_entries),'anothe
 select public.test_assert(public.workspace_credit_balance(:'workspace_a') is null,'another tenant cannot read the credit balance');
 reset role;
 
+-- ---------------------------------------------------------------------------
+-- A one-party recording basis
+-- ---------------------------------------------------------------------------
+-- The owner can rely on a one-party jurisdiction instead of the other party's
+-- agreement, and the row says which it is rather than recording a disclosure
+-- that never happened.
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select set_config('request.jwt.claims','{}',true);
+select set_config('test.line_a',:'line_a',true);
+select public.record_one_party_basis(:'workspace_a',:'line_a','call_recording','US-AZ','Arizona one-party, owner is a party to the call') as basis_a \gset
+select set_config('test.basis_a',:'basis_a',true);
+select public.test_assert((select legal_basis='one_party_recording' and channel='no_disclosure' and jurisdiction='US-AZ'
+  from public.consent_events where id=:'basis_a'),'a one-party basis claims no disclosure');
+
+-- It is a basis, so it satisfies the capture guard the same way consent does.
+select public.set_capture_enabled(:'workspace_a',:'line_a','call_recording',true);
+select public.test_assert((select recording_enabled from public.line_routing where workspace_id=:'workspace_a' and line_id=:'line_a'),'a one-party basis enables recording');
+
+-- And it is still revocable: a withdrawal is a newer row, and the trigger turns
+-- the capture off rather than recording a preference about it.
+select public.record_capture_consent(:'workspace_a',:'line_a','call_recording',false,'v1','Withdrawn by the owner');
+select public.test_assert((select not recording_enabled from public.line_routing where workspace_id=:'workspace_a' and line_id=:'line_a'),'withdrawing after a one-party basis stops the capture');
+
+-- A jurisdiction is not optional: the basis is a claim about a place's law.
+do $$ begin
+  begin perform public.record_one_party_basis(current_setting('test.workspace_a')::uuid,current_setting('test.line_a')::uuid,'call_recording',null,'No place');
+    raise exception 'A basis was recorded with no jurisdiction';
+  exception when raise_exception then if sqlerrm not like 'Give the jurisdiction%' then raise; end if; end;
+end $$;
+
+-- The shape constraint holds against a privileged writer too: a one-party row
+-- cannot claim an announcement, and a consent row cannot carry a jurisdiction.
+reset role;
+do $$ begin
+  begin update public.consent_events set channel='ivr_announcement' where id=current_setting('test.basis_a')::uuid;
+    raise exception 'A one-party basis claimed a disclosure';
+  exception when check_violation then raise notice 'PASS: a one-party basis cannot claim a disclosure'; end;
+end $$;
+set role authenticated;
+
+-- Another tenant still sees none of it.
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000003',true);
+select public.test_assert((select count(*)=0 from public.consent_events),'another tenant cannot read a recording basis');
+reset role;
+
 rollback;

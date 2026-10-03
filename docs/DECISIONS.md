@@ -646,3 +646,77 @@ signed-in list fell from 37 to 31.
   with `billing_read` and an audit row; it does not yet.
 - The M1 identity gates remain open, and the recommendation from the previous
   entry stands: they should land before the first real charge.
+
+## 2026-10-02 — A recorded one-party basis, and an honest connection card
+
+### The connection card was untrue in both directions
+
+The dashboard's Connection status read `provider_connections`, a table nothing
+in the repository has ever written — the only reference anywhere was the
+`select` that rendered it. So Twilio, xAI, Square and Resend reported "Not
+configured" however the environment was set, and setting a credential in
+Coolify could never change it. Supabase reported "Account and database
+connected" from a hardcoded string, whether or not the project was reachable.
+One half understated the truth and the other invented it.
+
+It reads the runtime now. The important part is what it cannot do: provider
+credentials belong to the worker and the voice gateway, which are separate
+Coolify applications with their own environments, and `config/runtime.mjs`
+refuses to start the web container if a worker secret appears in it. So the card
+reports what the web tier actually holds and names the unit that owns the rest,
+rather than implying a provider health check it is in no position to perform.
+
+xAI and Square read "Not implemented", which is the honest answer rather than a
+configuration state: no deployment unit owns `XAI_API_KEY`, no gateway code
+calls it, and no Square client exists.
+
+### One-party recording, as a recorded basis
+
+The owner's decision. Arizona is a one-party-consent state: a party to a call
+may record it without the other party agreeing, under both A.R.S. and federal
+law. Requiring a consent event there was asking for a record of something that
+had not happened — the member had obtained no agreement, so a row reading
+`granted: true, channel: ivr_announcement` would have been a false statement
+sitting in the evidence table.
+
+What stays is the row. Capture is still impossible without one, it is still
+append-only, still written only by the line owner, still audited, and still
+revocable — a withdrawal is a newer row and the existing trigger turns the
+capture off. What changes is that the row now says *which* basis was relied on,
+so an audit can tell a disclosure from a jurisdiction claim instead of finding
+both recorded identically.
+
+`legal_basis` is `all_party_consent` or `one_party_recording`. A one-party row
+must carry `channel = 'no_disclosure'` and a `jurisdiction`, and a consent row
+must carry a real channel and no jurisdiction; a check constraint enforces the
+pairing, so neither can be dressed as the other. The jurisdiction is mandatory
+because the basis is a claim about a particular place's law, and a claim with no
+place attached cannot be checked by anyone later.
+
+`record_one_party_basis` is a separate function rather than another argument on
+`record_capture_consent`. They are different assertions and the caller should
+have to say which one it is making; an optional parameter would let the weaker
+claim be made by default.
+
+The dashboard states the position plainly and deliberately does not phrase it as
+"no consent needed". The rule turns on where the *other* party is: several
+states require every party to agree, and the stricter state's law generally
+governs an interstate call. For inbound screening that is the common case, not
+the edge case.
+
+### Evidence
+
+151 row-level-security assertions, up from 146. The five new ones cover a
+one-party basis claiming no disclosure, satisfying the capture guard, being
+revocable with the capture stopping, refusing a missing jurisdiction, and
+refusing to claim a disclosure when rewritten by a privileged writer.
+
+81 browser, 107 node and 75 reference tests pass. Typecheck, lint and build
+clean. 92 kit originals unchanged.
+
+### Build order from here
+
+The owner set it: the xAI assistant on the voice gateway, then Square checkout
+and the deposit, then the Media Studio, then the dashboard shell. The first is
+the one that makes an incoming call actually get answered, and it is also the
+only one with no implementation at all today.
