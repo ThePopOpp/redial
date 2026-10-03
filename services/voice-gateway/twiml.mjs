@@ -48,6 +48,19 @@ export function screen({ actionUrl, greeting, seconds }) {
 // record or a deletion deadline. So a missing callback URL turns recording off
 // rather than proceeding blind: capturing audio we cannot account for is worse
 // than not capturing it.
+// A second question from the assistant. The same Gather as the first screen, so
+// the answer returns to the same handler and the turn counter in the URL is the
+// only thing carrying state.
+export function askAgain({ actionUrl, say, seconds = 10 }) {
+  return document(
+    `<Gather input="speech" method="POST" action="${escapeXml(actionUrl)}"` +
+    ` speechTimeout="auto" timeout="${Number(seconds) || 10}" language="en-US" profanityFilter="false">` +
+    `<Say voice="${VOICE}">${escapeXml(say)}</Say>` +
+    `</Gather>` +
+    `<Redirect method="POST">${escapeXml(actionUrl)}&amp;silent=1</Redirect>`,
+  );
+}
+
 export function recordingAttributes(recording, recordingStatusUrl) {
   if (!recording || !recordingStatusUrl) return '';
   return ' record="record-from-answer-dual"' +

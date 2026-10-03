@@ -94,7 +94,7 @@ export default async function Dashboard({params,searchParams}:{params:Promise<{p
   // and a retained deletion state, so an empty result here means "not yours,
   // expired or deleted" and the page must not distinguish them.
   const recordingResult=selectedCall ? await db.from('recordings').select('id,call_id,duration_seconds,channels,retention_deadline,created_at').eq('workspace_id',w).eq('line_id',l).eq('call_id',selectedCall.id).order('created_at').limit(10) : null;
-  const captureResult=line && view==='screening' ? await db.from('line_routing').select('recording_enabled,transcription_enabled').eq('workspace_id',w).eq('line_id',l).maybeSingle() : null;
+  const captureResult=line && view==='screening' ? await db.from('line_routing').select('recording_enabled,transcription_enabled,ai_screening_enabled,ai_notice_enabled').eq('workspace_id',w).eq('line_id',l).maybeSingle() : null;
   const consentResult=line && view==='screening' ? await db.from('consent_events').select('id,purpose,granted,disclosure_version,collection_context,created_at,legal_basis,jurisdiction').eq('workspace_id',w).eq('line_id',l).order('created_at',{ascending:false}).limit(50) : null;
   const peopleResult=workspace && view==='people' ? await db.from('memberships').select('user_id,role,status').eq('workspace_id',w) : null;
   const grantsResult=line && view==='people' ? await db.from('line_access_grants').select('user_id,capability').eq('workspace_id',w).eq('line_id',l) : null;

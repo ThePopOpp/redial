@@ -32,6 +32,20 @@ export function createStore(config) {
       return { number, routing: routing ?? null, endpoints: endpoints ?? [] };
     },
 
+    // One round trip for everything the assistant turn needs: the line's two
+    // switches and the tier from the workspace's plan. Resolved in the database
+    // because a caller is on the line while this runs, and because the tier
+    // lives behind a join the gateway has no business reassembling.
+    //
+    // A failure here is not a call failure. The assistant is an enhancement on
+    // top of the rule-based plan, so an unreadable profile means no assistant,
+    // not a dropped call.
+    async assistantProfile({ workspaceId, lineId }) {
+      const { data, error } = await client.rpc('line_assistant_profile', { w: workspaceId, l: lineId });
+      if (error) return null;
+      return data ?? null;
+    },
+
     // Recorded before the caller hears anything, so a crash mid-call still
     // leaves evidence that the call happened. The unique CallSid makes a Twilio
     // retry an update rather than a duplicate.

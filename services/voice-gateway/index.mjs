@@ -6,6 +6,7 @@ import { readGatewayConfig, gatewaySummary } from './config.mjs';
 import { createStore } from './store.mjs';
 import { twilioSignatureIsValid, signedUrl, formParams } from './twilio-signature.mjs';
 import { chooseDestination, planInbound, planAfterScreen, memberAccepted, outcomeFromDial, normalizeSpeech, isE164 } from './routing.mjs';
+import { decideTurn } from './assistant.mjs';
 import * as twiml from './twiml.mjs';
 import * as capture from './capture.mjs';
 import { recordingRetentionDeadline, transcriptExpiry } from '../shared/retention.mjs';
@@ -202,8 +203,34 @@ async function handle({ path, params, config, store, url, query }) {
       endpoints: line.endpoints, redialNumber: to, callerNumber: from,
       bridging: config.bridging, environment: config.environment,
     });
-    const plan = planAfterScreen({ said, confidence, destination });
-    log.info({ event: 'call.screened', action: plan.action, reason: plan.reason ?? null, heard: Boolean(said) });
+    const rulePlan = planAfterScreen({ said, confidence, destination });
+
+    // The assistant runs on top of the rule-based plan, never instead of it.
+    // Every refusal path inside decideTurn returns rulePlan unchanged, so a
+    // missing credential, a slow model or an unparseable reply all land on the
+    // behaviour this gateway had before the assistant existed.
+    const turnsUsed = Math.max(0, Number(query.get('turn') ?? 0) || 0);
+    // Defensive on purpose. The assistant is an enhancement layered on the
+    // rule-based plan, so nothing about resolving it may be able to end a call:
+    // a store without the method, an unreachable database or a slow lookup all
+    // mean "no assistant", not "sorry, something went wrong".
+    let profile = null;
+    try {
+      profile = await store.assistantProfile?.({ workspaceId: line.number.workspace_id, lineId: line.number.line_id }) ?? null;
+    } catch { profile = null; }
+    const plan = await decideTurn({
+      profile, said, confidence, destination, fallback: rulePlan, turnsUsed, config,
+    });
+    log.info({ event: 'call.screened', action: plan.action, reason: plan.reason ?? null,
+      heard: Boolean(said), turn: turnsUsed,
+      assistant: plan.assistant?.used ?? false, assistantWhy: plan.assistant?.why ?? null });
+
+    if (plan.action === 'ask_again') {
+      // State lives in the URL, not in the gateway. A follow-up question is one
+      // more Gather pointed at this same handler with the turn advanced, so
+      // nothing has to be remembered between webhooks.
+      return twiml.askAgain({ actionUrl: url(`/twilio/screen?turn=${turnsUsed + 1}`), say: plan.say });
+    }
 
     if (plan.action === 'message') {
       await store.settle({ callSid, outcome: 'screening' });

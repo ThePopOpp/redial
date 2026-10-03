@@ -35,6 +35,11 @@ export async function dashboardAction(form: FormData) {
         notice = 'invited';
       } else if (action === 'revoke') {
         const { error } = await db.rpc('revoke_membership',{w,u:uuid.parse(form.get('user'))}); if (error) throw error;
+      } else if (action === 'notice') {
+        // Not a capture, so no basis is required. Owner-only and audited in SQL.
+        uuid.parse(l);
+        const { error } = await db.rpc('set_ai_notice', { w, l, enabled: form.get('enabled') === 'true' });
+        if (error) throw error;
       } else if (action === 'consent' || action === 'capture' || action === 'basis') {
         // Both refuse anyone but the line owner, in SQL. Enabling recording is
         // a legal decision about that line's calls, and the access matrix gives

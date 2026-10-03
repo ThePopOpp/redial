@@ -720,3 +720,87 @@ The owner set it: the xAI assistant on the voice gateway, then Square checkout
 and the deposit, then the Media Studio, then the dashboard shell. The first is
 the one that makes an incoming call actually get answered, and it is also the
 only one with no implementation at all today.
+
+## 2026-10-03 — The assistant answers, behind the plan it was sold with
+
+### AI screening is a third purpose, not a mode of recording
+
+What a caller says has to leave Redial and reach a model provider before an
+assistant can decide anything. That is a disclosure of call content to a third
+party, and agreeing to a recording is not agreeing to it: a member may want
+their calls screened by fixed rules and not handed to a model at all. So
+`ai_screening` is its own purpose with its own basis, its own switch, its own
+withdrawal, and the same trigger as the other two. A recording basis does not
+enable it, which has an assertion of its own.
+
+### A coin toss was deciding whether capture was permitted
+
+`private.consent_active` read the newest row by `created_at desc, id desc`. The
+tiebreaker is a random uuid, and `created_at` defaults to `now()`, which in
+Postgres is the transaction clock — so any two events written in one transaction
+shared it exactly and ordered arbitrarily. In production each decision is its own
+statement and the ambiguity never surfaced. It was still a coin toss sitting in
+the authority for whether a line may record, which is not a thing to leave
+there. A monotonic `seq` settles it; insertion order is what "newest" meant all
+along. Found because a test wrote two events in one transaction and the result
+changed between runs.
+
+### The assistant is layered on the rules, never instead of them
+
+`decideTurn` takes the rule-based plan the gateway already computed and returns
+it unchanged for every refusal: the switch is off, the line has not enabled it,
+the plan is not entitled to it, there is no credential, the provider failed, the
+reply was unparseable, or the model picked an action it was not offered. The
+free tier and the failure path are therefore the same code, which is the cheapest
+way to keep the failure path exercised rather than theoretical.
+
+The model chooses from a closed set and writes one sentence. It is never asked
+for a destination. The endpoint comes from `chooseDestination`, which is pure,
+already tested, and enforces the loop and ownership guards — so a model that
+returns nonsense can make a call less useful but cannot make it go somewhere it
+should not. When it says connect and the guards say there is nowhere safe, the
+guards win and the refusal is recorded.
+
+A declined caller is still offered voicemail. The assistant's judgement is not a
+verdict and it is wrong often enough that a hard hangup would lose real callers.
+
+Timeouts are bounded at four seconds by default because Twilio abandons a slow
+webhook and the caller hears silence. There is no retry: a retry inside a live
+webhook spends the caller's patience twice, and the fallback is already good.
+
+Resolving the profile is wrapped in a try/catch at the call site as well as
+returning null from the store. A gateway test caught this — a fake store without
+the method threw, and the caller got "sorry, something went wrong". Nothing about
+an enhancement may be able to end a call.
+
+### Tiers, on the plans that already existed
+
+The owner's decision: layer AI onto the five existing plans rather than
+restructure them. Version 2 of each now carries `ai_model`, `ai_turns` and
+`ai_minutes`, and version 1 is retired with its prices. A published version is
+immutable, so this went through the versioning rather than around it: nobody's
+terms get rewritten. Doorstep and Concierge BYO get the rules; Estate and both
+Managed plans get the model. `line_assistant_profile` resolves the line's two
+switches and the workspace's tier in one round trip, because a caller is on the
+line while it runs.
+
+### The caller notice is the owner's to switch off
+
+Also the owner's decision, made against the recommendation recorded with it. The
+greeting tells the caller an AI is answering, defaulting on, and the line owner
+may turn it off. The database does not refuse it; the dashboard warns at the
+point of choosing, because an all-party state needs the announcement and the
+stricter state's law generally governs a call that crosses a line. For inbound
+screening that is the common case.
+
+### Evidence
+
+157 row-level-security assertions, up from 151. 118 node tests, up from 107 —
+the eleven new ones cover every fallback path, the output bounds, the guards
+outranking the model, and a declined caller still reaching voicemail. 81 browser
+and 75 reference tests pass; typecheck, lint and build clean; 92 kit originals
+unchanged.
+
+Not run: no call has been placed, no webhook has been exercised against Twilio,
+and no request has been sent to xAI. `REDIAL_GATEWAY_ASSISTANT` is `disabled` by
+default and no `XAI_API_KEY` is set anywhere.

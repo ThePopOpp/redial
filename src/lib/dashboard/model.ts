@@ -23,6 +23,6 @@ export const labels = ['Overview','Call inbox','Live Call Controls','Screening',
 // disclosures, so clearing someone for one never clears them for the other.
 export const capabilities = ['read_summary','read_transcript','read_recording','manage_rules','monitor_live','takeover_live','direct_agent','transfer_call'] as const;
 export type Recording = { id: string; call_id: string; duration_seconds: number; channels: number; retention_deadline: string; created_at: string };
-export type ConsentEvent = { id: string; purpose: 'call_recording' | 'call_transcription'; granted: boolean; disclosure_version: string; collection_context: string; created_at: string; legal_basis: 'all_party_consent' | 'one_party_recording'; jurisdiction: string | null };
-export type LineCapture = { recording_enabled: boolean; transcription_enabled: boolean };
-export const capturePurposes = ['call_recording','call_transcription'] as const;
+export type ConsentEvent = { id: string; purpose: 'call_recording' | 'call_transcription' | 'ai_screening'; granted: boolean; disclosure_version: string; collection_context: string; created_at: string; legal_basis: 'all_party_consent' | 'one_party_recording'; jurisdiction: string | null };
+export type LineCapture = { recording_enabled: boolean; transcription_enabled: boolean; ai_screening_enabled: boolean; ai_notice_enabled: boolean };
+export const capturePurposes = ['call_recording','call_transcription','ai_screening'] as const;

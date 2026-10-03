@@ -839,4 +839,59 @@ select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000003'
 select public.test_assert((select count(*)=0 from public.consent_events),'another tenant cannot read a recording basis');
 reset role;
 
+-- ---------------------------------------------------------------------------
+-- AI screening
+-- ---------------------------------------------------------------------------
+-- Sending what a caller says to a model is its own disclosure. Agreeing to a
+-- recording is not agreeing to that, so the third purpose has its own basis.
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select set_config('request.jwt.claims','{}',true);
+do $$ begin
+  begin perform public.set_capture_enabled(current_setting('test.workspace_a')::uuid,current_setting('test.line_a')::uuid,'ai_screening',true);
+    raise exception 'AI screening switched on with no basis';
+  exception when raise_exception then if sqlerrm not like 'Record a basis%' then raise; end if; end;
+end $$;
+select public.test_assert((select not ai_screening_enabled from public.line_routing where workspace_id=:'workspace_a' and line_id=:'line_a'),'AI screening is off until a basis exists');
+
+-- A recording basis is not an AI basis.
+select public.record_one_party_basis(:'workspace_a',:'line_a','call_recording','US-AZ','Recording only');
+do $$ begin
+  begin perform public.set_capture_enabled(current_setting('test.workspace_a')::uuid,current_setting('test.line_a')::uuid,'ai_screening',true);
+    raise exception 'A recording basis enabled AI screening';
+  exception when raise_exception then if sqlerrm not like 'Record a basis%' then raise; end if; end;
+end $$;
+
+-- With its own basis it turns on, and withdrawing stops it.
+select public.record_capture_consent(:'workspace_a',:'line_a','ai_screening',true,'v1','Callers are told an AI assistant answers');
+select public.set_capture_enabled(:'workspace_a',:'line_a','ai_screening',true);
+select public.test_assert((select ai_screening_enabled from public.line_routing where workspace_id=:'workspace_a' and line_id=:'line_a'),'an ai_screening basis enables AI screening');
+select public.record_capture_consent(:'workspace_a',:'line_a','ai_screening',false,'v1','Withdrawn');
+select public.test_assert((select not ai_screening_enabled from public.line_routing where workspace_id=:'workspace_a' and line_id=:'line_a'),'withdrawing the AI basis stops the screening');
+
+-- The caller notice is a presentation choice, so it needs no basis, but it is
+-- still owner-only and audited.
+select public.set_ai_notice(:'workspace_a',:'line_a',false);
+select public.test_assert((select not ai_notice_enabled from public.line_routing where workspace_id=:'workspace_a' and line_id=:'line_a'),'the line owner can turn the caller notice off');
+
+-- The guard holds against the backend role, which skips policies and not triggers.
+reset role;
+do $$ begin
+  begin update public.line_routing set ai_screening_enabled=true
+    where workspace_id=current_setting('test.workspace_a')::uuid and line_id=current_setting('test.line_a')::uuid;
+    raise exception 'The backend role enabled AI screening with no basis';
+  exception when check_violation then raise notice 'PASS: the backend role cannot enable AI screening without a basis'; end;
+end $$;
+
+-- The assistant profile answers for a line and is service_role only, so a
+-- member cannot read another workspace's assistant configuration.
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000003',true);
+do $$ begin
+  begin perform public.line_assistant_profile(current_setting('test.workspace_a')::uuid,current_setting('test.line_a')::uuid);
+    raise exception 'A member read the assistant profile';
+  exception when insufficient_privilege then raise notice 'PASS: the assistant profile is not reachable by a member'; end;
+end $$;
+reset role;
+
 rollback;

@@ -80,12 +80,30 @@ export function readGatewayConfig(env = process.env) {
   const port = Number(value('PORT') || '3002');
   if (!Number.isInteger(port) || port < 1 || port > 65535) errors.push('PORT must be a TCP port number');
 
+  // The assistant is a third independent switch. Off by default like the other
+  // two, and off is a working configuration: the gateway falls back to the
+  // rule-based screening it already had, so a missing credential degrades the
+  // call rather than failing it.
+  const assistant = value('REDIAL_GATEWAY_ASSISTANT') || 'disabled';
+  if (!['disabled', 'enabled'].includes(assistant)) errors.push('REDIAL_GATEWAY_ASSISTANT must be disabled or enabled');
+  const xaiApiKey = value('XAI_API_KEY');
+  if (assistant === 'enabled' && !xaiApiKey) errors.push('REDIAL_GATEWAY_ASSISTANT=enabled requires XAI_API_KEY');
+  const xaiModel = value('XAI_MODEL') || 'grok-4';
+  // Twilio gives a webhook about fifteen seconds before it gives up and the
+  // caller hears nothing. Four is the default so there is room to fall back,
+  // write the TwiML and still answer well inside that.
+  const assistantTimeoutMs = Number(value('REDIAL_GATEWAY_ASSISTANT_TIMEOUT_MS') || 4000);
+  if (!Number.isInteger(assistantTimeoutMs) || assistantTimeoutMs < 500 || assistantTimeoutMs > 10000) {
+    errors.push('REDIAL_GATEWAY_ASSISTANT_TIMEOUT_MS must be between 500 and 10000');
+  }
+
   if (errors.length) throw new Error(`Invalid gateway environment: ${[...new Set(errors)].join('; ')}`);
   return {
     supabase: { url: supabaseUrl, serviceRoleKey },
     twilio: { accountSid, authToken },
     mediaAccessSecret,
     publicOrigin, environment, bridging, port,
+    assistant, xaiApiKey, xaiModel, assistantTimeoutMs,
   };
 }
 
@@ -98,6 +116,8 @@ export function gatewaySummary(config) {
     twilioCredentials: config.twilio.authToken ? 'configured' : 'not configured',
     signatureValidation: 'required',
     bridgeCalls: config.bridging,
+    assistant: config.assistant,
+    assistantModel: config.assistant === 'enabled' ? config.xaiModel : 'not configured',
     recordingDefault: 'off',
     recordingConsent: 'required by the database, not by this process',
     recordingPlayback: config.mediaAccessSecret ? 'available' : 'not configured',

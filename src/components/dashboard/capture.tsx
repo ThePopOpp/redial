@@ -21,6 +21,13 @@ const PURPOSES = [
     enabledField: 'recording_enabled' as const,
   },
   {
+    purpose: 'ai_screening' as const,
+    title: 'AI screening',
+    what: 'What a caller says is sent to a model provider so the assistant can decide what to do with the call. Without this, screening follows fixed rules and nothing a caller says leaves Redial.',
+    legal: 'This is a disclosure of call content to a third party. Agreeing to a recording is not agreeing to this, so it is consented to separately and can be withdrawn on its own.',
+    enabledField: 'ai_screening_enabled' as const,
+  },
+  {
     purpose: 'call_transcription' as const,
     title: 'Call transcription',
     what: 'A written record of what was said, kept for as long as your retention preference allows and then deleted.',
@@ -76,6 +83,28 @@ export function CaptureControls({ workspace, line, view, capture, consent, isLin
         </div>
         <p>{item.what}</p>
         <p><strong>{item.legal}</strong></p>
+
+        {item.purpose === 'ai_screening' && <div className="carrier-note">
+          <strong>Telling the caller an AI is answering</strong>
+          <p>{capture?.ai_notice_enabled === false
+            ? 'Callers are not told. Your greeting is read as written.'
+            : 'The greeting tells the caller an AI assistant is answering.'}</p>
+          {/* The owner may switch this off, by decision, against the
+              recommendation recorded with it. The warning is the whole point of
+              the control: the database does not refuse this, so the page is
+              where someone finds out what they are choosing. */}
+          <p><strong>Turning this off does not change what the law requires.</strong> An
+            all-party state needs the announcement, and the stricter state&rsquo;s law
+            generally governs a call that crosses a line. If you take calls from outside
+            a one-party jurisdiction, leave this on.</p>
+          {isLineOwner && <form action={dashboardAction}>
+            <Scope workspace={workspace} line={line} view={view} />
+            <input type="hidden" name="enabled" value={capture?.ai_notice_enabled === false ? 'true' : 'false'} />
+            <Button name="action" value="notice" variant="outline">
+              {capture?.ai_notice_enabled === false ? 'Tell callers again' : 'Stop telling callers'}
+            </Button>
+          </form>}
+        </div>}
 
         {isLineOwner && <>
           {!consented
