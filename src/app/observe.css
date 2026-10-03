@@ -1,0 +1,87 @@
+/* Observe. Tokens only, so light and dark are the same stylesheet. */
+
+/* --- Scroll entrance ------------------------------------------------------
+   The server renders no data-reveal at all, so the content is visible without
+   JavaScript and before hydration. Only the client adds "pending", and only for
+   elements below the fold. The reduced-motion rule is repeated here so a
+   preference set after load still wins over whatever state React left behind. */
+[data-reveal='pending'] { opacity: 0; transform: translateY(16px); }
+[data-reveal='shown'] {
+  opacity: 1; transform: none;
+  transition: opacity .55s ease, transform .55s cubic-bezier(.22,.7,.3,1);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+.observe { display: flex; flex-direction: column; gap: 5rem; padding-bottom: 5rem; }
+.observe > * { min-width: 0; }
+
+/* --- Hero ---------------------------------------------------------------- */
+.observe-hero { padding: 4rem 0 0; max-width: 820px; }
+.observe-hero .eyebrow {
+  display: inline-flex; align-items: center; gap: .45rem; margin-bottom: 1.2rem;
+  padding: .3rem .7rem; border: 1px solid var(--border); border-radius: 999px;
+  background: var(--surface); color: var(--violet);
+}
+.observe-hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 6.5vw, 4.4rem); line-height: 1.05; margin: 0; }
+.observe-hero h1 em { color: var(--violet); font-style: italic; }
+.observe-lede { color: var(--muted-foreground); line-height: 1.75; margin: 1.5rem 0 0; max-width: 64ch; }
+.observe-hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin: 2rem 0 1rem; }
+.observe-primary, .observe-secondary {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 48px;
+  padding: 0 1.5rem; border-radius: .6rem; font-size: .92rem; text-decoration: none;
+  transition: opacity .2s, transform .2s;
+}
+.observe-primary { background: var(--violet); color: var(--background); border: 1px solid var(--violet); }
+.observe-secondary { background: transparent; color: var(--foreground); border: 1px solid var(--border); }
+.observe-primary:hover, .observe-secondary:hover { opacity: .9; transform: translateY(-1px); }
+
+/* --- Stages -------------------------------------------------------------- */
+.observe-stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.observe-stages article {
+  padding: 1.6rem 1.4rem; border: 1px solid var(--border); border-radius: 1rem;
+  background: var(--card); display: flex; flex-direction: column; gap: .6rem;
+}
+.observe-step { font-family: var(--font-metadata); font-size: .7rem; letter-spacing: .14em; color: var(--violet); margin: 0; }
+.observe-stages h3 { font-family: var(--font-display); font-size: 1.3rem; margin: 0; line-height: 1.25; }
+.observe-stages p:last-child { color: var(--muted-foreground); font-size: .86rem; line-height: 1.7; margin: 0; }
+
+/* --- Feature grid -------------------------------------------------------- */
+.observe-features > div:first-child { max-width: 760px; }
+.observe-features h2, .observe-honest h2, .observe-end h2 {
+  font-family: var(--font-display); font-size: clamp(1.9rem, 4.2vw, 2.8rem); margin: 0; line-height: 1.15;
+}
+.observe-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 2.2rem; }
+.observe-grid article {
+  padding: 1.5rem 1.4rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--card);
+  transition: border-color .25s, transform .25s;
+}
+.observe-grid article:hover { border-color: var(--violet); transform: translateY(-2px); }
+.observe-grid h3 { font-size: 1.02rem; margin: 0 0 .6rem; line-height: 1.35; }
+.observe-grid p { color: var(--muted-foreground); font-size: .85rem; line-height: 1.7; margin: 0; }
+
+/* --- The honest bit ------------------------------------------------------ */
+.observe-honest {
+  padding: 2.2rem; border: 1px solid var(--border); border-left: 3px solid var(--violet);
+  border-radius: 1rem; background: var(--surface);
+}
+.observe-honest p { color: var(--muted-foreground); line-height: 1.75; margin: 1rem 0 0; max-width: 72ch; }
+
+/* --- Closing ------------------------------------------------------------- */
+.observe-end { padding: 3rem 2rem; border: 1px solid var(--border); border-radius: 1.4rem; background: var(--card); text-align: center; }
+.observe-end p { color: var(--muted-foreground); line-height: 1.75; margin: 1rem auto 0; max-width: 58ch; }
+.observe-end .observe-hero-actions { justify-content: center; margin-bottom: 0; }
+
+/* --- Narrower ------------------------------------------------------------ */
+@media (max-width: 1000px) {
+  .observe-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .observe-stages { grid-template-columns: 1fr; }
+}
+@media (max-width: 680px) {
+  .observe { gap: 3.5rem; }
+  .observe-grid { grid-template-columns: 1fr; }
+  .observe-honest { padding: 1.5rem; }
+  .observe-end { padding: 2.2rem 1.2rem; }
+  .observe-hero-actions > a { width: 100%; }
+}

@@ -1,7 +1,7 @@
 ﻿import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-const routes = ['/', '/how-it-works', '/compatibility', '/pricing', '/demo/calls', '/demo/live', '/demo/calls/delivery-example', '/sign-in', '/staff-sign-in'];
+const routes = ['/', '/how-it-works', '/compatibility', '/observe', '/pricing', '/demo/calls', '/demo/live', '/demo/calls/delivery-example', '/sign-in', '/staff-sign-in'];
 
 test('local navigation opens the inbox, a transcript, and all four simulated controls', async ({ page }) => {
   const externalRequests: string[] = [];
@@ -112,7 +112,7 @@ for (const width of [390, 1440]) {
 test('large text and reduced motion preserve readable layouts', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.setViewportSize({ width: 720, height: 900 });
-  for (const route of ['/', '/pricing', '/demo/calls', '/staff-sign-in']) {
+  for (const route of ['/', '/pricing', '/observe', '/demo/calls', '/staff-sign-in']) {
     await page.goto(route);
       if (route.startsWith('/demo')) await expect(page.locator('.workspace-heading')).toBeVisible();
     await page.addStyleTag({ content: 'html { font-size: 200%; }' });

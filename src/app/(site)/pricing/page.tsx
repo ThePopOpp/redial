@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Check, Minus } from 'lucide-react';
+import { Reveal } from '@/components/reveal';
 import { planCards, planComparison, pricingQuestions, type ComparisonValue } from '@/lib/plans';
 
 export const metadata: Metadata = { title: 'Proposed pricing' };
@@ -32,7 +33,8 @@ export default function Pricing() {
     </header>
 
     <section className="pricing-tiers" aria-label="Proposed plans">
-      {planCards.map(plan => <article key={plan.id} className={`pricing-card${plan.featured ? ' is-featured' : ''}`}>
+      {planCards.map((plan, index) => <Reveal as="article" key={plan.id} delay={index * 70}
+        className={`pricing-card${plan.featured ? ' is-featured' : ''}`}>
         {plan.featured && <span className="pricing-flag">Most complete</span>}
         <header>
           <p className="pricing-mode">{plan.mode === 'byo' ? 'Bring your own number' : 'Number included'}</p>
@@ -47,7 +49,7 @@ export default function Pricing() {
           {plan.highlights.map(item => <li key={item}><Check size={15} aria-hidden="true" />{item}</li>)}
         </ul>
         <span className="pricing-cta" aria-disabled="true">Not available to purchase</span>
-      </article>)}
+      </Reveal>)}
     </section>
 
     <section className="pricing-compare" aria-labelledby="compare-heading">
@@ -102,10 +104,10 @@ export default function Pricing() {
     <section className="pricing-faq" aria-labelledby="faq-heading">
       <h2 id="faq-heading">Questions this page raises</h2>
       <div className="pricing-faq-list">
-        {pricingQuestions.map(item => <article key={item.question}>
+        {pricingQuestions.map((item, index) => <Reveal as="article" key={item.question} delay={(index % 2) * 70}>
           <h3>{item.question}</h3>
           <p>{item.answer}</p>
-        </article>)}
+        </Reveal>)}
       </div>
     </section>
 

@@ -45,9 +45,11 @@ export const planCards: readonly ProposedPlan[] = [
     highlights: ['A US local number included', '50 AI minutes a month', '50 member-app talk minutes', 'AI screening, up to 3 questions', '90-day call history'],
   },
   {
-    id: 'estate_managed', name: 'Estate Managed', mode: 'managed', monthly: 69, annual: 690,
-    summary: 'Managed numbers for everyone, with the allowance pooled across them.',
-    highlights: ['Everything in Concierge Managed, plus', 'Up to 5 people and numbers', '100 AI minutes, pooled', '150 member-app talk minutes, pooled', 'Priority email support'],
+    // Display name only. The product code stays `estate_managed`, which is what
+    // the kit proposal, the live catalog and any existing subscription use.
+    id: 'estate_managed', name: 'Agent Platform', mode: 'managed', monthly: 69, annual: 690,
+    summary: 'Managed numbers for everyone, with the allowance pooled and the full record behind it.',
+    highlights: ['Everything in Concierge Managed, plus', 'Up to 5 people and numbers', '100 AI minutes, pooled', '150 member-app talk minutes, pooled', 'Observe: the full call record', 'Priority email support'],
   },
 ] as const;
 
@@ -97,6 +99,19 @@ export const planComparison: readonly ComparisonGroup[] = [
       { label: 'AI minutes a month', values: [null, null, null, 50, '100 pooled'] },
       { label: 'Member-app talk minutes', values: [null, null, null, 50, '150 pooled'] },
       { label: 'Automatic overage charges', values: [false, false, false, false, false] },
+    ],
+  },
+  {
+    title: 'Observe',
+    note: 'The call record and what can be proved about it afterwards. Everything here exists today; see the Observe page for what it is not.',
+    rows: [
+      { label: 'Call log with outcome and duration', values: [true, true, true, true, true] },
+      { label: 'What the caller said', values: [true, true, true, true, true] },
+      { label: 'Speech confidence shown', values: [true, true, true, true, true] },
+      { label: 'Consent and basis history', values: [true, true, true, true, true] },
+      { label: 'Recording access log', values: [false, true, true, true, true] },
+      { label: 'Retention deadline per recording', values: [true, true, true, true, true] },
+      { label: 'Workspace activity trail', values: [false, false, true, false, true] },
     ],
   },
   {

@@ -2,6 +2,7 @@ export type NavigationItem = Readonly<{ href: string; label: string }>;
 
 export const publicNavigation: readonly NavigationItem[] = [
   { href: '/how-it-works', label: 'How it works' },
+  { href: '/observe', label: 'Observe' },
   { href: '/compatibility', label: 'Compatibility' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/sign-in', label: 'Sign in' },
