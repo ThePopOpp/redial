@@ -5,7 +5,7 @@ import path from 'node:path';
 import { carrierOptions, draftSchema, initialDraft } from '../src/lib/landing/onboarding';
 
 const origin = 'http://127.0.0.1:3210', headers = { origin };
-const completed = { ...initialDraft, fullName: 'Taylor Local', email: 'taylor@example.test', phone: '(480) 555-0149', carrier: 'Boost Mobile', connectionReviewed: true, checksReviewed: true, provider: 'own', providerName: 'Example voice provider', voice: 'Warm', screening: 'all', acknowledgeLocal: true, step: 7, complete: true };
+const completed = { ...initialDraft, fullName: 'Taylor Local', email: 'taylor@example.test', phone: '(480) 555-0149', carrier: 'Boost Mobile', connectionReviewed: true, checksReviewed: true, provider: 'own', providerName: 'Example voice provider', voice: 'Warm', screening: 'all', acknowledgeLocal: true, step: 8, complete: true };
 
 test('all carrier choices are accepted by the shared contract, with unknown values rejected', () => {
   for (const carrier of carrierOptions) expect(draftSchema.safeParse({ ...initialDraft, carrier }).success).toBe(true);

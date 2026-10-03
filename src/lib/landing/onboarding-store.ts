@@ -47,7 +47,7 @@ async function write(saved: SavedOnboarding) {
   expireAt(saved.id, saved.expiresAt);
 }
 function withCookie(saved: SavedOnboarding, status = 200) {
-  const response = json({ saved }, status);
+  const response = json({ localPreview: runtime().deployment === 'local', saved }, status);
   response.cookies.set(cookie, saved.id, { httpOnly: true, sameSite: 'strict', secure: runtime().secureCookies, path: '/api/onboarding', maxAge: saved.expiresAt === null ? 365 * 24 * 3600 : Math.max(1, Math.floor((saved.expiresAt - Date.now()) / 1000)) });
   return response;
 }
@@ -62,7 +62,11 @@ function account(record: SavedOnboarding | null): SetupAccount {
   if (!record?.submission) throw new ReviewError(404, 'NO_SUBMISSION', 'Complete the setup form in this browser to see your account.');
   return { id: record.id, version: record.version, submission: record.submission };
 }
-export async function getOnboarding() { await restoreExpirations(); const id = await currentId(); return json({ saved: id ? await serial(id, () => read(id)) : null }); }
+// The /local preview pages are blocked by the proxy on any hosted deployment,
+// so the completion screen must not offer them there. Decided per request from
+// the runtime rather than baked into the build: one image serves every
+// deployment and REDIAL_DEPLOYMENT is a runtime variable.
+export async function getOnboarding() { await restoreExpirations(); const id = await currentId(); return json({ localPreview: runtime().deployment === 'local', saved: id ? await serial(id, () => read(id)) : null }); }
 export async function saveOnboarding(request: Request) {
   const parsed = onboardingRequestSchema.safeParse(await body(request));
   if (!parsed.success) throw new ReviewError(400, 'VALIDATION', 'Check the setup fields and try again.');

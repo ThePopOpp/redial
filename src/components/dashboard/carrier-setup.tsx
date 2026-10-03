@@ -5,10 +5,13 @@ import { ArrowRight, Check, Phone, ShieldCheck, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
 import { carriers, emptySetup, routeNames, setupSchema, type SavedSetup, type SetupDraft } from '@/lib/dashboard/carrier-setup';
 import { saveCarrierSetup } from '@/lib/dashboard/setup-actions';
 
 const stages = ['Your provider', 'Your call path', 'Provider instructions', 'Before connecting', 'Review setup'];
+const deviceOptions = ['Android', 'iPhone', 'Other'] as const;
+const conditionOptions = [{ value: 'unanswered', label: 'No answer' }, { value: 'busy', label: 'Busy' }, { value: 'unreachable', label: 'Unreachable' }] as const;
 export function CarrierSetup({ workspace, line, saved, unavailable = false }: { workspace?: string; line?: string; saved?: SavedSetup; unavailable?: boolean }) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -18,6 +21,7 @@ export function CarrierSetup({ workspace, line, saved, unavailable = false }: { 
   const [version, setVersion] = useState(saved?.version || 0);
   const [busy, setBusy] = useState(false), [error, setError] = useState(''), [done, setDone] = useState(false);
   const countryOptions = useMemo(() => { const names = new Intl.DisplayNames(['en'], { type: 'region' }); return getCountries().map(value => ({ value, label: names.of(value) || value })).sort((a,b) => a.label.localeCompare(b.label)); }, []);
+  const carrierOptions = useMemo(() => carriers.filter(item => draft.country === 'US' || item.id === 'other').map(item => ({ value: item.id, label: item.name })), [draft.country]);
   useEffect(() => { if (dialogRef.current) dialogRef.current.scrollTop = 0; if (step > 0) headingRef.current?.focus({ preventScroll: true }); }, [step]);
   const carrier = carriers.find(item => item.id === draft.carrier)!;
   function change<K extends keyof SetupDraft>(key: K, value: SetupDraft[K]) { setDraft(old => ({ ...old, [key]: value })); setError(''); setDone(false); }
@@ -59,10 +63,10 @@ export function CarrierSetup({ workspace, line, saved, unavailable = false }: { 
         <section className="carrier-instructions" key={step} aria-label={stages[step]}>
           <p className="small-label">STEP {step + 1} OF {stages.length}</p><h3 ref={headingRef} tabIndex={-1}>{stages[step]}</h3>
           {step === 0 && <div className="carrier-fields">
-            <label>Country<select aria-label="Country" value={draft.country} onChange={event => { change('country', event.target.value); if (event.target.value !== 'US') change('carrier', 'other'); }}>{countryOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
-            <label>Mobile provider<select aria-label="Mobile provider" value={draft.carrier} onChange={event => change('carrier', event.target.value as SetupDraft['carrier'])}>{carriers.filter(item => draft.country === 'US' || item.id === 'other').map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+            <label htmlFor="carrier-country">Country<Select id="carrier-country" aria-label="Country" value={draft.country} options={countryOptions} onValueChange={value => { change('country', value); if (value !== 'US') change('carrier', 'other'); }}/></label>
+            <label htmlFor="carrier-provider">Mobile provider<Select id="carrier-provider" aria-label="Mobile provider" value={draft.carrier} options={carrierOptions} onValueChange={value => change('carrier', value as SetupDraft['carrier'])}/></label>
             {draft.carrier === 'other' && <label>Provider name<Input value={draft.otherCarrier} maxLength={80} onChange={event => change('otherCarrier', event.target.value)}/></label>}
-            <label>Phone type<select aria-label="Phone type" value={draft.device} onChange={event => change('device', event.target.value as SetupDraft['device'])}>{['Android','iPhone','Other'].map(item => <option key={item}>{item}</option>)}</select></label>
+            <label htmlFor="carrier-device">Phone type<Select id="carrier-device" aria-label="Phone type" value={draft.device} options={deviceOptions} onValueChange={value => change('device', value as SetupDraft['device'])}/></label>
             <label>Phone model<Input placeholder={demo ? 'Example: Pixel 9' : 'Your phone model'} value={draft.model} maxLength={80} onChange={event => change('model', event.target.value)}/></label>
             <label>Software version<Input placeholder="From your phone’s About screen" value={draft.os} maxLength={60} onChange={event => change('os', event.target.value)}/></label>
             <label>Plan name or type<Input placeholder="For example, prepaid or business" value={draft.plan} maxLength={80} onChange={event => change('plan', event.target.value)}/></label>
@@ -71,7 +75,7 @@ export function CarrierSetup({ workspace, line, saved, unavailable = false }: { 
           {step === 1 && <>
             <div className="carrier-choices" role="group" aria-label="Connection method">{Object.entries(routeNames).map(([value,label]) => <button key={value} aria-pressed={draft.route === value} onClick={() => change('route', value as SetupDraft['route'])}><strong>{label}</strong><span>{value === 'dedicated' ? 'People call a separate number. No forwarding needed.' : value === 'conditional' ? 'Your phone can ring first. Redial receives only forwarded calls.' : 'Your existing handset may stop ringing. Voicemail behavior changes.'}</span></button>)}</div>
             {draft.route !== 'dedicated' && <label>Number you plan to forward<Input type="tel" autoComplete="tel" placeholder={demo ? '+16025550149' : '+country code and number'} value={draft.sourcePhone} maxLength={16} onChange={event => change('sourcePhone', event.target.value)}/></label>}
-            {draft.route === 'conditional' && <label>Forwarding condition<select aria-label="Forwarding condition" value={draft.condition} onChange={event => change('condition', event.target.value as SetupDraft['condition'])}><option value="unanswered">No answer</option><option value="busy">Busy</option><option value="unreachable">Unreachable</option></select></label>}
+            {draft.route === 'conditional' && <label htmlFor="carrier-condition">Forwarding condition<Select id="carrier-condition" aria-label="Forwarding condition" value={draft.condition} options={conditionOptions} onValueChange={value => change('condition', value as SetupDraft['condition'])}/></label>}
             <p>These are requested options. Availability is confirmed during your provider check. A dedicated number is an alternative where mobile forwarding is unavailable, subject to local number availability.</p>
           </>}
           {step === 2 && <>

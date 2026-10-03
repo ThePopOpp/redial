@@ -11,3 +11,6 @@ playwright-report/
 *.log
 .redial/
 schema-to-apply.sql
+
+# Supabase CLI version cache, written by the CLI on every run.
+supabase/.temp/

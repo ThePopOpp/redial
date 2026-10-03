@@ -34,8 +34,9 @@ test('mobile other-provider path supports a dedicated number without invented ca
   await page.goto('/demo/numbers');
   await page.getByRole('button', { name: 'Set up incoming calls' }).click();
   const dialog = page.getByRole('dialog');
-  await dialog.getByLabel('Country', { exact: true }).selectOption('GB');
-  await expect(dialog.getByLabel('Mobile provider')).toHaveValue('other');
+  await dialog.getByLabel('Country', { exact: true }).click();
+  await page.getByRole('option', { name: 'United Kingdom', exact: true }).click();
+  await expect(dialog.getByLabel('Mobile provider')).toHaveText('Other provider');
   await dialog.getByLabel('Provider name').fill('Example carrier');
   await dialog.getByLabel('Phone model').fill('Example phone');
   await dialog.getByLabel('Software version').fill('Example OS');

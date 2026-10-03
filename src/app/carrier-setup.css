@@ -23,7 +23,6 @@
 .carrier-fields { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
 .carrier-wide { grid-column:1/-1; }
 .carrier-instructions label { display:flex; flex-direction:column; gap:8px; font-size:13px; }
-.carrier-instructions select { width:100%; min-height:42px; background:var(--surface); color:var(--foreground); border:1px solid var(--border); border-radius:8px; padding:10px; }
 .carrier-instructions a { color:var(--violet); text-decoration:underline; text-underline-offset:4px; }
 .carrier-choices { display:grid; gap:12px; }
 .carrier-choices button { display:flex; flex-direction:column; text-align:left; gap:8px; padding:16px; color:inherit; background:var(--surface); border:1px solid var(--border); border-radius:12px; cursor:pointer; }

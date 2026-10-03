@@ -420,3 +420,229 @@ callback, and no recording has been captured, served or deleted end to end. The
 projection, the deletion planner and the webhook acceptance rules are unit
 tested; the wiring between them and a live provider is not. M1 identity gates
 remain open.
+
+## 2026-10-02 — Brand selects, a hosted dead end, and the account-type catalog
+
+Three unrelated things, done together because the first two were found while
+looking at the third.
+
+### The setup wizard was using raw native selects
+
+`src/components/dashboard/carrier-setup.tsx` was the only file left in `src/`
+still rendering `<select>`. Every other control in the product goes through the
+Radix composition in `src/components/ui/select.tsx`, which is themed from the
+same tokens as the rest of the design system. The native element is not: its
+dropdown list is drawn by the operating system, so on Android it rendered with
+the OS blue highlight and ignored both the light and dark palettes.
+
+All four are now the shared `Select`: country, mobile provider, phone type and
+forwarding condition. The dead `.carrier-instructions select` rule is gone, and
+each field became `<label htmlFor>` pointing at the trigger. A `<button>` is a
+labelable element, so clicking the label still opens the list, which is the
+affordance the native control gave for free.
+
+The one Playwright assertion that drove the native element — `selectOption('GB')`
+— now clicks the trigger and the option. That is not a worse test: it exercises
+the listbox a member actually sees.
+
+### `/local/account` 404s on the hosted deployment, by design
+
+Opening an account on `redial.si` ended at a bare 404. The route is fine and has
+existed since the first commit; `src/proxy.ts` returns a bodiless 404 for any
+`/local` path whenever `REDIAL_DEPLOYMENT` is not `local`. That rule is correct
+and stays: those two pages read whatever onboarding submission the browser
+holds, they have no authentication, and one of them is called "admin".
+
+The defect was that the product still linked there. The onboarding completion
+screen offered "Open my local account" and "Open local admin dashboard", and the
+workspace navigation carried "Your submitted setup" and "Submitted setup review".
+All four were guaranteed dead ends on any hosted deployment.
+
+The flag is resolved per request and never baked. One image serves every
+deployment and `REDIAL_DEPLOYMENT` is a runtime variable, so a `NEXT_PUBLIC_`
+value would have been fixed at build time with whatever the builder had — which
+is `local` by default, exactly the wrong answer. `/api/onboarding` now returns
+`localPreview` alongside the saved draft, and `/demo/layout.tsx` reads the
+runtime and passes it to the shell.
+
+This hides links to a surface that is not reachable. It does not give the hosted
+deployment a member account: that still waits on the M1 identity gates.
+
+### Account types and refundable deposits
+
+The billing schema from `202609260002` already modelled a catalog properly —
+products, versioned plans carrying `features` and `limits`, prices with a
+cadence and a Square mapping and a draft/available/retired lifecycle. Nothing
+could write any of it. There were read projections for staff and no create,
+publish or retire path, so the five plan names in the product existed only as a
+hardcoded map in `src/lib/review/commands.ts` and all four catalog tables were
+empty in the development project.
+
+`202610030001` adds the Super Admin side and the deposit ledger.
+
+**`catalog_write` is a new capability, not `billing_write`.** `billing_write`
+moves money and is held by finance. Setting the price of a plan decides what
+every future customer pays, so it is separate and goes to owner and admin only.
+Finance and analyst keep `billing_read` and see the result.
+
+**A published plan version is frozen.** Versions only protect an existing
+subscriber if the version they were sold cannot be edited afterwards, so once a
+version leaves draft its `features` and `limits` are immutable and a change
+means a new version. Availability moves one way: draft, available, retired. The
+same holds for a price — withdrawing an offer is a retirement, not an edit.
+Both are triggers rather than policies, because `service_role` carries
+`bypassrls`, which skips policies and not triggers.
+
+**A deposit is its own ledger, not a column.** Money the member has handed over
+and can still get back is neither a payment against an invoice nor revenue. A
+single balance figure cannot say where it came from, what consumed it, or how
+much is still refundable, and those are the questions a dispute asks. So
+`credit_entries` is append-only in signed minor units: the balance is the sum,
+no row is ever rewritten, and a correction is a new entry. Edits and deletes are
+refused by trigger.
+
+The refundable amount is simply the balance. Money an invoice has already
+consumed has left the ledger, so a member can never be refunded more than they
+currently hold. The balance cannot go negative — an overdraft nobody agreed to —
+and the check takes a per-workspace advisory lock first, because without it two
+concurrent drawdowns each see a sufficient balance and both commit. One currency
+per account, because summing mixed currencies is not a balance.
+
+### Live charging is authorized; it is not yet wired
+
+The owner explicitly authorized taking live payments through Square, overriding
+the standing "no live charges" rule in `AGENTS.md`. Recorded here because that
+rule should only ever be set aside in writing.
+
+Nothing in this increment moves money. It stops at the catalog and the ledger.
+Checkout belongs in `checkout_operations`, which already holds the quote, the
+terms version, the expiry and the provider identifiers, and which the worker
+drives because the worker owns provider calls and holds the webhook signature
+key. That work still needs `SQUARE_ACCESS_TOKEN`, `SQUARE_WEBHOOK_SIGNATURE_KEY`,
+`SQUARE_WEBHOOK_URL`, `SQUARE_ENVIRONMENT`, `REDIAL_SQUARE_PRODUCTION_AUTHORIZED=yes`
+and `REDIAL_WORKER_PROVIDER_CALLS=enabled`, none of which are set.
+
+A concern worth keeping visible: the M1 identity gates are still open. `/app`
+and `/ops` have no verified server identity, workspace membership or separate
+staff MFA. Charging a real card through a system that cannot yet prove who a
+customer is produces payments that are hard to attribute and harder to dispute.
+The recommendation is that the identity gates land before the first real charge,
+whatever the authorization allows.
+
+### Evidence
+
+144 row-level-security assertions pass in the isolated harness, up from 131. The
+13 new ones cover a member and support staff both refused the catalog, the owner
+holding `catalog_write`, a price refused publication ahead of its plan, a
+published plan and a published price both immutable and unable to return to
+draft, a deposit raising the balance, a replayed idempotency key refused, the
+balance refusing to go negative, a second currency refused, and the ledger
+refusing an edit and a delete — the last three asserted against a privileged
+writer, because `authenticated` holds no UPDATE on these tables at all and that
+would have proved only the missing grant.
+
+81 browser tests, 107 node tests and the reference suite pass. Typecheck, lint
+and build are clean. `verify:kit` confirms all 92 kit originals still match.
+
+Not run: no Square call, no checkout, no charge, no deposit taken from a real
+card. The migration is applied to no project by this entry.
+
+## 2026-10-02 — The catalog becomes real: Super Admin screens and a plan step
+
+Applied `202610030001` and `202610030002` to the development project, built the
+Super Admin side of the catalog, and gave the setup form a step where someone
+chooses their account type.
+
+### Seeded, because an empty catalog is indistinguishable from a broken one
+
+The five plan names that existed only as a hardcoded map in
+`src/lib/review/commands.ts` are now rows: Doorstep BYO, Concierge BYO, Estate
+BYO, Concierge Managed, Estate Managed, each with a version 1 describing what it
+includes and a published price. No price carries a Square plan variation, so
+none of them can reach a provider.
+
+This was inserted directly rather than through the new RPCs, which was the only
+option: those functions require a staff session with MFA, and seed data has no
+session. The consequence is that the seed carries no audit row. Everything after
+it goes through the RPCs and is audited.
+
+### `/ops/catalog`
+
+Reading follows `billing_read`, so finance and analyst see what is on offer and
+get a short note saying why the forms are absent. Changing anything needs
+`catalog_write`, and every server action re-checks on the write rather than
+trusting the render — the same pattern as `promoteStaff` — with the database
+function checking a third time.
+
+Features and limits are entered as JSON. They are open-ended by design: what a
+plan includes changes faster than a column would, and the database already
+bounds their size and shape.
+
+### A step for the account type
+
+The setup form is eight steps now. Step seven asks which account type someone
+wants and, for a paid one, has them acknowledge the deposit.
+
+**The choice is optional and the step cannot trap anyone.** First draft made it
+required, which meant any deployment with nothing published — including the
+preview server the browser tests run against — could not complete setup at all.
+That is the wrong failure mode for a form that takes no money. The account type
+here is a recorded preference; the binding choice happens at checkout, where
+there is an authenticated member and a real quote. The deposit acknowledgement
+stays conditional on actually choosing a paid plan, because that one is a
+disclosure rather than a preference.
+
+It is stored as the product code, not the plan version id: a version can be
+superseded between someone saving a setup request and an administrator acting on
+it, and what they chose was the plan, not that revision of it.
+
+`/api/plans` serves the catalog behind the same access gate as everything else
+and writes no filter of its own. `plan_version_public_read` and
+`price_public_read` already restrict both tables to `available`, so a draft
+cannot come back through that path even if the query forgot to ask.
+
+### A hole the advisors found, in work from an hour earlier
+
+`workspace_credit_balance(w uuid)` took a workspace id and was `security
+definer`, so it ran with the owner's rights and answered for any workspace the
+caller named. The `credit_read` policy was doing its job on the table and the
+function walked straight past it: a signed-in member could ask for a stranger's
+balance and get a number back.
+
+The rule this broke is already written down for `may_read_recording` — a
+function that takes an identifier instead of reading `auth.uid()` has to
+re-check the caller itself — and it was not applied here. It now answers only
+where `private.billing_access` passes, and returns null rather than zero,
+because zero is an answer and this function has no business confirming that a
+workspace exists.
+
+Worth noting what did *not* catch this: 144 row-level-security assertions, a
+clean typecheck, lint, build and 81 browser tests. Policy tests check policies.
+Nothing was asserting that a security-definer function respects the boundary its
+table's policy draws, and that is exactly where this class of bug lives. The new
+assertion covers it for this function; the pattern deserves a sweep.
+
+The same pass revoked `execute` on six trigger functions. Postgres refuses to
+run one outside a trigger, so none was ever callable, but every other function
+in this schema states who may call it.
+
+### Evidence
+
+146 row-level-security assertions, up from 144. Typecheck, lint and build clean;
+81 browser, 107 node and 75 reference tests pass; 92 kit originals unchanged.
+Security advisors: the anon security-definer warning is gone entirely, and the
+signed-in list fell from 37 to 31.
+
+### Still open
+
+- **Checkout and the deposit are not wired.** `checkout_operations` has the
+  quote, terms version, expiry and provider identifiers and is driven by the
+  worker. It needs `SQUARE_ACCESS_TOKEN`, `SQUARE_WEBHOOK_SIGNATURE_KEY`,
+  `SQUARE_WEBHOOK_URL`, `SQUARE_ENVIRONMENT`,
+  `REDIAL_SQUARE_PRODUCTION_AUTHORIZED=yes` and
+  `REDIAL_WORKER_PROVIDER_CALLS=enabled`. None are set. No charge has been made.
+- **Staff cannot see a customer's credit balance.** The member-facing function
+  correctly refuses them. `staff_workspace_billing` should carry the balance,
+  with `billing_read` and an audit row; it does not yet.
+- The M1 identity gates remain open, and the recommendation from the previous
+  entry stands: they should land before the first real charge.

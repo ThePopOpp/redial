@@ -674,4 +674,123 @@ select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000006'
 select public.test_assert((select count(*)=0 from public.recordings),'revoking membership removes recording access');
 reset role;
 
+-- ---------------------------------------------------------------------------
+-- Account types and deposits
+-- ---------------------------------------------------------------------------
+-- The catalog is a staff surface. A member with billing access to their own
+-- workspace still has no say in what anything costs.
+set role authenticated;
+select set_config('test.workspace_a',:'workspace_a',true);
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select set_config('request.jwt.claims','{}',true);
+do $$ begin
+  begin perform public.create_billing_product('member_made','Member made','membership');
+    raise exception 'A member created a product';
+  exception when raise_exception then if sqlerrm<>'Not permitted' then raise; end if; end;
+end $$;
+select public.test_assert(public.staff_catalog() is null,'a member cannot read the staff catalog');
+
+-- Support staff can read billing but must not set prices: catalog_write is a
+-- separate grant from billing_read on purpose.
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000004',true);
+select set_config('request.jwt.claims','{"aal":"aal2"}',true);
+do $$ begin
+  begin perform public.create_billing_product('support_made','Support made','membership');
+    raise exception 'Support staff created a product';
+  exception when raise_exception then if sqlerrm<>'Not permitted' then raise; end if; end;
+end $$;
+
+-- The platform owner holds catalog_write and can build a plan.
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000005',true);
+select set_config('request.jwt.claims','{"aal":"aal2"}',true);
+select public.test_assert((select count(*)=1 from public.staff_capabilities_for_me() where capability='catalog_write'),'owner role carries catalog_write');
+select public.create_billing_product('estate_managed','Estate Managed','membership') as catalog_product \gset
+select public.create_plan_version(:'catalog_product','{"screening":true}','{"lines":1}') as catalog_plan \gset
+select public.set_plan_price(:'catalog_plan','monthly','USD',1200,null) as catalog_price \gset
+select set_config('test.catalog_plan',:'catalog_plan',true);
+select set_config('test.catalog_price',:'catalog_price',true);
+
+-- A price cannot be offered before the plan it prices.
+do $$ begin
+  begin perform public.publish_price(current_setting('test.catalog_price')::uuid);
+    raise exception 'A price was published ahead of its plan';
+  exception when raise_exception then if sqlerrm<>'Publish the plan version before its price' then raise; end if; end;
+end $$;
+select public.publish_plan_version(:'catalog_plan');
+select public.publish_price(:'catalog_price');
+
+-- What a subscriber was sold cannot be rewritten underneath them. Asserted
+-- against a privileged writer: `authenticated` holds no UPDATE on the catalog
+-- at all, so this proves the trigger and not just the missing grant.
+reset role;
+do $$ begin
+  begin update public.plan_versions set features='{"screening":false}' where id=current_setting('test.catalog_plan')::uuid;
+    raise exception 'A published plan version was edited';
+  exception when check_violation then raise notice 'PASS: a published plan version is immutable'; end;
+end $$;
+do $$ begin
+  begin update public.prices set amount_minor=9900 where id=current_setting('test.catalog_price')::uuid;
+    raise exception 'A published price was edited';
+  exception when check_violation then raise notice 'PASS: a published price is immutable'; end;
+end $$;
+do $$ begin
+  begin update public.plan_versions set availability='draft' where id=current_setting('test.catalog_plan')::uuid;
+    raise exception 'A published plan returned to draft';
+  exception when check_violation then raise notice 'PASS: a published plan cannot return to draft'; end;
+end $$;
+
+set role authenticated;
+-- Deposits. A staff adjustment is capability-gated and must carry a reason.
+select public.adjust_workspace_credit(:'workspace_a',5000,'USD','Opening deposit','deposit-key-0001') as catalog_credit \gset
+select set_config('test.catalog_credit',:'catalog_credit',true);
+-- Staff wrote the entry but are not a billing member of this workspace, so the
+-- member-facing balance refuses them too. Staff read balances through their own
+-- projection, not through this one.
+select public.test_assert(public.workspace_credit_balance(:'workspace_a') is null,'staff do not read a balance through the member function');
+do $$ begin
+  begin perform public.adjust_workspace_credit(current_setting('test.workspace_a')::uuid,100,'USD','Replay','deposit-key-0001');
+    raise exception 'A duplicate idempotency key was accepted';
+  exception when unique_violation then raise notice 'PASS: a replayed credit entry is refused'; end;
+end $$;
+
+-- The balance is the refundable amount: an account cannot be overdrawn.
+do $$ begin
+  begin perform public.adjust_workspace_credit(current_setting('test.workspace_a')::uuid,-6000,'USD','Over','deposit-key-0002');
+    raise exception 'The credit balance went negative';
+  exception when check_violation then raise notice 'PASS: the credit balance cannot go negative'; end;
+end $$;
+
+-- One currency per account; summing mixed currencies is not a balance.
+do $$ begin
+  begin perform public.adjust_workspace_credit(current_setting('test.workspace_a')::uuid,100,'GBP','Mixed','deposit-key-0003');
+    raise exception 'A second currency was accepted';
+  exception when check_violation then raise notice 'PASS: an account holds one currency'; end;
+end $$;
+
+-- The ledger is append-only, including for the role that bypasses policies.
+reset role;
+do $$ begin
+  begin update public.credit_entries set amount_minor=1 where id=current_setting('test.catalog_credit')::uuid;
+    raise exception 'A ledger entry was edited';
+  exception when check_violation then raise notice 'PASS: the credit ledger refuses an edit'; end;
+end $$;
+do $$ begin
+  begin delete from public.credit_entries where id=current_setting('test.catalog_credit')::uuid;
+    raise exception 'A ledger entry was deleted';
+  exception when check_violation then raise notice 'PASS: the credit ledger refuses a delete'; end;
+end $$;
+
+-- The member sees their own deposit; another tenant sees none of it.
+set role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
+select set_config('request.jwt.claims','{}',true);
+select public.test_assert((select count(*)=1 from public.credit_entries),'the billing owner reads their own credit ledger');
+select public.test_assert(public.workspace_credit_balance(:'workspace_a')=5000,'a deposit raises the credit balance');
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000003',true);
+select public.test_assert((select count(*)=0 from public.credit_entries),'another tenant cannot read the credit ledger');
+-- The balance function takes a workspace id, so it has to re-check the caller:
+-- a policy on the table does not constrain a security-definer function.
+select public.test_assert(public.workspace_credit_balance(:'workspace_a') is null,'another tenant cannot read the credit balance');
+reset role;
+
 rollback;

@@ -94,7 +94,12 @@ test('seven-step setup saves real form input, resumes, and deletes independently
   await form.getByRole('radio', { name: /Every call/ }).check();
   await form.getByLabel('Opening line').fill('Hi, you’ve reached Morgan’s AI assistant. What can I help you with?');
   await form.getByRole('button', { name: 'Continue', exact: true }).click();
+  // Account type. This preview server publishes no catalog, so the step says so
+  // and stays passable: nothing is sold here and no card is collected.
   await expect(form).toHaveAttribute('data-step', '7');
+  await expect(form).toContainText('No account types published');
+  await form.getByRole('button', { name: 'Continue', exact: true }).click();
+  await expect(form).toHaveAttribute('data-step', '8');
   await expect(form).toContainText('Morgan Review');
   await expect(form).toContainText('Dedicated number');
   await form.getByRole('checkbox', { name: /Save my details on this preview server/ }).check();
