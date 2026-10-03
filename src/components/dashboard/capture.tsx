@@ -36,6 +36,31 @@ export function CaptureControls({ workspace, line, view, capture, consent, isLin
   isLineOwner: boolean;
 }) {
   return <Card title="Recording and transcription" subtitle="Both are off until you record consent and then turn them on">
+    {/* Arizona is a one-party-consent state: a party to the call may record it.
+        That is worth saying plainly, because the default reading of the controls
+        below is that every recording needs the other person's agreement. It is
+        deliberately not phrased as "no consent needed": the rule turns on where
+        the other party is, and the consent record stays required because it is
+        what evidences the basis you relied on. */}
+    <div className="carrier-note">
+      <strong>Where you are matters</strong>
+      <p>
+        Arizona is a <strong>one-party consent</strong> state. If you are a party to the call,
+        Arizona law and federal law both let you record it without the other person agreeing.
+      </p>
+      <p>
+        That does not settle an interstate call. Several states &mdash; California, Washington,
+        Florida, Illinois and others &mdash; require every party to agree, and the stricter
+        state&rsquo;s law generally governs when a call crosses a line. If you take calls from
+        outside Arizona, an announcement is the thing that makes a two-party state workable.
+      </p>
+      <p>
+        Redial still asks you to record the decision below, and still refuses to capture
+        anything without one. The record is not the law&rsquo;s requirement; it is your evidence
+        of what you relied on, with the wording and the date attached. This is how the product
+        behaves, not legal advice.
+      </p>
+    </div>
     {!isLineOwner && <p>Only the line owner can change these. Enabling recording is a legal decision about this line&rsquo;s calls, so it is not something a workspace administrator can do on the owner&rsquo;s behalf.</p>}
     {PURPOSES.map(item => {
       // The newest event for this purpose is the current state. Withdrawal is a
