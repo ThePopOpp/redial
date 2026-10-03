@@ -804,3 +804,54 @@ unchanged.
 Not run: no call has been placed, no webhook has been exercised against Twilio,
 and no request has been sent to xAI. `REDIAL_GATEWAY_ASSISTANT` is `disabled` by
 default and no `XAI_API_KEY` is set anywhere.
+
+## 2026-10-03 — redial.si goes public
+
+The owner's decision, made after the recommendation against it was recorded:
+the development password gate comes off and the site is reachable without one,
+complete or not.
+
+### What the gate was holding up, and what still holds
+
+`checkAccess` only challenges when `REDIAL_DEPLOYMENT=development`. In `public`
+it checks the request host against the configured origin and, for mutations,
+the request origin — CSRF protection, not authentication. So removing the gate
+removes the only thing standing in front of the site as a whole.
+
+What does not change: `/app` redirects to sign-in through `verifiedAccount`,
+`/ops` redirects to staff sign-in through `requireStaff` and is invisible
+without a verified second factor, `/local` is still a bodiless 404 on any hosted
+deployment, and every table a signed-in member can reach is still bounded by the
+157 row-level-security assertions. `/demo` becoming public is what `/demo` is
+for.
+
+The concern that stands: `docs/DEVELOPMENT-DEPLOYMENT.md` and `AGENTS.md` both
+say `/app` and `/ops` remain closed until the M1 identity work is verified, and
+that verification has not happened. The code paths exist and are tested; nobody
+has walked them against the live project. That is now a public surface rather
+than one behind a password.
+
+### One thing that could not simply be flipped
+
+`POST /api/onboarding` writes a file per setup request, and a completed
+submission is written with `expiresAt: null` because a member's saved setup
+should not evaporate. Behind the gate the password was the limit. Public, that
+is an anonymous unbounded write onto a mounted volume, and the first symptom of
+abuse would have been the whole application unable to write anything.
+
+`MAX_STORED_SETUPS` caps it at 500. Crude, and it is the honest bound: it
+refuses the 501st *new* request rather than letting the volume decide when to
+stop. Someone continuing their own saved setup is never refused, however full
+the store is, because the cap is only consulted when no record already exists
+for that browser.
+
+A per-identity rate limit was considered and not added. The only identity
+available is a forwarded header, which this codebase deliberately does not trust
+for anything else, and a limit keyed on a spoofable value reads like protection
+without being any.
+
+### Also
+
+The development password was exposed in a terminal transcript during this
+session: a `curl` printed `%{redirect_url}`, which carries the credentials
+passed with `-u`. It is being retired with the gate rather than rotated.

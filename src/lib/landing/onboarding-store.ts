@@ -39,6 +39,29 @@ async function restoreExpirations() {
   try { for (const filename of await readdir(root())) { const id = filename.replace(/\.json$/, ''); if (!filename.endsWith('.json') || !pattern.test(id) || expirations.has(id)) continue; await serial(id, async () => { const saved = await read(id); if (saved) expireAt(id, saved.expiresAt); }); } }
   catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
 }
+// A ceiling on how many setup requests this deployment will hold.
+//
+// On the password-gated preview the gate was the limit. On a public deployment
+// `checkLocalRequest` still runs, but in public mode it only checks the host and
+// the request origin — that is CSRF protection, not authentication — so creating
+// a setup request needs no account and anyone can do it. A completed submission
+// is written with `expiresAt: null` because a member's saved setup should not
+// evaporate, which means nothing ages these out.
+//
+// Unbounded files written by anonymous callers onto a mounted volume is a disk
+// filling up, and the first symptom would be the whole application failing to
+// write anything. A cap is crude but it is the honest bound: it refuses the
+// 501st new request rather than letting the volume decide when to stop.
+//
+// Only new records are counted against it. Someone continuing their own saved
+// setup is never refused, however full the store is.
+const MAX_STORED_SETUPS = 500;
+
+async function storedCount() {
+  try { return (await readdir(root())).filter(name => name.endsWith('.json')).length; }
+  catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return 0; throw error; }
+}
+
 async function write(saved: SavedOnboarding) {
   await mkdir(root(), { recursive: true });
   const temporary = path.join(root(), `${saved.id}.${randomUUID()}.tmp`);
@@ -73,6 +96,9 @@ export async function saveOnboarding(request: Request) {
   const errors = validateDraft(parsed.data.draft);
   if (Object.keys(errors).length) return json({ error: 'Please complete the required setup fields.', fields: errors }, 400);
   const existingId = await currentId(), id = existingId ?? randomUUID();
+  if (!existingId && await storedCount() >= MAX_STORED_SETUPS) {
+    throw new ReviewError(503, 'AT_CAPACITY', 'This preview is holding as many setup requests as it can. Try again later.');
+  }
   return serial(id, async () => {
     const existing = existingId ? await read(existingId) : null;
     if (parsed.data.version !== (existing?.version ?? 0)) throw stale();
