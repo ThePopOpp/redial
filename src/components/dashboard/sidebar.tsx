@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState, useSyncExternalStore } from 'react';
-import { ChevronsLeft, Menu, X } from 'lucide-react';
+import { ChevronsLeft, Globe, Menu, UserCog, X } from 'lucide-react';
 import { navEntries, navGroups } from '@/lib/dashboard/navigation-model';
 import { Brand } from '@/components/brand';
 
@@ -48,7 +48,7 @@ export function DashboardSidebar({ workspace, line, view, email, signOut }: {
       <div className="app-sidebar-head">
         <Brand />
         <button type="button" className="app-collapse" onClick={() => writeCollapsed(!collapsed)}
-          aria-pressed={collapsed} title={collapsed ? 'Expand navigation' : 'Collapse navigation'}>
+          aria-pressed={collapsed} data-tip={collapsed ? 'Expand navigation' : 'Collapse navigation'}>
           <ChevronsLeft size={16} aria-hidden="true" />
           <span className="sr-only">{collapsed ? 'Expand navigation' : 'Collapse navigation'}</span>
         </button>
@@ -63,7 +63,7 @@ export function DashboardSidebar({ workspace, line, view, email, signOut }: {
           {navEntries.filter(entry => entry.group === group).map(entry => <Link key={entry.view}
             href={href(entry.view)}
             aria-current={entry.view === view ? 'page' : undefined}
-            title={collapsed ? entry.label : undefined}
+            data-tip={entry.label}
             onClick={() => setOpen(false)}>
             <entry.icon size={17} strokeWidth={1.7} aria-hidden="true" />
             <span>{entry.label}</span>
@@ -72,11 +72,15 @@ export function DashboardSidebar({ workspace, line, view, email, signOut }: {
       </nav>
 
       <div className="app-sidebar-foot">
-        <Link href="/" onClick={() => setOpen(false)}><span>Back to website</span></Link>
-        <Link href="/account" onClick={() => setOpen(false)}><span>Account settings</span></Link>
+        <Link href="/" data-tip="Back to website" onClick={() => setOpen(false)}>
+          <Globe size={16} strokeWidth={1.7} aria-hidden="true" /><span>Back to website</span>
+        </Link>
+        <Link href="/account" data-tip="Account settings" onClick={() => setOpen(false)}>
+          <UserCog size={16} strokeWidth={1.7} aria-hidden="true" /><span>Account settings</span>
+        </Link>
         {/* A server action, rendered on the server and passed through: the
             sidebar is a client component and cannot own one. */}
-        <div className="app-signout">{signOut}</div>
+        <div className="app-signout" data-tip="Sign out">{signOut}</div>
         <p title={email}>{email}</p>
       </div>
     </aside>

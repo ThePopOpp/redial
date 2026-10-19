@@ -39,9 +39,10 @@
 
 .app-sidebar-foot { display: flex; flex-direction: column; gap: 2px; padding-top: .9rem; border-top: 1px solid var(--border); }
 .app-sidebar-foot a {
-  display: flex; align-items: center; min-height: 34px; padding: 0 .6rem; border-radius: 8px;
+  display: flex; align-items: center; gap: .7rem; min-height: 36px; padding: 0 .6rem; border-radius: 8px;
   color: var(--muted-foreground); font-size: .78rem; text-decoration: none;
 }
+.app-sidebar-foot a svg { flex: none; }
 .app-sidebar-foot a:hover { color: var(--foreground); background: var(--card); }
 .app-signout { padding: .3rem .2rem .1rem; }
 .app-signout form, .app-signout button { width: 100%; }
@@ -53,27 +54,82 @@
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
-/* Collapsed: icons only, with the text kept for assistive technology. The rail
-   stays wide enough for a 44px target. */
+/* Collapsed: icons only, with every label kept for assistive technology and
+   shown to a sighted reader as a pop-out on hover or keyboard focus.
+   The rail stays wide enough for a 44px target. */
 .app-sidebar[data-collapsed='true'] { padding-inline: 10px; }
-.app-sidebar[data-collapsed='true'] .brand span,
+
+/* The scroll container has to open up, or the pop-outs are clipped at the rail
+   edge. Sticky with an automatic height keeps the rail in view while letting a
+   tall list push the page instead of hiding under a scrollbar. */
+.app-sidebar[data-collapsed='true'] { overflow: visible; height: auto; min-height: 100vh; }
+
+.app-sidebar[data-collapsed='true'] .brand span:not(.brand-mark),
 .app-sidebar[data-collapsed='true'] .app-nav-caption,
-.app-sidebar[data-collapsed='true'] nav a span,
-.app-sidebar[data-collapsed='true'] .app-sidebar-foot a span,
-.app-sidebar[data-collapsed='true'] .app-signout { padding: .3rem .2rem .1rem; }
-.app-signout form, .app-signout button { width: 100%; }
-.app-signout button { justify-content: flex-start; gap: .55rem; }
-.app-sidebar[data-collapsed='true'] .app-signout button { justify-content: center; padding-inline: 0; }
-.app-sidebar[data-collapsed='true'] .app-signout button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-.app-sidebar-foot p {
+.app-sidebar[data-collapsed='true'] nav a > span,
+.app-sidebar[data-collapsed='true'] .app-sidebar-foot a > span,
+.app-sidebar[data-collapsed='true'] .app-signout button span,
+.app-sidebar[data-collapsed='true'] .app-sidebar-foot p {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
 }
 .app-sidebar[data-collapsed='true'] .app-nav-caption { margin: 0; }
+.app-sidebar[data-collapsed='true'] .brand { justify-content: center; gap: 0; }
 .app-sidebar[data-collapsed='true'] nav a,
-.app-sidebar[data-collapsed='true'] .app-sidebar-foot a { justify-content: center; padding: 0; }
+.app-sidebar[data-collapsed='true'] .app-sidebar-foot a,
+.app-sidebar[data-collapsed='true'] .app-signout button {
+  justify-content: center; padding-inline: 0; gap: 0;
+}
 .app-sidebar[data-collapsed='true'] .app-nav-group { gap: 4px; }
 .app-sidebar[data-collapsed='true'] .app-sidebar-head { flex-direction: column; gap: .6rem; }
+.app-sidebar[data-collapsed='true'] .app-sidebar-foot { align-items: stretch; }
+
+/* --- Rail pop-outs ------------------------------------------------------- */
+/* Built from a data attribute rather than the browser's own title tooltip:
+   that one cannot be themed, waits about a second, and renders in the
+   operating system's colours rather than Redial's. These follow the tokens, so
+   light and dark need no second rule. */
+.app-sidebar[data-collapsed='true'] [data-tip] { position: relative; }
+.app-sidebar[data-collapsed='true'] [data-tip]::after,
+.app-sidebar[data-collapsed='true'] [data-tip]::before {
+  opacity: 0; pointer-events: none; position: absolute; top: 50%; z-index: 90;
+  transition: opacity .13s ease, translate .13s ease;
+}
+.app-sidebar[data-collapsed='true'] [data-tip]::after {
+  /* The empty alternative text after the slash is load-bearing. Generated
+     content counts toward an element's accessible name, so without it every
+     rail item announced itself twice — once from the clipped span, once from
+     this pop-out. The span is the one that should be read. */
+  content: attr(data-tip) / '';
+  left: calc(100% + 12px); translate: -4px -50%;
+  padding: .42rem .66rem; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--card); color: var(--foreground);
+  box-shadow: var(--shadow);
+  font-family: var(--font-body); font-size: .78rem; line-height: 1.2; white-space: nowrap;
+}
+/* The little arrow. A rotated square is one element rather than a border
+   triangle that cannot take the panel's own border colour. */
+.app-sidebar[data-collapsed='true'] [data-tip]::before {
+  content: ''; left: calc(100% + 7px); translate: -4px -50%;
+  width: 9px; height: 9px; rotate: 45deg;
+  border-left: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: var(--card);
+}
+.app-sidebar[data-collapsed='true'] [data-tip]:hover::after,
+.app-sidebar[data-collapsed='true'] [data-tip]:hover::before,
+.app-sidebar[data-collapsed='true'] [data-tip]:focus-visible::after,
+.app-sidebar[data-collapsed='true'] [data-tip]:focus-visible::before {
+  opacity: 1; translate: 0 -50%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar[data-collapsed='true'] [data-tip]::after,
+  .app-sidebar[data-collapsed='true'] [data-tip]::before { transition: none; translate: 0 -50%; }
+}
+/* A touch screen has no hover, so the pop-out would stick after a tap. */
+@media (hover: none) {
+  .app-sidebar[data-collapsed='true'] [data-tip]::after,
+  .app-sidebar[data-collapsed='true'] [data-tip]::before { content: none; }
+}
 
 .app-drawer-toggle { display: none; }
 

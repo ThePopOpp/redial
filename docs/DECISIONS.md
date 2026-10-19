@@ -940,3 +940,66 @@ Supabase session. The shell compiles and the types line up, but the first time
 anyone sees it is after a deploy and a sign-in. That gap is why the sign-out
 regression above went unnoticed until it was read back, and it is worth closing
 with a signed-in browser test.
+
+## 2026-10-19 — Fixing the collapsed rail, and testing the thing that broke
+
+The collapsed sidebar showed icons *and* wrapped labels squeezed into a 72px
+rail. The cause was an edit from the previous entry: inserting the sign-out
+rules used `.app-sidebar-foot p {` as its anchor, and that selector was the last
+member of the multi-selector list that hides every label when the rail is
+collapsed. The block was spliced into the middle of that list, so the
+declaration landed on the wrong selector. Every label stayed visible, and the
+account email — the one thing that should have remained — was hidden instead.
+
+Typecheck, lint and the build all passed. CSS has no type system, and a
+selector list is one of the few places where a textual edit can be locally
+plausible and globally wrong.
+
+### What else was wrong once the labels went away
+
+The footer links had no icons at all, so collapsed they were empty boxes with a
+hover target and nothing in it. They have icons now.
+
+`.brand span` would have hidden the brand mark along with the word, since the
+mark is also a span. Narrowed to `span:not(.brand-mark)`.
+
+The rail scrolls, and `overflow-y: auto` computes `overflow-x` to `auto` as
+well, which clipped the pop-outs at the rail edge. Collapsed, the sidebar is
+`overflow: visible` with an automatic height, so a tall list pushes the page
+rather than hiding behind a scrollbar.
+
+### Pop-outs instead of the browser's tooltip
+
+`title` cannot be themed, waits about a second, and renders in the operating
+system's colours. These are built from a `data-tip` attribute and the same
+tokens as everything else, so light and dark need no second rule, with a
+rotated square for the arrow so it can take the panel's own border colour.
+
+The content is written `attr(data-tip) / ''`. The empty alternative text is
+load-bearing: generated content counts toward an element's accessible name, and
+without it every rail item announced its label twice — once from the clipped
+span and once from the pop-out. A test caught that, not a review.
+
+Touch devices get no pop-out at all. There is no hover to end, so it would
+appear on tap and stay.
+
+### The test that should have existed
+
+`/app` needs a signed-in Supabase session, so no browser test can reach it, and
+the previous entry recorded that gap without closing it. The stylesheet is
+global, though, so `tests/dashboard-shell.spec.ts` mounts the sidebar's real
+markup on a page that loads it and measures the result: labels clipped to no
+width but still named for assistive technology, the brand mark surviving, the
+rail between 44px and 110px, the pop-out invisible until hover and themed from
+the tokens, and the expanded rail reading normally.
+
+Three assertions, all of which would have failed against the broken build. Two
+of them failed against the first fix as well, which is the point.
+
+### Evidence
+
+84 browser tests, up from 81. 118 node and 75 reference tests pass. Typecheck,
+lint and build clean; 92 kit originals unchanged.
+
+Not run: the row-level-security suite. Docker is not up on this machine and this
+change is stylesheet and markup only.
