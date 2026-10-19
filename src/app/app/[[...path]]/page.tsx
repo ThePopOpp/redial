@@ -6,7 +6,11 @@ import { authAction } from '@/lib/supabase/actions';
 import { views, labels, capabilities, type Workspace, type Line, type DashboardRecord, type RecordKind, type Recording, type ConsentEvent, type LineCapture } from '@/lib/dashboard/model';
 import { CaptureControls, CallRecordings } from '@/components/dashboard/capture';
 import { RecordForm, Scope } from '@/components/dashboard/form';
-import { DashboardNavigation } from '@/components/dashboard/navigation';
+import { DashboardSidebar } from '@/components/dashboard/sidebar';
+import { DashboardTopbar, type Alert } from '@/components/dashboard/topbar';
+import { DashboardFab } from '@/components/dashboard/fab';
+import { LogOut } from 'lucide-react';
+import { labelFor } from '@/lib/dashboard/navigation-model';
 import { LaunchStatus } from '@/components/dashboard/launch-status';
 import { ConnectionStatus, type ConnectionRow } from '@/components/dashboard/connection-status';
 import { runtime } from '@/lib/runtime';
@@ -15,8 +19,6 @@ import type { SavedSetup } from '@/lib/dashboard/carrier-setup';
 import { ContactImport } from '@/components/dashboard/contact-import';
 import { appOrigin } from '@/lib/supabase/config';
 import { contactReturnPath } from '@/lib/dashboard/contact-import';
-import { Brand } from '@/components/brand';
-import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
@@ -49,7 +51,7 @@ const kindFor: Record<string,RecordKind>={contacts:'contact',directory:'director
 const descriptions: Record<string,string>={contacts:'Save familiar voices and their call preferences.',directory:'Save destinations for review. A saved destination is not yet approved for dialing.',callbacks:'Keep a list of follow-ups. These are reminders, not scheduled calls.',screening:'Save the policy you want your line to use. Activation requires a verified connection.',agent:'Prepare an opening greeting and clear instructions for your assistant.',settings:'Save your preferences. Retention and delivery require the corresponding worker integration.',help:'Create a support request in the Redial operations inbox.'};
 function NewWorkspace() { return <Card title="Create your workspace"><form action={dashboardAction} className="review-form"><label htmlFor="workspace-name">Workspace name</label><Input id="workspace-name" name="name" maxLength={100} required/><label htmlFor="workspace-type">Workspace type</label><Select id="workspace-type" name="type" defaultValue="personal" options={['personal','business']}/><Button name="action" value="workspace">Create workspace</Button></form></Card>; }
 
-export default async function Dashboard({params,searchParams}:{params:Promise<{path?:string[]}>;searchParams:Promise<{workspace?:string;line?:string;notice?:string;page?:string;call?:string;import?:string}>}) {
+export default async function Dashboard({params,searchParams}:{params:Promise<{path?:string[]}>;searchParams:Promise<{workspace?:string;line?:string;notice?:string;page?:string;call?:string;import?:string;q?:string}>}) {
   const query=await searchParams, path=(await params).path || [], view=path[0] || 'overview';
   const account=await verifiedAccount();
   if(!account) redirect(view==='contacts' && query.import==='phone' ? `/sign-in?next=${encodeURIComponent(contactReturnPath(`/app/contacts?${new URLSearchParams({workspace:query.workspace || '',line:query.line || ''})}`))}` : '/sign-in');
@@ -87,7 +89,19 @@ export default async function Dashboard({params,searchParams}:{params:Promise<{p
   const recordResult=workspace && member && kind && (line || kind==='ticket') ? await (kind==='ticket' ? db.from('workspace_records').select('*').eq('workspace_id',w).eq('kind',kind) : db.from('workspace_records').select('*').eq('workspace_id',w).eq('line_id',l).eq('kind',kind)).order('created_at',{ascending:false}).limit(100) : null;
   const records=(recordResult?.data || []) as DashboardRecord[];
   const page=Math.min(1000,Math.max(0,Number.parseInt(query.page || '0',10)||0));
-  const callResult=line && ['overview','calls'].includes(view) ? await db.from('calls').select('id,caller,phone,outcome,summary,summary_confidence,started_at,duration_seconds',{count:'exact'}).eq('workspace_id',w).eq('line_id',l).order('started_at',{ascending:false}).range(page*25,page*25+24) : null;
+  // The header search narrows the inbox. Matched against the caller name and
+  // the number only: the summary is a speech-to-text result and searching it
+  // would return rows on the strength of something nobody actually said.
+  const term=(query.q ?? '').trim().slice(0,80);
+  const callQuery=line && ['overview','calls'].includes(view)
+    ? db.from('calls').select('id,caller,phone,outcome,summary,summary_confidence,started_at,duration_seconds',{count:'exact'}).eq('workspace_id',w).eq('line_id',l)
+    : null;
+  // `,` and `%` would otherwise reach PostgREST's filter grammar as syntax.
+  const safeTerm=term.replace(/[,%()]/g,' ').trim();
+  const callResult=callQuery
+    ? await (safeTerm ? callQuery.or(`caller.ilike.%${safeTerm}%,phone.ilike.%${safeTerm}%`) : callQuery)
+      .order('started_at',{ascending:false}).range(page*25,page*25+24)
+    : null;
   const selectedCall=callResult?.data?.find(c=>c.id===query.call);
   const transcriptResult=selectedCall ? await db.from('transcript_segments').select('id,speaker,body').eq('workspace_id',w).eq('line_id',l).eq('call_id',selectedCall.id).order('sequence').limit(500) : null;
   // The recording policy requires its own grant, a future retention deadline
@@ -104,7 +118,17 @@ export default async function Dashboard({params,searchParams}:{params:Promise<{p
   const setupResult=line && view==='numbers' ? await db.from('line_setup_drafts').select('body,version,updated_at').eq('workspace_id',w).eq('line_id',l).maybeSingle() : null;
   const setupAccess=line && view==='numbers' ? await db.rpc('can_manage_line_setup',{w,l}) : null;
   const error=[setupResult,setupAccess,repliesResult,lineResult,recordResult,callResult,transcriptResult,recordingResult,captureResult,consentResult,peopleResult,grantsResult,subscriptionResult,auditResult].some(result=>result?.error);
-  return <div className="review-shell"><aside className="review-sidebar"><Brand/><DashboardNavigation workspace={w} line={l} view={view}/><div className="sidebar-profile"><p>{user.email}</p><Link href="/account">Account settings</Link></div></aside><div className="review-body"><header className="review-topbar"><strong>{workspace?.name || 'Your workspace'}</strong><div className="actions"><ThemeToggle/><form action={authAction}><Button variant="outline" name="action" value="signout">Sign out</Button></form></div></header><main id="main" tabIndex={-1} className="review-content">
+  // What the bell counts. Real rows only: a callback someone agreed to and a
+  // support request still waiting on a reply. A badge invented from nothing is
+  // worse than no badge, because it trains the reader to ignore the real one.
+  const callbackCount=workspace && line ? (await db.from('workspace_records').select('id',{count:'exact',head:true}).eq('workspace_id',w).eq('line_id',l).eq('kind','callback')).count ?? 0 : 0;
+  const ticketCount=workspace ? (await db.from('workspace_records').select('id',{count:'exact',head:true}).eq('workspace_id',w).eq('kind','ticket')).count ?? 0 : 0;
+  const alerts: Alert[]=[
+    ...(callbackCount ? [{ label:`${callbackCount} callback${callbackCount===1?'':'s'}`, detail:'Someone is expecting to hear back.', href:href('callbacks') }] : []),
+    ...(ticketCount ? [{ label:`${ticketCount} support request${ticketCount===1?'':'s'}`, detail:'Open with the Redial team.', href:href('help') }] : []),
+  ];
+
+  return <div className="app-shell"><DashboardSidebar workspace={w} line={l} view={view} email={user.email ?? ''} signOut={<form action={authAction}><Button variant="outline" name="action" value="signout"><LogOut size={15}/><span>Sign out</span></Button></form>}/><div className="app-body"><DashboardTopbar workspaceName={workspace?.name || 'Your workspace'} viewLabel={labelFor(view)} workspace={w} line={l} email={user.email ?? ''} alerts={alerts} query={query.q ?? ''}/><main id="main" tabIndex={-1} className="app-content" data-view={view}>
     <details className="workspace-card"><summary>Workspace & line</summary><div className="actions">{workspaces.map(item=><Link key={item.id} href={`/app?workspace=${item.id}`} className="action-link">{item.name} · {item.type}</Link>)}</div><div className="actions">{lines.map(item=><Link key={item.id} href={`/app/${view}?workspace=${w}&line=${item.id}`} className="action-link">{item.name}</Link>)}</div>{workspace && <NewWorkspace/>}</details>
     {query.notice && <p role="status" className={query.notice==='failed'?'error-message':'success-message'}>{query.notice==='failed'?'The change could not be saved. Check your input and access, then reload before retrying.':query.notice==='invited'?'If that person has a verified Redial account, an invitation is waiting in their workspace. No email was sent.':query.notice==='origin'?'Use the configured Redial domain to save changes.':query.notice==='consented'?'Consent recorded. Recording or transcription is still off until you turn it on.':query.notice==='withdrawn'?'Consent withdrawn, and the capture it covered has been turned off.':'Saved.'}</p>}
     {error && <p role="alert" className="error-message">Some workspace data could not be loaded. Reload to retry; no demo data has been substituted.</p>}
@@ -127,5 +151,5 @@ export default async function Dashboard({params,searchParams}:{params:Promise<{p
     {view==='audit' && <Card title="Workspace activity">{auditResult?.data?.length ? auditResult.data.map(event=><article className="record-row" key={event.id}><strong>{event.action}</strong><span>{event.created_at}</span></article>) : <p>No activity is available with your permissions.</p>}</Card>}
     </>}
     </>}
-  </main></div></div>;
+  </main><DashboardFab workspace={w} line={l}/></div></div>;
 }

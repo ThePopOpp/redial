@@ -13,6 +13,7 @@ import './phone-wizard.css';
 import './carrier-setup.css';
 import './pricing.css';
 import './observe.css';
+import './dashboard-shell.css';
 import './auth.css';
 import './ops.css';
 import './legal.css';

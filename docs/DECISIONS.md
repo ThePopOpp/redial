@@ -855,3 +855,88 @@ without being any.
 The development password was exposed in a terminal transcript during this
 session: a `curl` printed `%{redirect_url}`, which carries the credentials
 passed with `-u`. It is being retired with the gate rather than rotated.
+
+## 2026-10-19 — The workspace dashboard gets a shell
+
+The owner asked for the `/app` dashboard to match the layout of their other
+products: breadcrumbs and a working search in the header, icons and a collapse
+in the sidebar, wider content, and a quick-tools button.
+
+### The sidebar
+
+Fifteen flat entries was a wall. They are now four groups — Your space,
+Records, Your line, Account — each entry carrying an icon, and the rail
+collapses to icons only.
+
+`navigation-model.ts` derives the list from the router's own `views` rather than
+writing it out again, and throws at build time if a view has no icon or group.
+A view added to the router without a home in the sidebar now fails the build
+instead of quietly disappearing from it.
+
+Collapsed state is read through `useSyncExternalStore` rather than copied into
+state inside an effect. The server snapshot is always "expanded", so the first
+client render agrees with the markup the server produced and the stored
+preference applies on the subscription that follows. ESLint's
+`set-state-in-effect` rule caught the first version, which also had the
+hydration mismatch the store approach avoids.
+
+### The header
+
+Breadcrumbs on the left, then search, notifications, the theme toggle and the
+account link.
+
+The search is real rather than decorative: submitting it filters the call inbox
+on the caller name and the number. Deliberately not the summary — that is a
+speech-to-text result, and matching it would return calls on the strength of a
+phrase nobody actually said. The term has `,`, `%` and brackets stripped before
+it reaches PostgREST, where they are filter grammar rather than text.
+
+The notification count is real rows: callbacks someone is expecting and open
+support requests. No read-state exists for either, so the badge is a count of
+outstanding things rather than of unread ones. A badge invented from nothing
+would have trained the reader to ignore the real one.
+
+The avatar is initials, not a photograph. An avatar URL would have to come from
+user metadata, which the person it describes can edit, and rendering an
+arbitrary remote image on every authenticated page is a tracking pixel some of
+the time and a broken image the rest.
+
+Sign out moved into the sidebar. It is a server action, so the page renders the
+form and hands it to the client sidebar as children — the sidebar cannot own
+one. It was briefly dropped altogether while the header was replaced, which no
+test caught, because nothing exercises `/app` in a browser.
+
+### Width
+
+`.review-content` capped the workspace at 1450px and centred it, which left a
+third of a large display empty. The app shell now has its own `.app-content` at
+1860px, and the overview becomes two columns above 1500px with the stat row
+spanning both. The demo keeps the old proportions: it is a different shell and
+changing it was not asked for.
+
+### Quick tools
+
+Seven tools behind the button: AI Agents, Call logs, Messages and Notes are real
+destinations. Voice calls, SMS and the voice recorder are not connected, and the
+panel says so with the reason on each.
+
+They are shown rather than hidden on purpose. A dialpad that looks like it can
+dial is the single most misleading control this product could offer, and
+outbound calling, messaging and browser recording are all provider actions this
+deployment is not authorised to perform. A recording made from a browser would
+carry no consent record and no deletion deadline, which is the one state the
+database refuses to represent.
+
+### Evidence
+
+81 browser, 118 node and 75 reference tests pass. Typecheck, lint and build are
+clean, and `verify:kit` confirms the 92 originals.
+
+Not run: the row-level-security suite, because Docker is not running on this
+machine. This change touches no SQL.
+
+Not covered: nothing exercises `/app` in a browser, because it needs a real
+Supabase session. The shell compiles and the types line up, but the first time
+anyone sees it is after a deploy and a sign-in. That gap is why the sign-out
+regression above went unnoticed until it was read back, and it is worth closing
+with a signed-in browser test.
