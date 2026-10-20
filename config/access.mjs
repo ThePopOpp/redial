@@ -24,8 +24,31 @@ export function checkAccess(request, config, mutation = false) {
     if (!/^(?:127\.0\.0\.1|localhost|\[::1\]):[1-9]\d{0,4}$/.test(host)) return { status: 403, code: 'LOCAL_ONLY', message: 'This preview is available on the local server only.' };
     origin = new URL(`${new URL(request.url).protocol}//${host}`).origin;
   }
-  if ((mutation && request.headers.get('origin') !== origin) || request.headers.get('sec-fetch-site') === 'cross-site') {
-    return { status: 403, code: 'ORIGIN', message: 'This request must come from the preview site.' };
+  const site = request.headers.get('sec-fetch-site');
+  const navigation = request.headers.get('sec-fetch-mode') === 'navigate';
+  const refuse = { status: 403, code: 'ORIGIN', message: 'This request must come from the Redial site.' };
+
+  // Cross-site request forgery is a property of requests that change
+  // something, so the Origin check is applied to those.
+  if (mutation) {
+    if (request.headers.get('origin') !== origin) return refuse;
+    if (site === 'cross-site') return refuse;
+    return null;
   }
+
+  // A safe request that is cross-site and is not a top-level navigation is
+  // something embedding or fetching this site, which nothing legitimately does.
+  //
+  // A cross-site navigation is a person clicking a link, and refusing those was
+  // a real outage: every inbound link returned 403 — the confirmation email, the
+  // password reset, a search result, a shared URL — while typing the address by
+  // hand worked, because that sends `Sec-Fetch-Site: none`. It survived the
+  // password-gated preview because almost nothing linked inward and the
+  // password came first.
+  //
+  // Allowing them gives nothing away. Session cookies are SameSite=Strict, so a
+  // cross-site request carries no session and reads nothing a stranger could not
+  // already see, and every page behind the login re-checks identity server-side.
+  if (site === 'cross-site' && !navigation) return refuse;
   return null;
 }

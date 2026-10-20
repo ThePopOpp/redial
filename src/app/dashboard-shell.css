@@ -206,7 +206,11 @@
 /* Wider than it was. The old 1450px cap left a third of a large display empty,
    and this is a workspace rather than an article: the tables and call lists
    want the room. */
-.app-content { width: 100%; max-width: 1860px; margin: 0 auto; padding: 1.4rem 1.6rem 4rem; min-width: 0; }
+/* Full bleed, with padding doing the work instead of a centred column. The
+   1450px cap this replaced left a third of a large display empty, and a
+   workspace is not an article: the tables, call lists and record rows want the
+   room, and the sidebar already gives the eye a left edge to return to. */
+.app-content { width: 100%; max-width: none; padding: 1.5rem 2rem 4rem; min-width: 0; }
 
 /* The content cards still use the shared .workspace-* rules from review.css.
    These widen them inside the app shell only, so the demo keeps its proportions
@@ -228,7 +232,13 @@
   .app-content[data-view='overview'] > .workspace-card { margin-bottom: 0; }
 }
 @media (min-width: 1800px) {
+  .app-content { padding-inline: 2.5rem; }
   .app-content .stat-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+}
+/* Past this the overview has room for a third column rather than two very wide
+   ones, which is where a card stops being readable and starts being a banner. */
+@media (min-width: 2200px) {
+  .app-content[data-view='overview'] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 /* --- Quick tools --------------------------------------------------------- */

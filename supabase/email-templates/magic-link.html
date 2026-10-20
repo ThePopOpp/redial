@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Your Redial sign-in link</title>
+<style>
+  /* Honoured by the clients that support it; the design below is readable
+     without it rather than depending on it. */
+  @media (prefers-color-scheme: dark) {
+    .rd-page { background: #0f1011 !important; }
+    .rd-card { background: #1a1b1c !important; border-color: #454149 !important; }
+    .rd-text, .rd-title { color: #f5f5f7 !important; }
+    .rd-muted, .rd-foot { color: #adaeaf !important; }
+    .rd-url { background: #141416 !important; color: #adaeaf !important; border-color: #454149 !important; }
+    .rd-button { background: #847dff !important; color: #0f1011 !important; }
+    .rd-mark { background: #847dff !important; color: #0f1011 !important; }
+  }
+</style>
+</head>
+<body class="rd-page" style="margin:0;padding:0;background:#faf9fc;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="rd-page" style="background:#faf9fc;">
+<tr><td align="center" style="padding:32px 16px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;">
+
+<tr><td style="padding-bottom:20px;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+    <td class="rd-mark" style="width:30px;height:30px;border-radius:8px;background:#6c4db3;color:#ffffff;font:600 15px Georgia,'Times New Roman',serif;text-align:center;vertical-align:middle;">R</td>
+    <td style="padding-left:10px;font:600 19px Georgia,'Times New Roman',serif;color:#27222f;" class="rd-title">Redial</td>
+  </tr></table>
+</td></tr>
+
+<tr><td class="rd-card" style="background:#ffffff;border:1px solid #d8d0e1;border-radius:14px;padding:32px;">
+  <p class="rd-title" style="margin:0 0 14px;font:400 25px/1.2 Georgia,'Times New Roman',serif;color:#27222f;">Sign in to Redial</p>
+  <p class="rd-text" style="margin:0 0 22px;font:400 15px/1.65 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#27222f;">Here is your sign-in link. It works once, from any browser, and signs in the address this was sent to.</p>
+
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+    <td style="border-radius:8px;background:#6c4db3;" class="rd-button">
+      <a href="{{ .ConfirmationURL }}" class="rd-button" style="display:inline-block;padding:13px 26px;border-radius:8px;background:#6c4db3;color:#ffffff;font:500 15px -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;text-decoration:none;">Sign in</a>
+    </td>
+  </tr></table>
+
+  <p class="rd-muted" style="margin:24px 0 7px;font:400 12px/1.5 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#68616f;">If the button does not work, paste this into your browser:</p>
+  <p class="rd-url" style="margin:0;padding:11px 12px;border:1px solid #d8d0e1;border-radius:7px;background:#f3f0f7;font:400 12px/1.5 ui-monospace,'SF Mono',Consolas,monospace;color:#68616f;word-break:break-all;">{{ .ConfirmationURL }}</p>
+
+  <p class="rd-muted" style="margin:22px 0 0;font:400 13px/1.6 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#68616f;">If you did not ask to sign in, ignore this message. The link expires on its own and nothing happens.</p>
+</td></tr>
+
+<tr><td class="rd-foot" style="padding:20px 4px 0;font:400 12px/1.6 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#68616f;">
+  Redial &middot; a little more intention on the line.<br>
+  This link can be used once. Following it signs this address in, so do not forward it.
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>

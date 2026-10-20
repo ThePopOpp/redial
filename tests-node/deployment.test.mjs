@@ -123,7 +123,20 @@ test('hosted writes require exact configured HTTPS origin in addition to authent
   for (const origin of ['', 'http://dev.redial.si', 'https://dev.redial.si.evil.test', 'https://redial.si']) {
     assert.equal(checkAccess(request({ origin }, 'POST'), config, true)?.code, 'ORIGIN');
   }
-  assert.equal(checkAccess(request({ 'sec-fetch-site': 'cross-site' }), config)?.code, 'ORIGIN');
+  // A cross-site POST is forgery even with the right Origin header absent.
+  assert.equal(checkAccess(request({ origin: 'https://dev.redial.si', 'sec-fetch-site': 'cross-site' }, 'POST'), config, true)?.code, 'ORIGIN');
+});
+
+test('a person clicking a link into the site is not forgery', () => {
+  // The confirmation email, the password reset, a search result and a shared
+  // URL all arrive like this. Refusing them returned 403 on every inbound link
+  // while a typed address still worked, because that sends `none`.
+  for (const site of ['cross-site', 'same-site', 'same-origin', 'none']) {
+    assert.equal(checkAccess(request({ 'sec-fetch-site': site, 'sec-fetch-mode': 'navigate' }), config), null, site);
+  }
+  // Something embedding or fetching the site is still refused.
+  assert.equal(checkAccess(request({ 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'cors' }), config)?.code, 'ORIGIN');
+  assert.equal(checkAccess(request({ 'sec-fetch-site': 'cross-site', 'sec-fetch-mode': 'no-cors' }), config)?.code, 'ORIGIN');
 });
 
 test('local APIs retain loopback restriction and exact origin checks', () => {

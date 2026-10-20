@@ -1003,3 +1003,83 @@ lint and build clean; 92 kit originals unchanged.
 
 Not run: the row-level-security suite. Docker is not up on this machine and this
 change is stylesheet and markup only.
+
+## 2026-10-19 — Every inbound link returned 403
+
+A test account was registered against the live site. The confirmation email
+arrived, the link was followed, and it answered:
+
+    {"error":"This request must come from the preview site.","code":"ORIGIN"}
+
+### The cause
+
+`checkAccess` ended with:
+
+    if ((mutation && origin mismatch) || sec-fetch-site === 'cross-site') refuse
+
+The second half applied to every request, not only to the ones that change
+something. A browser sends `Sec-Fetch-Site: cross-site` on any navigation that
+started somewhere else, so **every inbound link to redial.si was refused**: the
+confirmation email, the password reset, a search result, a shared URL. Typing
+the address by hand worked, because that sends `none`, which is why the site
+looked healthy.
+
+It survived the password-gated preview because almost nothing linked inward and
+the password challenge came first. Going public turned a dormant rule into an
+outage, and nobody had followed a link from outside until now.
+
+The `otp_expired` that followed was a symptom, not a second fault. Supabase
+consumes the token at its own verify endpoint before redirecting to
+`/auth/callback`; the gate refused that landing, the token was already spent,
+and the next click reported it expired.
+
+### The fix
+
+Cross-site request forgery is a property of requests that change something, so
+the Origin check now applies to mutations, where it always belonged. A safe
+cross-site request is refused only when it is not a top-level navigation —
+something embedding or fetching the site, which nothing legitimately does.
+
+Allowing the navigations gives nothing away. Session cookies are SameSite=Strict
+so a cross-site request carries no session, and every page behind the login
+re-checks identity on the server.
+
+Four new assertions cover it: a navigation from each `Sec-Fetch-Site` value is
+allowed, a cross-site `cors` or `no-cors` read is refused, and a cross-site POST
+is refused even when the Origin header is right.
+
+### The email was Supabase's default
+
+Supabase Auth has its own SMTP settings and its own templates, and neither
+inherits anything from the application environment —
+`docs/DEVELOPMENT-DEPLOYMENT.md` says so. Only the SMTP half had been
+configured, so the mail arrived from `hello@redial.si` wearing Supabase's
+wording.
+
+`supabase/email-templates/` now holds all five, so the wording and the markup
+are reviewable and version controlled rather than living only in a dashboard
+field where a change leaves no trace. They are table-based with every rule
+inlined, because Gmail strips `<style>` in places and Outlook renders through
+Word; the display face falls back to Georgia rather than loading a web font and
+getting Times. Colours are the light-mode tokens as literals, since a CSS
+variable has nothing to resolve against in an email, with a
+`prefers-color-scheme` block for the clients that honour it.
+
+The link is also printed as plain text. A button is a link with a background
+colour, and a client that strips the background leaves something that does not
+look clickable.
+
+### Width
+
+The owner compared the dashboard with the products it was modelled on and found
+it still too narrow. The 1860px cap is gone: the content is full bleed with
+padding doing the work, a third column appears past 2200px, and the sidebar
+still gives the eye a left edge to return to.
+
+### Evidence
+
+119 node tests, up from 118. 84 browser and 75 reference tests pass; typecheck,
+lint and build clean; 92 kit originals unchanged.
+
+Not run: the row-level-security suite, Docker being down on this machine. The
+change touches no SQL.
