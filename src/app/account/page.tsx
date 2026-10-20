@@ -8,6 +8,7 @@ import { Card, Badge, date } from '@/components/review/ui';
 import { Brand } from '@/components/brand';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordField } from '@/components/auth/password-field';
 import { ThemeToggle } from '@/components/theme-toggle';
 
 export const metadata: Metadata = { title: 'Your account', robots: { index: false, follow: false } };
@@ -51,7 +52,7 @@ export default async function Account({ searchParams }: { searchParams: Promise<
         <Card title="Password">
           <form action={accountAction} className="review-form">
             <label htmlFor="account-password">New password</label>
-            <Input id="account-password" name="password" type="password" autoComplete="new-password" minLength={12} maxLength={128} required />
+            <PasswordField id="account-password" autoComplete="new-password" minLength={12} required />
             <p className="small-label">At least 12 characters. A longer passphrase is stronger than a short, complicated one.</p>
             <Button name="action" value="password">Update password</Button>
           </form>

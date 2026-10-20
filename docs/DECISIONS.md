@@ -1083,3 +1083,73 @@ lint and build clean; 92 kit originals unchanged.
 
 Not run: the row-level-security suite, Docker being down on this machine. The
 change touches no SQL.
+
+## 2026-10-19 — A password you can read back, and the forms nobody had tested
+
+The owner asked for a reveal control on the registration password. Adding it
+turned up the reason it had never been noticed missing.
+
+### The control
+
+`PasswordField` is one component used on sign-in, registration, the account
+page and the reset page. It starts hidden and the toggle is `type="button"` —
+a button inside a form submits by default, and here that would post the form
+with the password half typed.
+
+Hiding what someone types is a guess about their surroundings that is wrong
+most of the time. The common failure is not a shoulder looking over; it is a
+typo in a twelve-character passphrase discovered only when the form refuses it.
+Revealing is opt-in and starts off, so the guess still holds for anyone who
+wants it.
+
+### The auth forms had never rendered in a test
+
+The Playwright server had no Supabase configuration, and `/register` and
+`/sign-in` both return the "access unavailable" panel when
+`supabaseConfig()` is null. Every browser test that visited those routes —
+including the viewport and WCAG checks — was measuring an empty panel. The real
+forms had never been loaded by anything but a person.
+
+The test server now carries a Supabase-shaped configuration for a project that
+does not exist. Nothing submits to it; the tests read markup and operate
+controls that do not leave the page.
+
+### What that surfaced, and what it did not
+
+Eighteen contrast failures on `/sign-in`, which were not contrast failures.
+`.auth-inner` fades in over 400ms behind a `prefers-reduced-motion:
+no-preference` query, and axe was sampling it mid-fade: every muted colour came
+back blended against the background at roughly sixty per cent. `#adaeaf` over
+`#0f1011` at 0.64 is `#747576`, and `#747576` fails.
+
+The audit now reduces motion first. That measures the settled page, which is
+what an audit is for, and it is also the state a reader who asked for less
+movement actually gets.
+
+Worth recording that the first reading was wrong: a list of eighteen serious
+contrast violations on the sign-in page looked exactly like a real defect, and
+the colours were not tokens, which is what made it plausible.
+
+### One assertion was describing the fallback
+
+`preview does not collect credentials` asserted that `/sign-in` and
+`/staff-sign-in` carried no form at all. That was true of the password-gated
+preview and of any deployment with no Supabase configured, because the
+unavailable panel has no inputs. It described the fallback rather than the
+product.
+
+The site is public now and genuinely signs people in, so the question is no
+longer whether a credential is collected but whether it is collected properly.
+It now asserts the pages stay out of search, the password field is masked and
+carries the right autocomplete, and the form posts to this origin rather than a
+third party.
+
+### Evidence
+
+86 browser tests, up from 84: five for the collapsed rail and the reveal
+control, and the sign-in and registration forms are now exercised rather than
+skipped. 119 node and 75 reference tests pass; typecheck, lint and build clean;
+92 kit originals unchanged.
+
+Not run: the row-level-security suite. Docker is not up on this machine and the
+change touches no SQL.

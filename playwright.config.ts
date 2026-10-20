@@ -26,6 +26,17 @@ export default defineConfig({
     command: 'npm run start -- --port 3210',
     url: 'http://127.0.0.1:3210',
     reuseExistingServer: false,
-    env: { NEXT_TELEMETRY_DISABLED: '1' },
+    // Shaped like a real Supabase configuration so the sign-in and registration
+    // forms render and can be exercised. Without it those pages return the
+    // "access unavailable" panel, which means the real auth forms were never
+    // what the viewport and WCAG route checks were measuring.
+    //
+    // The project does not exist and nothing here submits to it: these tests
+    // read the markup and operate controls that do not leave the page.
+    env: {
+      NEXT_TELEMETRY_DISABLED: '1',
+      SUPABASE_URL: 'https://examplelocaltest.supabase.co',
+      SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_browser_test_not_a_real_key',
+    },
   },
 });

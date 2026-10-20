@@ -103,3 +103,37 @@ test('an expanded rail reads normally', async ({ page }) => {
   const tip = await page.locator('#probe').evaluate(el => getComputedStyle(el, '::after').content);
   expect(tip === 'none' || tip === 'normal').toBe(true);
 });
+
+// A password box you can read back. Worth asserting rather than eyeballing:
+// the control starts hidden, it must never submit the form, and the type has
+// to return to `password` so a browser does not keep the value visible after
+// the field is left.
+test('the registration password can be revealed and hidden again', async ({ page }) => {
+  await page.goto('/register');
+  const field = page.locator('#register-password');
+  const toggle = page.locator('#register-password ~ .auth-password-toggle, .auth-password-toggle').first();
+
+  await field.fill('a-long-enough-passphrase');
+  await expect(field).toHaveAttribute('type', 'password');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+
+  await toggle.click();
+  await expect(field).toHaveAttribute('type', 'text');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  // Revealing must not have submitted the form on the way.
+  await expect(page).toHaveURL(/\/register$/);
+  await expect(field).toHaveValue('a-long-enough-passphrase');
+
+  await toggle.click();
+  await expect(field).toHaveAttribute('type', 'password');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+});
+
+test('the sign-in password carries the same control', async ({ page }) => {
+  await page.goto('/sign-in');
+  const field = page.locator('#auth-password');
+  await expect(field).toHaveAttribute('type', 'password');
+  await page.locator('.auth-password-toggle').first().click();
+  await expect(field).toHaveAttribute('type', 'text');
+  await expect(page).toHaveURL(/\/sign-in$/);
+});

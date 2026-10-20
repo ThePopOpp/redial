@@ -39,12 +39,21 @@ test('private trees reject anonymous and forged role/demo input without reflecti
   }
 });
 
-test('preview does not collect credentials and protects indexing and media permissions', async ({ page, request }) => {
+test('sign-in collects a credential safely and stays out of search', async ({ page, request }) => {
+  // This asserted that these pages carried no form at all, which was true of
+  // the password-gated preview and of any deployment with no Supabase
+  // configured — the "access unavailable" panel has no inputs. It described the
+  // fallback rather than the product. The site is public now and genuinely
+  // signs people in, so the question is no longer whether a credential is
+  // collected but whether it is collected properly.
   for (const route of ['/sign-in', '/staff-sign-in']) {
     await page.goto(route);
-      if (route.startsWith('/demo')) await expect(page.locator('.workspace-heading')).toBeVisible();
-    await expect(page.locator('input, form')).toHaveCount(0);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+    const password = page.locator('#auth-password');
+    await expect(password).toHaveAttribute('type', 'password');
+    await expect(password).toHaveAttribute('autocomplete', 'current-password');
+    // The form posts to this origin, never to a third party.
+    await expect(page.locator('form[action^="http"]:not([action^="/"])')).toHaveCount(0);
   }
   const response = await request.get('/');
   expect(response.headers()['permissions-policy']).toContain('microphone=()');
@@ -100,6 +109,13 @@ for (const width of [360, 390, 768, 1024, 1440]) {
 for (const width of [390, 1440]) {
   test(`automated WCAG checks at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
+    // Audit the settled page. The sign-in panel fades in over 400ms behind a
+    // `prefers-reduced-motion: no-preference` query, and axe was sampling it
+    // mid-fade: every muted colour came back blended against the background at
+    // roughly 60% and read as a contrast failure that does not exist once the
+    // animation ends. Reducing motion skips it outright, which is also the
+    // state a reader who asked for less movement actually gets.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const route of routes) {
       await page.goto(route);
       if (route.startsWith('/demo')) await expect(page.locator('.workspace-heading')).toBeVisible();

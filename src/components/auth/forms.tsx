@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { authAction } from '@/lib/supabase/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordField } from './password-field';
 
 // The OAuth slot is deliberately empty. The layout reserves room for provider
 // buttons above the divider so adding Google or a magic link later is a change
@@ -21,7 +22,7 @@ export function SignInForm({ next = '/app', staff = false }: { next?: string; st
           <label htmlFor="auth-password">Password</label>
           <Link href="/forgot-password" className="auth-inline-link">Forgot password?</Link>
         </div>
-        <Input id="auth-password" name="password" type="password" autoComplete="current-password" placeholder="Enter your password" minLength={12} maxLength={128} required />
+        <PasswordField id="auth-password" autoComplete="current-password" placeholder="Enter your password" minLength={12} required />
       </div>
       <Button name="action" value="signin" className="auth-submit">Sign in</Button>
     </form>
@@ -40,7 +41,7 @@ export function RegisterForm() {
     </div>
     <div className="auth-field">
       <label htmlFor="register-password">Password</label>
-      <Input id="register-password" name="password" type="password" autoComplete="new-password" placeholder="At least 12 characters" minLength={12} maxLength={128} required />
+      <PasswordField id="register-password" autoComplete="new-password" placeholder="At least 12 characters" minLength={12} required />
       <p className="auth-hint">Use at least 12 characters. A longer passphrase is stronger than a short, complicated one.</p>
     </div>
     <label className="auth-check">
