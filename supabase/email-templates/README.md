@@ -1,7 +1,7 @@
 # Supabase Auth email templates
 
 These are the emails Supabase Auth sends: confirmation, password reset, magic
-link, email change and invitation. They are **not** sent by this application.
+link, email change, invitation and reauthentication. They are **not** sent by this application.
 Supabase Auth has its own SMTP settings and its own templates, neither of which
 inherit anything from `REDIAL_EMAIL_PROVIDER` or the rest of the application
 environment — the note in `docs/DEVELOPMENT-DEPLOYMENT.md` says so, and the
@@ -24,6 +24,7 @@ Paste the body of the matching file, keeping the subject line listed below.
 | `magic-link.html` | Magic link | Your Redial sign-in link |
 | `change-email.html` | Change email address | Confirm your new Redial address |
 | `invite.html` | Invite user | You have been invited to Redial |
+| `reauthentication.html` | Reauthentication | Your Redial verification code |
 
 Also check, in the same area:
 
@@ -46,6 +47,17 @@ The confirmation link is also printed as plain text underneath. A button is a
 link with a background colour, and a client that strips the background leaves
 something unclickable-looking; the bare URL is what a person falls back to, and
 it is what they need when the link has to be moved to another browser.
+
+## Reauthentication is a code, not a link
+
+`reauthentication.html` is the one template with no button and no URL. Supabase
+sends `{{ .Token }}` — a short code typed back into the page that asked for it —
+so a button would have nowhere to go.
+
+It is set oversized and letter-spaced because the usual failure is reading `0`
+as `O` while copying it across by eye, and it carries the line that no one at
+Redial will ever ask for it. That sentence is the only defence against someone
+phoning a member and talking them through reading it out.
 
 ## One-time links expire when they are followed
 
