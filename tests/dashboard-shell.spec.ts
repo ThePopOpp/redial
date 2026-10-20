@@ -137,3 +137,27 @@ test('the sign-in password carries the same control', async ({ page }) => {
   await expect(field).toHaveAttribute('type', 'text');
   await expect(page).toHaveURL(/\/sign-in$/);
 });
+
+// A sent confirmation has to look like an outcome, not a rejection. The form
+// used to stay on the page under a quiet grey line, which read as "that did not
+// work" to the person who built it, twice.
+test('a submitted registration replaces the form with a finished state', async ({ page }) => {
+  await page.goto('/register?notice=email');
+  await expect(page.getByRole('heading', { name: 'Check your inbox' })).toBeVisible();
+  // Nothing left to type: a field here invites a second attempt.
+  await expect(page.locator('#register-password')).toHaveCount(0);
+  await expect(page.locator('#register-email')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Back to sign in' })).toBeVisible();
+});
+
+test('the registration form is still there before it is submitted', async ({ page }) => {
+  await page.goto('/register');
+  await expect(page.locator('#register-password')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Check your inbox' })).toHaveCount(0);
+});
+
+test('a requested password reset says so instead of re-offering the form', async ({ page }) => {
+  await page.goto('/forgot-password?notice=email');
+  await expect(page.getByRole('heading', { name: 'Check your inbox' })).toBeVisible();
+  await expect(page.locator('input[type="email"]')).toHaveCount(0);
+});

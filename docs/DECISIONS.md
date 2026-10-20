@@ -1153,3 +1153,53 @@ skipped. 119 node and 75 reference tests pass; typecheck, lint and build clean;
 
 Not run: the row-level-security suite. Docker is not up on this machine and the
 change touches no SQL.
+
+## 2026-10-19 — A finished sign-up looked like a rejected one
+
+The owner reported the registration redirect as broken, twice, and it was not
+broken. On a successful sign-up `authAction` redirects to
+`/register?notice=email`, which rendered a quiet grey line — "If your address is
+eligible, check your inbox for the next step" — directly above the same empty
+registration form.
+
+Nothing about that says the form worked. An empty form is an invitation to fill
+it in again, and the hedged wording reads as a refusal rather than a receipt. It
+was reported as a redirect fault because landing back on the page you just
+submitted is what a rejected form does.
+
+### What changed
+
+A sent confirmation now replaces the form instead of sitting above it. There is
+nothing left to type, which is the point: leaving somewhere to type invites
+someone to type again. The heading changes, the page says the link is what
+finishes the account, and it offers the two things a person actually wants
+there — try a different address, or go to sign-in.
+
+The same treatment covers `/forgot-password?notice=email`, which had the same
+shape and would have been read the same way.
+
+The wording still does not confirm whether an account exists at the address.
+Supabase answers a sign-up for an address already in use exactly as it answers a
+new one, so that the form cannot be used to discover who has an account, and
+"we have sent you a link" would give away what that is protecting. "If that
+address can be used" keeps the protection while being unambiguous that the form
+itself succeeded.
+
+### Worth noting about the diagnosis
+
+Three rounds were spent on the gate, the email templates and the Supabase URL
+configuration, all of which were real and none of which was this. The report
+said "redirect", the word pointed at routing, and the actual fault was that a
+success state was indistinguishable from a failure. Reading the redirect target
+in `actions.ts` found it in a minute; it should have been the first thing
+checked once the inbound-link 403 was fixed and the owner still saw the same
+page.
+
+### Evidence
+
+89 browser tests, up from 86: the finished state replaces the form, the form is
+still present before submission, and the reset page behaves the same way. 119
+node and 75 reference tests pass; typecheck, lint and build clean; 92 kit
+originals unchanged.
+
+Not run: the row-level-security suite, Docker being down here. No SQL changed.
